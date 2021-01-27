@@ -11,19 +11,19 @@ public class Driver {
         CharStream cs = null;  //load the file
         try {
             cs = fromFileName("Parser/IO/program.txt");
+            CorgiLexer lexer = new CorgiLexer(cs);  //instantiate a lexer
+            CommonTokenStream tokens = new CommonTokenStream(lexer); //scan stream for tokens
+            CorgiParser parser = new CorgiParser(tokens);  //parse the tokens
+
+            parser.removeErrorListeners();
+            parser.addErrorListener(CustomErrorListener.INSTANCE);
+
+            ParseTree tree = parser.start(); // parse the content and get the tree
+
+            CorgiBaseVisitor visitor = new CorgiBaseVisitor();
+            visitor.visit(tree);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("File could not be opened");
         }
-        CorgiLexer lexer = new CorgiLexer(cs);  //instantiate a lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer); //scan stream for tokens
-        CorgiParser parser = new CorgiParser(tokens);  //parse the tokens
-
-        parser.removeErrorListeners();
-        parser.addErrorListener(CustomErrorListener.INSTANCE);
-
-        ParseTree tree = parser.start(); // parse the content and get the tree
-
-        CorgiBaseVisitor visitor = new CorgiBaseVisitor();
-        visitor.visit(tree);
     }
 }
