@@ -1,3 +1,6 @@
+import GeneratedAntlrClasses.CorgiBaseVisitor;
+import GeneratedAntlrClasses.CorgiLexer;
+import GeneratedAntlrClasses.CorgiParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 

@@ -1,10 +1,10 @@
 package Semantics;
 
 public class SymbolTableManager {
-    private SymbolTableManager instance = null;
+    private static SymbolTableManager instance = null;
     private MainScope mainScope;
 
-    public SymbolTableManager getInstance(){
+    public static SymbolTableManager getInstance(){
         if(instance == null){
             instance = new SymbolTableManager();
         }
