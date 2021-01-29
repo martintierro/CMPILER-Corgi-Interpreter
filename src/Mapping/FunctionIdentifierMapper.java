@@ -1,5 +1,6 @@
 package Mapping;
 
+import Builder.ParserHandler;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Representations.CorgiValue;
@@ -87,7 +88,7 @@ public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper
                 this.modifiedExp = this.modifiedExp.replace(identifierString, this.mobiValue.getValue().toString());
             }
             else {
-                MainScope mainScope = SymbolTableManager.getInstance().getMainScope(ParserHandler.getInstance().getCurrentClassName());
+                MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
                 this.mobiValue = mainScope.searchVariableIncludingLocal(identifierString);
 
                 //Console.log("Variable in global scope: " +this.mobiValue.getValue());

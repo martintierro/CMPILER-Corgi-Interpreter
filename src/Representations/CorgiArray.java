@@ -1,5 +1,7 @@
 package Representations;
 
+import Utlities.KeywordRecognizer;
+
 public class CorgiArray {
 
     private CorgiValue[] corgiValueArray;
@@ -57,5 +59,30 @@ public class CorgiArray {
         else {
             return this.corgiValueArray[index];
         }
+    }
+
+    public static CorgiArray createArray(String primitiveTypeString, String arrayIdentifier) {
+        //identify primitive type
+        PrimitiveType primitiveType = PrimitiveType.NOT_YET_IDENTIFIED;
+
+        if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_BOOLEAN, primitiveTypeString)) {
+            primitiveType = PrimitiveType.BOOLEAN;
+        }
+        else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_CHAR, primitiveTypeString)) {
+            primitiveType = PrimitiveType.CHAR;
+        }
+        else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_FLOAT, primitiveTypeString)) {
+            primitiveType = PrimitiveType.FLOAT;
+        }
+        else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_INT, primitiveTypeString)) {
+            primitiveType = PrimitiveType.INT;
+        }
+        else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_STRING, primitiveTypeString)) {
+            primitiveType = PrimitiveType.STRING;
+        }
+
+        CorgiArray corgiArray = new CorgiArray(primitiveType, arrayIdentifier);
+
+        return corgiArray;
     }
 }

@@ -3,10 +3,12 @@ package Representations;
 import Commands.ControlTypeEnum;
 import Commands.ICommand;
 import Commands.IControlledCommand;
+import ErrorChecker.TypeChecker;
 import Execution.ExecutionManager;
 import Execution.ExecutionMonitor;
 import Execution.FunctionTracker;
 import GeneratedAntlrClasses.CorgiLexer;
+import GeneratedAntlrClasses.CorgiParser;
 import Semantics.LocalScope;
 import Utlities.KeywordRecognizer;
 
@@ -105,15 +107,15 @@ public class CorgiFunction implements IControlledCommand {
         return this.parameterValues.size();
     }
 
-//   TODO public void verifyParameterByValueAt(CorgiLexer. exprCtx, int index) {
-//        if(index >= this.parameterValues.size()) {
-//            return;
-//        }
-//
-//        CorgiValue mobiValue = this.getParameterAt(index);
-//        TypeChecker typeChecker = new TypeChecker(mobiValue, exprCtx);
-//        typeChecker.verify();
-//    }
+    public void verifyParameterByValueAt(CorgiParser.ExpressionContext exprCtx, int index) {
+        if(index >= this.parameterValues.size()) {
+            return;
+        }
+
+        CorgiValue mobiValue = this.getParameterAt(index);
+        TypeChecker typeChecker = new TypeChecker(mobiValue, exprCtx);
+        typeChecker.verify();
+    }
 
     public void addParameter(String identifierString, CorgiValue corgiValue) {
         this.parameterValues.put(identifierString, corgiValue);
