@@ -4,11 +4,7 @@ import GeneratedAntlrClasses.CorgiBaseListener;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import org.antlr.runtime.ANTLRInputStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.TokenSource;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.ByteArrayInputStream;
@@ -40,7 +36,8 @@ public class ParserHandler {
 
     public void parseText(String textToParse) throws IOException {
         InputStream stream = new ByteArrayInputStream(textToParse.getBytes(StandardCharsets.UTF_8));
-        this.sharedLexer = new CorgiLexer((CharStream) new ANTLRInputStream(stream));
+        CharStream charStream = CharStreams.fromStream(stream);
+        this.sharedLexer = new CorgiLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream((TokenSource) this.sharedLexer);
         this.sharedParser = new CorgiParser((TokenStream) tokens);
         this.sharedParser.removeErrorListeners();

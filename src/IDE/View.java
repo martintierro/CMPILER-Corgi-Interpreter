@@ -1,14 +1,11 @@
 package IDE;
 
 import Commands.FunctionList;
-import Execution.FunctionTracker;
 import ANTLR.CorgiError;
 import Builder.BuildChecker;
 import Controller.Controller;
 import Execution.ExecutionManager;
 import IDE.Dialog.*;
-import Semantics.LocalScopeCreator;
-import Semantics.SymbolTableManager;
 import Statements.StatementControlOverseer;
 import Utlities.LocalVariableTracker;
 import javafx.application.Application;
@@ -32,13 +29,9 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 
-import java.awt.*;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
@@ -118,7 +111,7 @@ public class View extends Application {
     private Scene setupComponents() {
         gridPane = new GridPane();
         Scene scene = new Scene(gridPane, 1024, 768);
-        scene.getStylesheets().add(View.class.getResource("java-keywords.css").toExternalForm());
+//        scene.getStylesheets().add(View.class.getResource("java-keywords.css").toExternalForm());
 
         scene.setOnKeyPressed(e -> {
          /*   if(e.getCode() == KeyCode.S && e.isMetaDown() && e.isShiftDown()) {
@@ -479,7 +472,7 @@ public class View extends Application {
     }
 
     private void generateMethod() throws IOException {
-        GenerateFunctionDialog generateMethodDialog = new GenerateFunctionDialog();
+        GenerateFunctionDialog generateFunctionDialog = new GenerateFunctionDialog();
         this.controller.buildOnly(this.editor.getText(), this.currentFileName);
         ArrayList<String> methodNames = FunctionList.getInstance().getMethodNames();
 
@@ -487,7 +480,7 @@ public class View extends Application {
             System.out.println(methodName);
         }
 
-        String result = generateMethodDialog.showGenerateMethodDialog();
+        String result = generateFunctionDialog.showGenerateFunctionDialog();
 
         if (result != null) {
             if (this.editor.getSelectedText() != null) {

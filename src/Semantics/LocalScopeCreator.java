@@ -89,6 +89,9 @@ public class LocalScopeCreator {
     }
 
     public static void reset() {
+        if(instance==null){
+            getInstance();
+        }
         instance.activeLocalScope = null;
     }
 

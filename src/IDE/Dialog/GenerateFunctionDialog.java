@@ -48,7 +48,7 @@ public class GenerateFunctionDialog {
         tabPane = new TabPane();
         Tab tab = new Tab();
         tab.setText("Function 1");
-        tab.setContent(new GenerateMethodGrid(tabPane, addThisButton, addAllButton));
+        tab.setContent(new GenerateFunctionGrid(tabPane, addThisButton, addAllButton));
         tabPane.getTabs().add(tab);
 
         tab.setOnClosed(event -> {
@@ -56,7 +56,7 @@ public class GenerateFunctionDialog {
         });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            GenerateMethodGrid grid = (GenerateMethodGrid) newValue.getContent();
+            GenerateFunctionGrid grid = (GenerateFunctionGrid) newValue.getContent();
             grid.validateInput();
         });
 
@@ -64,7 +64,7 @@ public class GenerateFunctionDialog {
         Button addButton = new Button("Anotha One. DJ KHALED!");
         addButton.setOnAction(event -> {
             Tab newTab = new Tab("Function " + (tabPane.getTabs().size() + 1));
-            newTab.setContent(new GenerateMethodGrid(tabPane, addThisButton, addAllButton));
+            newTab.setContent(new GenerateFunctionGrid(tabPane, addThisButton, addAllButton));
             newTab.setOnClosed(closeEvent -> {
                 validateInput();
             });
@@ -84,14 +84,14 @@ public class GenerateFunctionDialog {
             if (dialogButton == addThisButtonType) {
                 //return generateSampleString();
                 System.out.println("Add This Pressed");
-                GenerateMethodGrid grid = (GenerateMethodGrid) tabPane.getSelectionModel().getSelectedItem().getContent();
+                GenerateFunctionGrid grid = (GenerateFunctionGrid) tabPane.getSelectionModel().getSelectedItem().getContent();
                 return grid.generateSampleString();
             }
             else if (dialogButton == addAllButtonType) {
                 String output = "";
                 System.out.println("Add All Pressed");
                 for (Tab functionTab : tabPane.getTabs()) {
-                    GenerateMethodGrid grid = (GenerateMethodGrid) functionTab.getContent();
+                    GenerateFunctionGrid grid = (GenerateFunctionGrid) functionTab.getContent();
                     output += grid.generateSampleString();
                     output += "\n\n";
                 }
@@ -103,7 +103,7 @@ public class GenerateFunctionDialog {
     }
 
 
-    public String showGenerateMethodDialog() {
+    public String showGenerateFunctionDialog() {
         Optional<String> result = dialog.showAndWait();
 
         return result.get();
@@ -117,7 +117,7 @@ public class GenerateFunctionDialog {
             if (tab == null)
                 continue;
 
-            GenerateMethodGrid grid = (GenerateMethodGrid) tab.getContent();
+            GenerateFunctionGrid grid = (GenerateFunctionGrid) tab.getContent();
             grid.validateInput();
         }
     }
