@@ -21,18 +21,18 @@ public class ArrayAnalyzer implements ParseTreeListener {
     private final static String ARRAY_PRIMITIVE_KEY = "ARRAY_PRIMITIVE_KEY";
     private final static String ARRAY_IDENTIFIER_KEY = "ARRAY_IDENTIFIER_KEY";
 
-    private IdentifiedTokenHolder identifiedTokens;
+    private IdentifiedTokenHolder identifiedTokenHolder;
     private MainScope declaredClassScope;
     private LocalScope localScope;
     private CorgiArray declaredArray;
 
-    public ArrayAnalyzer( IdentifiedTokenHolder identifiedTokens, MainScope declaredClassScope) {
-        this.identifiedTokens = identifiedTokens;
+    public ArrayAnalyzer(IdentifiedTokenHolder identifiedTokenHolder, MainScope declaredClassScope) {
+        this.identifiedTokenHolder = identifiedTokenHolder;
         this.declaredClassScope = declaredClassScope;
     }
 
-    public ArrayAnalyzer( IdentifiedTokenHolder identifiedTokens, LocalScope localScope) {
-        this.identifiedTokens = identifiedTokens;
+    public ArrayAnalyzer(IdentifiedTokenHolder identifiedTokenHolder, LocalScope localScope) {
+        this.identifiedTokenHolder = identifiedTokenHolder;
         this.localScope = localScope;
     }
 
@@ -57,11 +57,11 @@ public class ArrayAnalyzer implements ParseTreeListener {
     public void enterEveryRule(ParserRuleContext ctx) {
         if(ctx instanceof CorgiParser.PrimitiveTypeContext) {
             CorgiParser.PrimitiveTypeContext primitiveCtx = (CorgiParser.PrimitiveTypeContext) ctx;
-            this.identifiedTokens.addToken(ARRAY_PRIMITIVE_KEY, primitiveCtx.getText());
+            this.identifiedTokenHolder.addToken(ARRAY_PRIMITIVE_KEY, primitiveCtx.getText());
         }
         else if(ctx instanceof CorgiParser.VariableDeclaratorIdContext) {
             CorgiParser.VariableDeclaratorIdContext varDecIdCtx = (CorgiParser.VariableDeclaratorIdContext) ctx;
-            this.identifiedTokens.addToken(ARRAY_IDENTIFIER_KEY, varDecIdCtx.getText());
+            this.identifiedTokenHolder.addToken(ARRAY_IDENTIFIER_KEY, varDecIdCtx.getText());
 
             this.analyzeArray();
         }
@@ -84,9 +84,9 @@ public class ArrayAnalyzer implements ParseTreeListener {
     private void analyzeArray() {
 
         if(this.declaredClassScope != null) {
-            if(this.identifiedTokens.containsTokens(ARRAY_PRIMITIVE_KEY, ARRAY_IDENTIFIER_KEY)) {
-                String arrayTypeString = this.identifiedTokens.getToken(ARRAY_PRIMITIVE_KEY);
-                String arrayIdentifierString = this.identifiedTokens.getToken(ARRAY_IDENTIFIER_KEY);
+            if(this.identifiedTokenHolder.containsTokens(ARRAY_PRIMITIVE_KEY, ARRAY_IDENTIFIER_KEY)) {
+                String arrayTypeString = this.identifiedTokenHolder.getToken(ARRAY_PRIMITIVE_KEY);
+                String arrayIdentifierString = this.identifiedTokenHolder.getToken(ARRAY_IDENTIFIER_KEY);
 
                 //initialize an array corgiValue
                 this.declaredArray = CorgiArray.createArray(arrayTypeString, arrayIdentifierString);
@@ -95,13 +95,13 @@ public class ArrayAnalyzer implements ParseTreeListener {
                 this.declaredClassScope.addCorgiValue(arrayIdentifierString, corgiValue);
                 //Console.log(LogType.DEBUG, "Creating array with type " +arrayTypeString+ " variable " +arrayIdentifierString);
 
-                this.identifiedTokens.clearTokens();
+                this.identifiedTokenHolder.clearTokens();
             }
         }
         else if(this.localScope != null) {
-            if(this.identifiedTokens.containsTokens(ARRAY_PRIMITIVE_KEY, ARRAY_IDENTIFIER_KEY)) {
-                String arrayTypeString = this.identifiedTokens.getToken(ARRAY_PRIMITIVE_KEY);
-                String arrayIdentifierString = this.identifiedTokens.getToken(ARRAY_IDENTIFIER_KEY);
+            if(this.identifiedTokenHolder.containsTokens(ARRAY_PRIMITIVE_KEY, ARRAY_IDENTIFIER_KEY)) {
+                String arrayTypeString = this.identifiedTokenHolder.getToken(ARRAY_PRIMITIVE_KEY);
+                String arrayIdentifierString = this.identifiedTokenHolder.getToken(ARRAY_IDENTIFIER_KEY);
 
                 //initialize an array mobivalue
                 this.declaredArray = CorgiArray.createArray(arrayTypeString, arrayIdentifierString);
@@ -110,7 +110,7 @@ public class ArrayAnalyzer implements ParseTreeListener {
                 this.localScope.addCorgiValue(arrayIdentifierString, corgiValue);
 //                Console.log(LogType.DEBUG, "Creating array with type " +arrayTypeString+ " variable " +arrayIdentifierString);
 
-                this.identifiedTokens.clearTokens();
+                this.identifiedTokenHolder.clearTokens();
             }
         }
 

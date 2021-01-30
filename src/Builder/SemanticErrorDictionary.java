@@ -14,7 +14,13 @@ public class SemanticErrorDictionary {
     public final static int MULTIPLE_FUNCTION = 5500;
     public final static int PARAMETER_COUNT_MISMATCH = 6000;
     public final static int RUNTIME_ARRAY_OUT_OF_BOUNDS = 7000;
+    public final static int RUNTIME_NEGATIVE_ARRAY_SIZE = 7001;
+    public final static int RUNTIME_ARITHMETIC_EXCEPTION = 7002;
     public final static int MISSING_THIS_KEYWORD = 8000;
+    public final static int RETURN_IN_VOID = 9000;
+    public final static int INVALID_INDEX_ASSIGN = 9001;
+    public final static int NO_RETURN_STATEMENT = 9002;
+    public final static int NOT_A_STATEMENT = 9004;
 
     private static SemanticErrorDictionary instance = null;
 

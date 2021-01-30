@@ -5,7 +5,7 @@ import Representations.PrimitiveType;
 
 import java.math.BigDecimal;
 
-public class AssignmentUtils {
+public class AssignmentUtilities {
 
     /*
      * Assigns an appropriate value depending on the primitive type. Since expression class returns a double value, we attempt
@@ -30,6 +30,13 @@ public class AssignmentUtils {
         }
         else {
             //Console.log(LogType.DEBUG, "MobiValue: DID NOT FIND APPROPRIATE TYPE!!");
+        }
+    }
+
+    public static void assignAppropriateValue(CorgiValue corgiValue, String stringValue) {
+        if(corgiValue.getPrimitiveType() == PrimitiveType.STRING ||
+                corgiValue.getPrimitiveType() == PrimitiveType.CHAR) {
+            corgiValue.setValue(stringValue);
         }
     }
 

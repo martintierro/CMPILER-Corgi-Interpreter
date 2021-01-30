@@ -75,11 +75,11 @@ public class MainAnalyzer implements ParseTreeListener {
         else if(ctx instanceof CorgiParser.FieldDeclarationContext) {
             CorgiParser.FieldDeclarationContext fieldCtx = (CorgiParser.FieldDeclarationContext) ctx;
 
-            if(fieldCtx.type() != null) {
+            if(fieldCtx.typeType() != null) {
                 CorgiParser.TypeTypeContext typeCtx = fieldCtx.typeType();
 
                 //check if its a primitive type
-                if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
+                if(MainAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                     CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                     this.identifiedTokenHolder.addToken(PRIMITIVE_TYPE_KEY, primitiveTypeCtx.getText());
 
@@ -92,7 +92,7 @@ public class MainAnalyzer implements ParseTreeListener {
                 }
 
                 //check if its array declaration
-                else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
+                else if(MainAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
 //                    Console.log(LogType.DEBUG, "Primitive array declaration: " +fieldCtx.getText());
                     ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, this.mainScope);
                     arrayAnalyzer.analyze(fieldCtx);

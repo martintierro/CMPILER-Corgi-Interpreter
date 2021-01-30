@@ -78,12 +78,12 @@ public class ParameterAnalyzer implements ParseTreeListener {
             CorgiParser.TypeTypeContext typeCtx = formalParamCtx.typeType();
 
             //return type is a primitive type
-            if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
+            if(MainAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                 this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
             }
             //check if its array declaration
-            else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
+            else if(MainAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                 this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
                 this.identifiedTokenHolder.addToken(IS_ARRAY_KEY, IS_ARRAY_KEY);
@@ -112,10 +112,10 @@ public class ParameterAnalyzer implements ParseTreeListener {
             String typeString = this.identifiedTokenHolder.getToken(PARAMETER_TYPE_KEY);
             String identifierString = this.identifiedTokenHolder.getToken(PARAMETER_IDENTIFIER_KEY);
 
-            //initialize an array mobivalue
+            //initialize an array Corgi Value
             CorgiArray declaredArray = CorgiArray.createArray(typeString, identifierString);
-            CorgiValue mobiValue = new CorgiValue(declaredArray, PrimitiveType.ARRAY);
-            this.corgiFunction.addParameter(identifierString, mobiValue);
+            CorgiValue corgiValue = new CorgiValue(declaredArray, PrimitiveType.ARRAY);
+            this.corgiFunction.addParameter(identifierString, corgiValue);
 
             //Console.log(LogType.DEBUG, "Created array parameter for " +this.corgiFunction.getFunctionName());
             System.err.println("Created array parameter for " +this.corgiFunction.getFunctionName()); //TODO: Change to IDE

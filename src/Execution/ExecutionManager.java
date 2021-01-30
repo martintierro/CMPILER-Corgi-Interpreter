@@ -4,12 +4,24 @@ import Adders.FunctionExecutionAdder;
 import Adders.IExecutionAdder;
 import Adders.MainExecutionAdder;
 import Commands.ICommand;
+import Notifications.NotificationCenter;
+import Notifications.NotificationListener;
+import Notifications.Parameters;
+import Notifications.Notifications;
 import Representations.CorgiFunction;
 
 import java.util.ArrayList;
 
-public class ExecutionManager {
-    private static ExecutionManager instance = null;
+public class ExecutionManager implements NotificationListener {
+
+    private final static String TAG = "ExecutionManager";
+
+    private static ExecutionManager sharedInstance = null;
+
+    public static ExecutionManager getInstance() {
+        return sharedInstance;
+    }
+
     private ArrayList<ICommand> executionList = new ArrayList<ICommand>();
     private boolean foundEntryPoint = false;
     private String entryClassName = null;
@@ -20,19 +32,80 @@ public class ExecutionManager {
     private IExecutionAdder activeExecutionAdder;
     private MainExecutionAdder mainExecutionAdder;
 
-    public static ExecutionManager getInstance(){
-        if(instance == null){
-            instance = new ExecutionManager();
-            //TODO add as observer
-        }
-        return instance;
-    }
+//    private IAttemptCommand.CatchTypeEnum currentCatchType = null;
+//    private IAttemptCommand currentTryCommand = null;
 
-    private ExecutionManager(){
+    private boolean aborted = false;
+    private int currentCheckedLineNumber = -1;
+
+    private ExecutionManager() {
         this.mainExecutionAdder = new MainExecutionAdder(this.executionList);
         this.activeExecutionAdder = this.mainExecutionAdder;
     }
 
+    public static void initialize() {
+        sharedInstance = new ExecutionManager();
+        NotificationCenter.getInstance().addObserver(Notifications.ON_EXECUTION_FINISHED, sharedInstance);
+    }
+
+    public static void reset() {
+        sharedInstance.foundEntryPoint = false;
+        sharedInstance.entryClassName = null;
+        sharedInstance.clearAllActions();
+
+        sharedInstance.aborted = false;
+
+        NotificationCenter.getInstance().removeObserver(Notifications.ON_EXECUTION_FINISHED, sharedInstance);
+    }
+
+//    public IAttemptCommand getCurrentTryCommand() {
+//        return this.currentTryCommand;
+//    }
+//
+//    public void setCurrentTryCommand(IAttemptCommand command) {
+//        this.currentTryCommand = command;
+//    }
+//
+//    public IAttemptCommand.CatchTypeEnum getCurrentCatchType() {
+//        return this.currentCatchType;
+//    }
+//
+//    public void setCurrentCatchType(IAttemptCommand.CatchTypeEnum catchType) {
+//
+//        if (catchType == null) {
+//            this.currentCatchType = null;
+//            return;
+//        }
+//
+//        if (this.currentTryCommand != null && this.currentTryCommand.hasCatchFor(catchType))
+//            this.currentCatchType = catchType;
+//        else {
+//
+//            this.aborted = true;
+//
+//            if (catchType == IAttemptCommand.CatchTypeEnum.ARRAY_OUT_OF_BOUNDS) {
+//                BuildChecker.reportCustomError(ErrorRepository.RUNTIME_ARRAY_OUT_OF_BOUNDS, "", this.currentCheckedLineNumber);
+//            } else if (catchType == IAttemptCommand.CatchTypeEnum.NEGATIVE_ARRAY_SIZE) {
+//                BuildChecker.reportCustomError(ErrorRepository.RUNTIME_NEGATIVE_ARRAY_SIZE, "", this.currentCheckedLineNumber);
+//            } else if (catchType == IAttemptCommand.CatchTypeEnum.ARITHMETIC_EXCEPTION) {
+//                BuildChecker.reportCustomError(ErrorRepository.RUNTIME_ARITHMETIC_EXCEPTION, "", this.currentCheckedLineNumber);
+//            }
+//
+//            this.clearAllActions();
+//        }
+//    }
+
+    public boolean isAborted () {
+        return aborted;
+    }
+
+    public void setCurrentCheckedLineNumber (int n) {
+        this.currentCheckedLineNumber = n;
+    }
+    /*
+     * Reported by the parser walker if void main() has been found which means that an entry point for execution has been found.
+     * Required the class name in which main() has been found
+     */
     public void reportFoundEntryPoint(String entryClassName) {
         this.entryClassName = entryClassName;
         this.foundEntryPoint = true;
@@ -60,8 +133,8 @@ public class ExecutionManager {
     /*
      * Opens a function. Any succeeding commands to be added will be put to the function control flow.
      */
-    public void openFunctionExecution(CorgiFunction mobiFunction) {
-        FunctionExecutionAdder functionExecutionAdder = new FunctionExecutionAdder(mobiFunction);
+    public void openFunctionExecution(CorgiFunction corgiFunction) {
+        FunctionExecutionAdder functionExecutionAdder = new FunctionExecutionAdder(corgiFunction);
         this.activeExecutionAdder = functionExecutionAdder;
     }
 
@@ -82,7 +155,7 @@ public class ExecutionManager {
             return functionExecAdder.getAssignedFunction();
         }
         else {
-            System.err.println("Execution Manager is not in a function!"); //TODO Change to IDE
+            System.out.println(TAG + ": " + "Execution manager is not in a function!");
             return null;
         }
     }
@@ -129,4 +202,10 @@ public class ExecutionManager {
         return this.executionMonitor;
     }
 
+    @Override
+    public void onNotify(String notificationString, Parameters params) {
+        if(notificationString == Notifications.ON_EXECUTION_FINISHED) {
+            //SymbolTableManager.getInstance().resetClassTables(); //TODO: does not work as intended
+        }
+    }
 }

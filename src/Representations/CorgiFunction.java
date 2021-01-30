@@ -7,7 +7,6 @@ import ErrorChecker.TypeChecker;
 import Execution.ExecutionManager;
 import Execution.ExecutionMonitor;
 import Execution.FunctionTracker;
-import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Semantics.LocalScope;
 import Utlities.KeywordRecognizer;
@@ -27,6 +26,7 @@ public class CorgiFunction implements IControlledCommand {
     private LinkedHashMap<String, CorgiValue> parameterValues;	//the list of parameters accepted that follows the 'call-by-value' standard.
     private CorgiValue returnValue; //the return value of the function. null if it's a void type
     private FunctionType returnType = FunctionType.VOID_TYPE; //the return type of the function
+    private boolean validReturn = true;
 
     public CorgiFunction(){
         this.commandList = new ArrayList<>();
@@ -57,6 +57,14 @@ public class CorgiFunction implements IControlledCommand {
 
     public FunctionType getReturnType() {
         return this.returnType;
+    }
+
+    public boolean isValidReturn(){
+        return this.validReturn;
+    }
+
+    public void setValidReturn(boolean b) {
+        validReturn = b;
     }
 
     public void setFunctionName(String functionName) {

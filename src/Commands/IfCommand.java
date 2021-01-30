@@ -15,11 +15,11 @@ public class IfCommand implements IConditionalCommand{
     private List<ICommand> positiveCommands;
     private List<ICommand> negativeCommands;
 
-    private CorgiParser.ExpressionContext ctx;
+    private CorgiParser.ParExpressionContext ctx;
     private String conditionalExpr;
 
-    public IfCommand(String conditionalExpr) {
-        this.conditionalExpr = conditionalExpr;
+    public IfCommand(CorgiParser.ParExpressionContext ctx) {
+        this.ctx = ctx;
         this.positiveCommands = new ArrayList<>();
         this.negativeCommands = new ArrayList<>();
     }

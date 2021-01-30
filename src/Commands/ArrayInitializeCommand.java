@@ -1,6 +1,6 @@
 package Commands;
 
-import Evaluation.EvaluationCommand;
+import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiArray;
 
@@ -10,14 +10,11 @@ public class ArrayInitializeCommand implements ICommand {
     private CorgiArray corgiArray;
     private CorgiParser.ArrayCreatorRestContext arrayCreatorCtx;
 
-    public ArrayInitializeCommand(CorgiArray mobiArray, CorgiParser.ArrayCreatorRestContext arrayCreatorCtx) {
-        this.corgiArray = mobiArray;
+    public ArrayInitializeCommand(CorgiArray corgiArray, CorgiParser.ArrayCreatorRestContext arrayCreatorCtx) {
+        this.corgiArray = corgiArray;
         this.arrayCreatorCtx = arrayCreatorCtx;
     }
 
-    /* (non-Javadoc)
-     * @see com.neildg.mobiprog.execution.commands.ICommand#execute()
-     */
     @Override
     public void execute() {
         CorgiParser.ExpressionContext exprCtx = this.arrayCreatorCtx.expression(0);
@@ -26,6 +23,7 @@ public class ArrayInitializeCommand implements ICommand {
             EvaluationCommand evaluationCommand = new EvaluationCommand(exprCtx);
             evaluationCommand.execute();
 
+            ExecutionManager.getInstance().setCurrentCheckedLineNumber(exprCtx.getStart().getLine());
             this.corgiArray.initializeSize(evaluationCommand.getResult().intValue());
         }
 

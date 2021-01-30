@@ -1,5 +1,6 @@
 package Analyzers;
 
+import Commands.MappingCommand;
 import ErrorChecker.MultipleVarDecChecker;
 import ErrorChecker.TypeChecker;
 import Execution.ExecutionManager;
@@ -67,14 +68,14 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
             //clear tokens for reuse
             this.identifiedTokenHolder.clearTokens();
 
-            if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
+            if(MainAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                 this.identifiedTokenHolder.addToken(PRIMITIVE_TYPE_KEY, primitiveTypeCtx.getText());
 
             }
 
             //check if its array declaration
-            else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
+            else if(MainAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
 //                Console.log(LogType.DEBUG, "Primitive array declaration: " +typeCtx.getText());
                 ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, LocalScopeCreator.getInstance().getActiveLocalScope());
                 arrayAnalyzer.analyze(typeCtx.getParent());

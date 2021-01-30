@@ -1,6 +1,5 @@
 package Mapping;
 
-import Builder.ParserHandler;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Representations.CorgiValue;
@@ -17,7 +16,7 @@ public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper
     private String modifiedExp = null;
 
     private CorgiFunction assignedFunction;
-    private CorgiValue mobiValue;
+    private CorgiValue corgiValue;
     private LocalScope functionLocalScope;
 
     public FunctionIdentifierMapper(String originalExp, CorgiFunction assignedFunction) {
@@ -28,6 +27,11 @@ public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper
     }
 
     public void analyze(CorgiParser.ExpressionContext exprCtx) {
+        ParseTreeWalker treeWalker = new ParseTreeWalker();
+        treeWalker.walk(this, exprCtx);
+    }
+
+    public void analyze(CorgiParser.ParExpressionContext exprCtx) {
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         treeWalker.walk(this, exprCtx);
     }
@@ -43,8 +47,8 @@ public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper
     }
 
     @Override
-    public CorgiValue getMobiValue() {
-        return this.mobiValue;
+    public CorgiValue getCorgiValue() {
+        return this.corgiValue;
     }
 
     @Override
@@ -82,18 +86,15 @@ public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper
             this.modifiedExp = this.modifiedExp.replace(identifierString, this.assignedFunction.getParameter(identifierString).getValue().toString());
         }
         else {
-            this.mobiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, this.functionLocalScope);
+            this.corgiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, this.functionLocalScope);
 
-            if(this.mobiValue != null) {
-                this.modifiedExp = this.modifiedExp.replace(identifierString, this.mobiValue.getValue().toString());
-            }
-            else {
+            if (this.corgiValue == null) {
                 MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-                this.mobiValue = mainScope.searchVariableIncludingLocal(identifierString);
+                this.corgiValue = mainScope.searchVariableIncludingLocal(identifierString);
 
                 //Console.log("Variable in global scope: " +this.mobiValue.getValue());
-                this.modifiedExp = this.modifiedExp.replace(identifierString, this.mobiValue.getValue().toString());
             }
+            this.modifiedExp = this.modifiedExp.replace(identifierString, this.corgiValue.getValue().toString());
         }
     }
 }

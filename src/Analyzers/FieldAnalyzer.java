@@ -1,5 +1,6 @@
 package Analyzers;
 
+import Commands.MappingCommand;
 import ErrorChecker.MultipleVarDecChecker;
 import ErrorChecker.TypeChecker;
 import Execution.ExecutionManager;
@@ -52,16 +53,16 @@ public class FieldAnalyzer implements ParseTreeListener {
             MultipleVarDecChecker multipleDeclaredChecker = new MultipleVarDecChecker(varCtx.variableDeclaratorId());
             multipleDeclaredChecker.verify();
 
-            this.identifiedTokens.addToken(ClassAnalyzer.IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
+            this.identifiedTokens.addToken(MainAnalyzer.IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
             this.createMobiValue();
 
             if(varCtx.variableInitializer() != null) {
 
                 //we do not evaluate strings.
-                if(this.identifiedTokens.containsTokens(ClassAnalyzer.PRIMITIVE_TYPE_KEY)) {
-                    String primitiveTypeString = this.identifiedTokens.getToken(ClassAnalyzer.PRIMITIVE_TYPE_KEY);
+                if(this.identifiedTokens.containsTokens(MainAnalyzer.PRIMITIVE_TYPE_KEY)) {
+                    String primitiveTypeString = this.identifiedTokens.getToken(MainAnalyzer.PRIMITIVE_TYPE_KEY);
                     if(primitiveTypeString.contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
-                        this.identifiedTokens.addToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
+                        this.identifiedTokens.addToken(MainAnalyzer.IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
                         return;
                     }
                 }
@@ -71,7 +72,6 @@ public class FieldAnalyzer implements ParseTreeListener {
 
                 CorgiValue declaredMobiValue = this.mainScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
-                //type check the mobivalue
                 TypeChecker typeChecker = new TypeChecker(declaredMobiValue, varCtx.variableInitializer().expression());
                 typeChecker.verify();
             }
@@ -90,17 +90,17 @@ public class FieldAnalyzer implements ParseTreeListener {
      */
     private void createMobiValue() {
 
-        if(this.identifiedTokens.containsTokens(ClassAnalyzer.ACCESS_CONTROL_KEY, ClassAnalyzer.PRIMITIVE_TYPE_KEY, ClassAnalyzer.IDENTIFIER_KEY)) {
+        if(this.identifiedTokens.containsTokens(MainAnalyzer.ACCESS_CONTROL_KEY, MainAnalyzer.PRIMITIVE_TYPE_KEY, MainAnalyzer.IDENTIFIER_KEY)) {
 
-            String classModifierString = this.identifiedTokens.getToken(ClassAnalyzer.ACCESS_CONTROL_KEY);
-            String primitiveTypeString = this.identifiedTokens.getToken(ClassAnalyzer.PRIMITIVE_TYPE_KEY);
-            String identifierString = this.identifiedTokens.getToken(ClassAnalyzer.IDENTIFIER_KEY);
+            String classModifierString = this.identifiedTokens.getToken(MainAnalyzer.ACCESS_CONTROL_KEY);
+            String primitiveTypeString = this.identifiedTokens.getToken(MainAnalyzer.PRIMITIVE_TYPE_KEY);
+            String identifierString = this.identifiedTokens.getToken(MainAnalyzer.IDENTIFIER_KEY);
             String identifierValueString = null;
 
 //            Console.log(LogType.DEBUG, "Class modifier: " +classModifierString);
 
-            if(this.identifiedTokens.containsTokens(ClassAnalyzer.IDENTIFIER_VALUE_KEY)) {
-                identifierValueString = this.identifiedTokens.getToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY);
+            if(this.identifiedTokens.containsTokens(MainAnalyzer.IDENTIFIER_VALUE_KEY)) {
+                identifierValueString = this.identifiedTokens.getToken(MainAnalyzer.IDENTIFIER_VALUE_KEY);
                 this.mainScope.addInitializedVariable(primitiveTypeString, identifierString, identifierValueString);
             }
             else {
@@ -109,15 +109,15 @@ public class FieldAnalyzer implements ParseTreeListener {
 
             CorgiValue declaredValue = this.mainScope.searchVariableIncludingLocal(identifierString);
             //verify if the declared variable is a constant
-            if(this.identifiedTokens.containsTokens(ClassAnalyzer.CONST_CONTROL_KEY)) {
-                declaredValue.markFinal();
+            if(this.identifiedTokens.containsTokens(MainAnalyzer.CONST_CONTROL_KEY)) {
+                declaredValue.makeFinal();
             }
 
 
 
             //remove the following tokens
-            this.identifiedTokens.removeToken(ClassAnalyzer.IDENTIFIER_KEY);
-            this.identifiedTokens.removeToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY);
+            this.identifiedTokens.removeToken(MainAnalyzer.IDENTIFIER_KEY);
+            this.identifiedTokens.removeToken(MainAnalyzer.IDENTIFIER_VALUE_KEY);
         }
     }
 }

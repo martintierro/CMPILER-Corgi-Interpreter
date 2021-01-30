@@ -20,6 +20,10 @@ public class IdentifierMapper implements IValueMapper{
 
     }
 
+    public void analyze(CorgiParser.ParExpressionContext exprCtx) {
+
+    }
+
     @Override
     public String getOriginalExp() {
         return null;
@@ -31,7 +35,7 @@ public class IdentifierMapper implements IValueMapper{
     }
 
     @Override
-    public CorgiValue getMobiValue() {
+    public CorgiValue getCorgiValue() {
         return null;
     }
 }

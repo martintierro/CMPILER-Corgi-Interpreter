@@ -17,7 +17,6 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
     private CorgiParser.ExpressionContext readRightHandExprCtx; //used to avoid mistakenly reading right hand expressions as direct function calls as well.
 
-    //TODO: find a way to not rely on tree depth for function calls.
     public final static int FUNCTION_CALL_NO_PARAMS_DEPTH = 13;
     public final static int FUNCTION_CALL_WITH_PARAMS_DEPTH = 14;
 
@@ -67,7 +66,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
                 List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
 
-                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0) ,JavaLexer.INC);
+                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0) ,CorgiLexer.INC);
                 this.handleStatementExecution(incDecCommand);
             }
 
@@ -76,7 +75,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
                 List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
 
-                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0) ,JavaLexer.DEC);
+                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0) ,CorgiLexer.DEC);
                 this.handleStatementExecution(incDecCommand);
 
             }
@@ -164,9 +163,6 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
         if(firstExprCtx != null) {
             if(exprCtx != this.readRightHandExprCtx) {
-                ThisKeywordChecker thisChecker = new ThisKeywordChecker(firstExprCtx);
-                thisChecker.verify();
-
                 return (firstExprCtx.Identifier() != null);
             }
         }
@@ -177,9 +173,6 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
     private boolean isFunctionCallWithNoParams(CorgiParser.ExpressionContext exprCtx) {
         if(exprCtx.depth() == FUNCTION_CALL_NO_PARAMS_DEPTH) {
-            ThisKeywordChecker thisChecker = new ThisKeywordChecker(exprCtx);
-            thisChecker.verify();
-            if(exprCtx.Identifier() != null)
                 return true;
         }
 

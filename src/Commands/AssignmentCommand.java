@@ -4,22 +4,19 @@ import Analyzers.FunctionCallVerifier;
 import ErrorChecker.ConstChecker;
 import ErrorChecker.TypeChecker;
 import ErrorChecker.UndeclaredChecker;
-import Evaluation.EvaluationCommand;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiArray;
 import Representations.CorgiValue;
 import Searcher.VariableSearcher;
-import Utlities.AssignmentUtils;
+import Utlities.AssignmentUtilities;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
 
-public class AssignmentCommand implements ICommand{
-
-    private final static String TAG = "MobiProg_NewAssignmentCommand";
+public class AssignmentCommand implements ICommand {
 
     private CorgiParser.ExpressionContext leftHandExprCtx;
     private CorgiParser.ExpressionContext rightHandExprCtx;
@@ -38,10 +35,10 @@ public class AssignmentCommand implements ICommand{
         undeclaredChecker = new UndeclaredChecker(this.rightHandExprCtx);
         undeclaredChecker.verify();
 
+
         ParseTreeWalker functionWalker = new ParseTreeWalker();
         functionWalker.walk(new FunctionCallVerifier(), this.rightHandExprCtx);
 
-        //type check the mobivalue
         CorgiValue corgiValue;
         if(ExecutionManager.getInstance().isInFunctionExecution()) {
             corgiValue = VariableSearcher.searchVariableInFunction(ExecutionManager.getInstance().getCurrentFunction(), this.leftHandExprCtx.getText());
@@ -54,26 +51,40 @@ public class AssignmentCommand implements ICommand{
         typeChecker.verify();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.neildg.mobiprog.execution.commands.ICommand#execute()
-     */
     @Override
     public void execute() {
         EvaluationCommand evaluationCommand = new EvaluationCommand(this.rightHandExprCtx);
         evaluationCommand.execute();
 
+        if(evaluationCommand.hasException())
+            return;
+
         if(this.isLeftHandArrayAccessor()) {
-            this.handleArrayAssignment(evaluationCommand.getResult().toEngineeringString());
+
+            if(evaluationCommand.isNumericResult())
+                this.handleArrayAssignment(evaluationCommand.getResult().toEngineeringString());
+            else
+                this.handleArrayAssignment(evaluationCommand.getStringResult());
         }
         else {
             CorgiValue corgiValue = VariableSearcher.searchVariable(this.leftHandExprCtx.getText());
-            AssignmentUtils.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
+
+            if (evaluationCommand.isNumericResult()) {
+
+                if (!corgiValue.isFinal()) {
+                    AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
+                }
+
+            } else {
+
+                if (!corgiValue.isFinal()) {
+                    AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getStringResult());
+                }
+            }
         }
     }
 
-    private boolean isLeftHandArrayAccessor() {
+    public boolean isLeftHandArrayAccessor() {
         List<TerminalNode> lBrackTokens = this.leftHandExprCtx.getTokens(CorgiLexer.LBRACK);
         List<TerminalNode> rBrackTokens = this.leftHandExprCtx.getTokens(CorgiLexer.RBRACK);
 
@@ -90,11 +101,21 @@ public class AssignmentCommand implements ICommand{
         EvaluationCommand evaluationCommand = new EvaluationCommand(arrayIndexExprCtx);
         evaluationCommand.execute();
 
+        ExecutionManager.getInstance().setCurrentCheckedLineNumber(arrayIndexExprCtx.getStart().getLine());
+
         //create a new array value to replace value at specified index
         CorgiValue newArrayValue = new CorgiValue(null, corgiArray.getArrayType());
         newArrayValue.setValue(resultString);
         corgiArray.updateValueAt(newArrayValue, evaluationCommand.getResult().intValue());
 
+        //Console.log("Index to access: " +evaluationCommand.getResult().intValue()+ " Updated with: " +resultString);
+    }
 
+    public CorgiParser.ExpressionContext getLeftHandExprCtx() {
+        return leftHandExprCtx;
+    }
+
+    public CorgiParser.ExpressionContext getRightHandExprCtx() {
+        return rightHandExprCtx;
     }
 }
