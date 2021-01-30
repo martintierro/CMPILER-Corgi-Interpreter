@@ -73,10 +73,10 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
 
     private void verifyFunctionCall(CorgiParser.ExpressionContext funcExprCtx) {
 
-        if(funcExprCtx.expression(0).Identifier() == null)
+        if(funcExprCtx.expression() == null)
             return;
 
-        String functionName = funcExprCtx.expression(0).Identifier().getText();
+        String functionName = funcExprCtx.expression(0).getText();
 
         MainScope classScope = SymbolTableManager.getInstance().getMainScope();
         CorgiFunction corgiFunction = classScope.getFunction(functionName);

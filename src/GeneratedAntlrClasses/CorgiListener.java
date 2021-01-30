@@ -1,5 +1,5 @@
-package GeneratedAntlrClasses;
 // Generated from D:/Projects/CMPILER Projects/InterpreterMP/grammar\Corgi.g4 by ANTLR 4.9.1
+package GeneratedAntlrClasses;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -18,26 +18,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 */
 	void exitCompilationUnit(CorgiParser.CompilationUnitContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CorgiParser#packageDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterPackageDeclaration(CorgiParser.PackageDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#packageDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitPackageDeclaration(CorgiParser.PackageDeclarationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#importDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterImportDeclaration(CorgiParser.ImportDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#importDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitImportDeclaration(CorgiParser.ImportDeclarationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link CorgiParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -48,26 +28,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 */
 	void exitTypeDeclaration(CorgiParser.TypeDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CorgiParser#modifier}.
-	 * @param ctx the parse tree
-	 */
-	void enterModifier(CorgiParser.ModifierContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#modifier}.
-	 * @param ctx the parse tree
-	 */
-	void exitModifier(CorgiParser.ModifierContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#classOrInterfaceModifier}.
-	 * @param ctx the parse tree
-	 */
-	void enterClassOrInterfaceModifier(CorgiParser.ClassOrInterfaceModifierContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#classOrInterfaceModifier}.
-	 * @param ctx the parse tree
-	 */
-	void exitClassOrInterfaceModifier(CorgiParser.ClassOrInterfaceModifierContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link CorgiParser#variableModifier}.
 	 * @param ctx the parse tree
 	 */
@@ -77,16 +37,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVariableModifier(CorgiParser.VariableModifierContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#classDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterClassDeclaration(CorgiParser.ClassDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#classDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitClassDeclaration(CorgiParser.ClassDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CorgiParser#typeParameters}.
 	 * @param ctx the parse tree
@@ -208,6 +158,16 @@ public interface CorgiListener extends ParseTreeListener {
 	 */
 	void exitClassBodyDeclaration(CorgiParser.ClassBodyDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CorgiParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void enterStart(CorgiParser.StartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CorgiParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void exitStart(CorgiParser.StartContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CorgiParser#memberDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -257,16 +217,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConstructorDeclaration(CorgiParser.ConstructorDeclarationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#genericConstructorDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterGenericConstructorDeclaration(CorgiParser.GenericConstructorDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#genericConstructorDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitGenericConstructorDeclaration(CorgiParser.GenericConstructorDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CorgiParser#fieldDeclaration}.
 	 * @param ctx the parse tree
@@ -948,16 +898,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 */
 	void exitCreatedName(CorgiParser.CreatedNameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CorgiParser#innerCreator}.
-	 * @param ctx the parse tree
-	 */
-	void enterInnerCreator(CorgiParser.InnerCreatorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#innerCreator}.
-	 * @param ctx the parse tree
-	 */
-	void exitInnerCreator(CorgiParser.InnerCreatorContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link CorgiParser#arrayCreatorRest}.
 	 * @param ctx the parse tree
 	 */
@@ -977,16 +917,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassCreatorRest(CorgiParser.ClassCreatorRestContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#explicitGenericInvocation}.
-	 * @param ctx the parse tree
-	 */
-	void enterExplicitGenericInvocation(CorgiParser.ExplicitGenericInvocationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#explicitGenericInvocation}.
-	 * @param ctx the parse tree
-	 */
-	void exitExplicitGenericInvocation(CorgiParser.ExplicitGenericInvocationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CorgiParser#nonWildcardTypeArguments}.
 	 * @param ctx the parse tree
@@ -1017,16 +947,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNonWildcardTypeArgumentsOrDiamond(CorgiParser.NonWildcardTypeArgumentsOrDiamondContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#superSuffix}.
-	 * @param ctx the parse tree
-	 */
-	void enterSuperSuffix(CorgiParser.SuperSuffixContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#superSuffix}.
-	 * @param ctx the parse tree
-	 */
-	void exitSuperSuffix(CorgiParser.SuperSuffixContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CorgiParser#explicitGenericInvocationSuffix}.
 	 * @param ctx the parse tree

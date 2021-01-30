@@ -1,5 +1,5 @@
-package GeneratedAntlrClasses;
 // Generated from D:/Projects/CMPILER Projects/InterpreterMP/grammar\Corgi.g4 by ANTLR 4.9.1
+package GeneratedAntlrClasses;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -17,47 +17,17 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCompilationUnit(CorgiParser.CompilationUnitContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CorgiParser#packageDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPackageDeclaration(CorgiParser.PackageDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#importDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitImportDeclaration(CorgiParser.ImportDeclarationContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link CorgiParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTypeDeclaration(CorgiParser.TypeDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CorgiParser#modifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitModifier(CorgiParser.ModifierContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#classOrInterfaceModifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassOrInterfaceModifier(CorgiParser.ClassOrInterfaceModifierContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link CorgiParser#variableModifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariableModifier(CorgiParser.VariableModifierContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#classDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassDeclaration(CorgiParser.ClassDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CorgiParser#typeParameters}.
 	 * @param ctx the parse tree
@@ -131,6 +101,12 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassBodyDeclaration(CorgiParser.ClassBodyDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CorgiParser#start}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStart(CorgiParser.StartContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CorgiParser#memberDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -160,12 +136,6 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitConstructorDeclaration(CorgiParser.ConstructorDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#genericConstructorDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGenericConstructorDeclaration(CorgiParser.GenericConstructorDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CorgiParser#fieldDeclaration}.
 	 * @param ctx the parse tree
@@ -575,12 +545,6 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCreatedName(CorgiParser.CreatedNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CorgiParser#innerCreator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInnerCreator(CorgiParser.InnerCreatorContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link CorgiParser#arrayCreatorRest}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -592,12 +556,6 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClassCreatorRest(CorgiParser.ClassCreatorRestContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#explicitGenericInvocation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExplicitGenericInvocation(CorgiParser.ExplicitGenericInvocationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CorgiParser#nonWildcardTypeArguments}.
 	 * @param ctx the parse tree
@@ -616,12 +574,6 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNonWildcardTypeArgumentsOrDiamond(CorgiParser.NonWildcardTypeArgumentsOrDiamondContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#superSuffix}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSuperSuffix(CorgiParser.SuperSuffixContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CorgiParser#explicitGenericInvocationSuffix}.
 	 * @param ctx the parse tree

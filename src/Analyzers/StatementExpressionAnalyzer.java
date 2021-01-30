@@ -124,7 +124,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
     private void handleFunctionCallWithParams(CorgiParser.ExpressionContext funcExprCtx) {
         CorgiParser.ExpressionContext functionExprCtx = funcExprCtx.expression(0);
-        String functionName = functionExprCtx.Identifier().getText();
+        String functionName = functionExprCtx.getText();
 
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
         this.handleStatementExecution(functionCallCommand);
@@ -133,7 +133,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
     }
 
     private void handleFunctionCallWithNoParams(CorgiParser.ExpressionContext funcExprCtx) {
-        String functionName = funcExprCtx.Identifier().getText();
+        String functionName = funcExprCtx.getText();
 
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
         this.handleStatementExecution(functionCallCommand);
@@ -162,9 +162,10 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
         CorgiParser.ExpressionContext firstExprCtx = exprCtx.expression(0);
 
         if(firstExprCtx != null) {
-            if(exprCtx != this.readRightHandExprCtx) {
-                return (firstExprCtx.Identifier() != null);
-            }
+//            if(exprCtx != this.readRightHandExprCtx) {
+//                return (firstExprCtx.Identifier() != null);
+//            }
+            return true;
         }
 
         return false;

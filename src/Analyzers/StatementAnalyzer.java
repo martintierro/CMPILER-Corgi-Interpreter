@@ -19,7 +19,7 @@ public class StatementAnalyzer {
 
     public void analyze(CorgiParser.StatementContext ctx) {
 
-        if(ctx.PRINT() != null || ctx.PRINTLN() != null) {
+        if(ctx.printStatement() != null) {
             this.handlePrintStatement(ctx);
         }
 
@@ -141,13 +141,13 @@ public class StatementAnalyzer {
             //Console.log(LogType.DEBUG, "End of DO-WHILE expression: " +ctx.parExpression().getText());
         }
         else if(isRETURNStatement(ctx) && ExecutionManager.getInstance().isInFunctionExecution()) {
-            System.out.println("Detected return expression: " +ctx.expression(0).getText());
-            this.handleReturnStatement(ctx.expression(0));
+            System.out.println("Detected return expression: " +ctx.expression().getText());
+            this.handleReturnStatement(ctx.expression());
         }
     }
 
     private void handlePrintStatement(CorgiParser.StatementContext ctx) {
-        System.out.println("HANDLE PRINT: " + ctx.expression().size());
+//        System.out.println("HANDLE PRINT: " + ctx.expression().size());
 
         PrintCommand printCommand = new PrintCommand(ctx);
 
@@ -187,10 +187,10 @@ public class StatementAnalyzer {
         //System.out.println("HANDLE SCAN: " + ctx.expression().getText() + ctx.Identifier().getText());
         ScanCommand scanCommand;
 
-        if(ctx.expression(1) != null)
-            scanCommand = new ScanCommand(ctx.expression(0).getText(), ctx.expression(1), ctx.Identifier().getText());
-        else
-            scanCommand = new ScanCommand(ctx.expression(0).getText(), ctx.Identifier().getText());
+//        if(ctx.expression(1) != null)
+//            scanCommand = new ScanCommand(ctx.expression(0).getText(), ctx.expression(1), ctx.Identifier().getText());
+//        else
+        scanCommand = new ScanCommand(ctx.expression().getText(), ctx.Identifier().getText());
 
         StatementControlOverseer statementControl = StatementControlOverseer.getInstance();
 

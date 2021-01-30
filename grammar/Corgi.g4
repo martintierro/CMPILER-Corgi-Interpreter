@@ -60,7 +60,7 @@ classBody
     ;
 
 interfaceBody
-    :   ':' interfaceBodyDeclaration* 'end'
+    :   '{' interfaceBodyDeclaration* '}'
     ;
 
 classBodyDeclaration
@@ -68,6 +68,13 @@ classBodyDeclaration
     |    block
     |    memberDeclaration
     ;
+
+start
+    :   ';'
+    |    block
+    |    memberDeclaration
+    ;
+
 
 memberDeclaration
     :   methodDeclaration

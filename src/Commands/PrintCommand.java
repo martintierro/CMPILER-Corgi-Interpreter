@@ -15,15 +15,15 @@ public class PrintCommand implements ICommand, ParseTreeListener {
     private CorgiParser.ExpressionContext expressionCtx;
 
     private String statementToPrint = "";
-    private boolean isLN = false;
+//    private boolean isLN = false;
 
     private boolean evaluatedExp = false;
 
     public PrintCommand(CorgiParser.StatementContext sCtx) {
 
-        isLN = sCtx.PRINTLN() != null;
+//        isLN = sCtx.PRINTLN() != null;
 
-        this.expressionCtx = sCtx.expression(0);
+        this.expressionCtx = sCtx.expression();
 
         UndeclaredChecker undeclaredChecker = new UndeclaredChecker(expressionCtx);
         undeclaredChecker.verify();
@@ -36,8 +36,7 @@ public class PrintCommand implements ICommand, ParseTreeListener {
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         treeWalker.walk(this, this.expressionCtx);
 
-        if (isLN)
-            statementToPrint += "\n";
+        statementToPrint += "\n";
 
         //TODO: Print statement on front-end
 

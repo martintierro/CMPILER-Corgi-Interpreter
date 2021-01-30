@@ -30,10 +30,10 @@ public class FunctionCallVerifier implements ParseTreeListener {
         if(ctx instanceof CorgiParser.ExpressionContext) {
             CorgiParser.ExpressionContext exprCtx = (CorgiParser.ExpressionContext) ctx;
             if (EvaluationCommand.isFunctionCall(exprCtx)) {
-                if(exprCtx.expression(0).Identifier() == null)
-                    return;
+//                if(exprCtx.expression(0).Identifier() == null)
+//                    return;
 
-                String functionName = exprCtx.expression(0).Identifier().getText();
+                String functionName = exprCtx.expression(0).getText();
 
                 MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
                 CorgiFunction corgiFunction = mainScope.getFunction(functionName);

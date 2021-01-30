@@ -1,6 +1,5 @@
-package GeneratedAntlrClasses;
 // Generated from D:/Projects/CMPILER Projects/InterpreterMP/grammar\Corgi.g4 by ANTLR 4.9.1
-
+package GeneratedAntlrClasses;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -28,30 +27,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPackageDeclaration(CorgiParser.PackageDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPackageDeclaration(CorgiParser.PackageDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterImportDeclaration(CorgiParser.ImportDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitImportDeclaration(CorgiParser.ImportDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterTypeDeclaration(CorgiParser.TypeDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -64,30 +39,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterModifier(CorgiParser.ModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitModifier(CorgiParser.ModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterClassOrInterfaceModifier(CorgiParser.ClassOrInterfaceModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitClassOrInterfaceModifier(CorgiParser.ClassOrInterfaceModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterVariableModifier(CorgiParser.VariableModifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -95,18 +46,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariableModifier(CorgiParser.VariableModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterClassDeclaration(CorgiParser.ClassDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitClassDeclaration(CorgiParser.ClassDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -256,6 +195,18 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStart(CorgiParser.StartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStart(CorgiParser.StartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMemberDeclaration(CorgiParser.MemberDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -311,18 +262,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitConstructorDeclaration(CorgiParser.ConstructorDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterGenericConstructorDeclaration(CorgiParser.GenericConstructorDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitGenericConstructorDeclaration(CorgiParser.GenericConstructorDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1144,18 +1083,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInnerCreator(CorgiParser.InnerCreatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInnerCreator(CorgiParser.InnerCreatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterArrayCreatorRest(CorgiParser.ArrayCreatorRestContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1175,18 +1102,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitClassCreatorRest(CorgiParser.ClassCreatorRestContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExplicitGenericInvocation(CorgiParser.ExplicitGenericInvocationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExplicitGenericInvocation(CorgiParser.ExplicitGenericInvocationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1223,18 +1138,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNonWildcardTypeArgumentsOrDiamond(CorgiParser.NonWildcardTypeArgumentsOrDiamondContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSuperSuffix(CorgiParser.SuperSuffixContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSuperSuffix(CorgiParser.SuperSuffixContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
