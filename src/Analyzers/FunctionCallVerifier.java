@@ -1,7 +1,7 @@
 package Analyzers;
 
 import ErrorChecker.ParameterMismatchChecker;
-import Evaluation.EvaluationCommand;
+import Commands.EvaluationCommand;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Semantics.MainScope;

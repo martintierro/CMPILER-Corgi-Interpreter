@@ -3,7 +3,7 @@ package ErrorChecker;
 import Builder.BuildChecker;
 import Builder.ParserHandler;
 import Builder.SemanticErrorDictionary;
-import Evaluation.EvaluationCommand;
+import Commands.EvaluationCommand;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;

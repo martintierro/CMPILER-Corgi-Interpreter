@@ -21,7 +21,7 @@ public class Driver {
             parser.removeErrorListeners();
             parser.addErrorListener(CustomErrorListener.INSTANCE);
 
-            ParseTree tree = parser.start(); // parse the content and get the tree
+            ParseTree tree = parser.mainDeclaration(); // parse the content and get the tree
 
             CorgiBaseVisitor visitor = new CorgiBaseVisitor();
             visitor.visit(tree);

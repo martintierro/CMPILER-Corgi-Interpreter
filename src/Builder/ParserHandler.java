@@ -1,5 +1,6 @@
 package Builder;
 
+import GeneratedAntlrClasses.CorgiBaseListener;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import org.antlr.runtime.ANTLRInputStream;
@@ -48,7 +49,8 @@ public class ParserHandler {
         ParserRuleContext parserRuleContext = this.sharedParser.compilationUnit();
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();
-        treeWalker.walk(new JavaBaseImplementor(), parserRuleContext);
+      //  treeWalker.walk(new JavaBaseImplementor(), parserRuleContext);
+        treeWalker.walk(new CorgiBaseListener(), parserRuleContext);
 
     }
 

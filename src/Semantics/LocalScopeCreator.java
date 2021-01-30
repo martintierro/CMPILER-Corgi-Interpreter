@@ -88,4 +88,9 @@ public class LocalScopeCreator {
         return null;
     }
 
+    public static void reset() {
+        instance.activeLocalScope = null;
+    }
+
+
 }
