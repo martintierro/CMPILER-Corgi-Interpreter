@@ -1,5 +1,7 @@
 // Generated from D:/Projects/CMPILER Projects/InterpreterMP/grammar\Corgi.g4 by ANTLR 4.9.1
 package GeneratedAntlrClasses;
+import Analyzers.ClassAnalyzer;
+import Analyzers.MainAnalyzer;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -171,6 +173,21 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStart(CorgiParser.StartContext ctx) {
+		ClassAnalyzer classAnalyzer = new ClassAnalyzer();
+		classAnalyzer.analyze(ctx);
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStart(CorgiParser.StartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterInterfaceBody(CorgiParser.InterfaceBodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -195,18 +212,6 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStart(CorgiParser.StartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStart(CorgiParser.StartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterMemberDeclaration(CorgiParser.MemberDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -219,7 +224,10 @@ public class CorgiBaseListener implements CorgiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMainDeclaration(CorgiParser.MainDeclarationContext ctx) { }
+	@Override public void enterMainDeclaration(CorgiParser.MainDeclarationContext ctx) {
+		MainAnalyzer mainAnalyzer = new MainAnalyzer();
+		mainAnalyzer.analyze(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *

@@ -1,12 +1,16 @@
 package Analyzers;
 
+import Builder.BuildChecker;
+import Builder.SemanticErrorDictionary;
 import ErrorChecker.MultipleFuncDecChecker;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
+import Representations.FunctionType;
 import Semantics.LocalScopeCreator;
 import Semantics.MainScope;
 import Utlities.IdentifiedTokenHolder;
+import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -14,20 +18,21 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FunctionAnalyzer implements ParseTreeListener {
-    private final static String TAG = "MobiProg_MethodAnalyzer";
 
     private MainScope mainScope;
     private IdentifiedTokenHolder identifiedTokenHolder;
-    private CorgiFunction corgiFunction;
+    private CorgiFunction declaredCorgiFunction;
 
-    public FunctionAnalyzer(IdentifiedTokenHolder identifiedTokenHolder, MainScope mainScope) {
-        this.identifiedTokenHolder = identifiedTokenHolder;
+    private boolean paramsFlag = false;
+
+    public FunctionAnalyzer(IdentifiedTokenHolder identifiedTokens, MainScope mainScope) {
+        this.identifiedTokenHolder = identifiedTokens;
         this.mainScope = mainScope;
-        this.corgiFunction = new CorgiFunction();
+        this.declaredCorgiFunction = new CorgiFunction();
     }
 
     public void analyze(CorgiParser.MethodDeclarationContext ctx) {
-        ExecutionManager.getInstance().openFunctionExecution(this.corgiFunction);
+        ExecutionManager.getInstance().openFunctionExecution(this.declaredCorgiFunction);
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         treeWalker.walk(this, ctx);
@@ -63,27 +68,44 @@ public class FunctionAnalyzer implements ParseTreeListener {
     @Override
     public void exitEveryRule(ParserRuleContext ctx) {
         if(ctx instanceof CorgiParser.MethodDeclarationContext) {
+
+            CorgiParser.MethodDeclarationContext mdCtx = (CorgiParser.MethodDeclarationContext) ctx;
+
+            if (!this.declaredCorgiFunction.isValidReturn()) {
+
+                int lineNumber = 0;
+
+                if (mdCtx.Identifier() != null)
+                    lineNumber = mdCtx.Identifier().getSymbol().getLine();
+
+                BuildChecker.reportCustomError(SemanticErrorDictionary.NO_RETURN_STATEMENT, "", this.declaredCorgiFunction.getFunctionName(), lineNumber);
+            }
+
+
             ExecutionManager.getInstance().closeFunctionExecution();
         }
     }
 
     private void analyzeMethod(ParserRuleContext ctx) {
 
-        if(ctx instanceof CorgiParser.TypeTypeContext) {
+        if(ctx instanceof CorgiParser.TypeTypeContext && !paramsFlag) {
             CorgiParser.TypeTypeContext typeCtx = (CorgiParser.TypeTypeContext) ctx;
 
             //return type is a primitive type
             if(typeCtx.primitiveType() != null) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
-                this.corgiFunction.setReturnType(CorgiFunction.identifyFunctionType(primitiveTypeCtx.getText()));
+                this.declaredCorgiFunction.setReturnType(CorgiFunction.identifyFunctionType(primitiveTypeCtx.getText()));
             }
             //return type is a string or a class type
-//            else {
-//                this.analyzeClassOrInterfaceType(typeCtx.classOrInterfaceType());
-//            }
+            else {
+                this.analyzeClassOrInterfaceType(typeCtx.classOrInterfaceType());
+            }
         }
 
         else if(ctx instanceof CorgiParser.FormalParametersContext) {
+
+            paramsFlag = true;
+
             CorgiParser.FormalParametersContext formalParamsCtx = (CorgiParser.FormalParametersContext) ctx;
             this.analyzeParameters(formalParamsCtx);
             this.storeCorgiFunction();
@@ -94,21 +116,31 @@ public class FunctionAnalyzer implements ParseTreeListener {
             CorgiParser.BlockContext blockCtx = ((CorgiParser.MethodBodyContext) ctx).block();
 
             BlockAnalyzer blockAnalyzer = new BlockAnalyzer();
-            this.corgiFunction.setParentLocalScope(LocalScopeCreator.getInstance().getActiveLocalScope());
+            this.declaredCorgiFunction.setParentLocalScope(LocalScopeCreator.getInstance().getActiveLocalScope());
             blockAnalyzer.analyze(blockCtx);
 
         }
 
     }
 
+    private void analyzeClassOrInterfaceType(CorgiParser.ClassOrInterfaceTypeContext classOrInterfaceCtx) {
+        //a string identified
+        if(classOrInterfaceCtx.getText().contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
+            this.declaredCorgiFunction.setReturnType(FunctionType.STRING_TYPE);
+        }
+        //a class identified
+        else {
+            //Console.log(LogType.DEBUG, "Class identified: " + classOrInterfaceCtx.getText());
+        }
+    }
 
     private void analyzeIdentifier(TerminalNode identifier) {
-        this.corgiFunction.setFunctionName(identifier.getText());
+        this.declaredCorgiFunction.setFunctionName(identifier.getText());
     }
 
     private void analyzeParameters(CorgiParser.FormalParametersContext formalParamsCtx) {
         if(formalParamsCtx.formalParameterList() != null) {
-            ParameterAnalyzer parameterAnalyzer = new ParameterAnalyzer(this.corgiFunction);
+            ParameterAnalyzer parameterAnalyzer = new ParameterAnalyzer(this.declaredCorgiFunction);
             parameterAnalyzer.analyze(formalParamsCtx.formalParameterList());
         }
     }
@@ -117,10 +149,11 @@ public class FunctionAnalyzer implements ParseTreeListener {
      * Stores the created function in its corresponding class scope
      */
     private void storeCorgiFunction() {
-        if(this.identifiedTokenHolder.containsTokens(MainAnalyzer.ACCESS_CONTROL_KEY)) {
-            String accessToken = this.identifiedTokenHolder.getToken(MainAnalyzer.ACCESS_CONTROL_KEY);
+        if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.ACCESS_CONTROL_KEY)) {
+            String accessToken = this.identifiedTokenHolder.getToken(ClassAnalyzer.ACCESS_CONTROL_KEY);
 
-            this.mainScope.addFunction(this.corgiFunction.getFunctionName(), this.corgiFunction);
+            this.mainScope.addFunction(this.declaredCorgiFunction.getFunctionName(), this.declaredCorgiFunction);
+
 
             this.identifiedTokenHolder.clearTokens(); //clear tokens for reuse
         }

@@ -284,12 +284,12 @@ public class StatementAnalyzer {
             return (finallyTokenList.size() != 0);
         }
         */
-//    public static IAttemptCommand.CatchTypeEnum determineCatchType(CorgiParser.CatchTypeContext ctx) {
-//        if (ctx.getTokens(CorgiLexer.ARITHMETIC_EXCEPTION).size() > 0) {
+//    public static IAttemptCommand.CatchTypeEnum determineCatchType(CatchTypeContext ctx) {
+//        if (ctx.getTokens(BaracoLexer.ARITHMETIC_EXCEPTION).size() > 0) {
 //            return IAttemptCommand.CatchTypeEnum.ARITHMETIC_EXCEPTION;
-//        } else if (ctx.getTokens(CorgiLexer.ARRAY_BOUNDS_EXCEPTION).size() > 0) {
+//        } else if (ctx.getTokens(BaracoLexer.ARRAY_BOUNDS_EXCEPTION).size() > 0) {
 //            return IAttemptCommand.CatchTypeEnum.ARRAY_OUT_OF_BOUNDS;
-//        } else if (ctx.getTokens(CorgiLexer.NEGATIVE_ARRSIZE_EXCEPTION).size() > 0) {
+//        } else if (ctx.getTokens(BaracoLexer.NEGATIVE_ARRSIZE_EXCEPTION).size() > 0) {
 //            return IAttemptCommand.CatchTypeEnum.NEGATIVE_ARRAY_SIZE;
 //        }
 //

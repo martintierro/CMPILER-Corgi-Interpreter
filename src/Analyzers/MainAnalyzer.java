@@ -1,7 +1,11 @@
 package Analyzers;
 
+import Builder.ParserHandler;
+import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
+import Semantics.LocalScope;
+import Semantics.LocalScopeCreator;
 import Semantics.MainScope;
 import Semantics.SymbolTableManager;
 import Utlities.IdentifiedTokenHolder;
@@ -15,154 +19,51 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.List;
 
 public class MainAnalyzer implements ParseTreeListener {
-    private final static String TAG = "MobiProg_ClassAnalyzer";
-
-    private MainScope mainScope;
-    private IdentifiedTokenHolder identifiedTokenHolder;
-
-    public final static String ACCESS_CONTROL_KEY = "ACCESS_CONTROL_KEY";
-    public final static String CONST_CONTROL_KEY = "CONST_CONSTROL_KEY";
-    public final static String STATIC_CONTROL_KEY = "STATIC_CONTROL_KEY";
-    public final static String PRIMITIVE_TYPE_KEY = "PRIMITIVE_TYPE_KEY";
-    public final static String IDENTIFIER_KEY = "IDENTIFIER_KEY";
-    public final static String IDENTIFIER_VALUE_KEY = "IDENTIFIER_VALUE_KEY";
-
     public MainAnalyzer() {
 
     }
 
     public void analyze(CorgiParser.MainDeclarationContext ctx) {
-        this.mainScope = new MainScope();
-        this.identifiedTokenHolder = new IdentifiedTokenHolder();
+        if(!ExecutionManager.getInstance().hasFoundEntryPoint()) {
+//            ExecutionManager.getInstance().reportFoundEntryPoint(ParserHandler.getInstance().getCurrentClassName());
 
-        ParseTreeWalker treeWalker = new ParseTreeWalker();
-        treeWalker.walk(this, ctx);
-    }
+            //automatically create a local scope for main() whose parent is the class scope
+            MainScope classScope = SymbolTableManager.getInstance().getMainScope();
+            LocalScope localScope = LocalScopeCreator.getInstance().openLocalScope();
+            localScope.setParent(classScope);
 
-    @Override
-    public void visitTerminal(TerminalNode node) {
-        // TODO Auto-generated method stub
+            ParseTreeWalker treeWalker = new ParseTreeWalker();
+            treeWalker.walk(this, ctx);
 
-    }
 
-    @Override
-    public void visitErrorNode(ErrorNode node) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void enterEveryRule(ParserRuleContext ctx) {
-//        if(ctx instanceof CorgiParser.ClassDeclarationContext) {
-            SymbolTableManager.getInstance().getMainScope();
-//        }
-
-        this.analyzeClassMembers(ctx);
-    }
-
-    @Override
-    public void exitEveryRule(ParserRuleContext ctx) {
-
-    }
-
-    private void analyzeClassMembers(ParserRuleContext ctx) {
-//        if(ctx instanceof CorgiParser.ClassOrInterfaceModifierContext) {
-//            CorgiParser.ClassOrInterfaceModifierContext classModifierCtx = (CorgiParser.ClassOrInterfaceModifierContext) ctx;
-//
-//            this.analyzeModifier(classModifierCtx);
-//        }
-
-        if(ctx instanceof CorgiParser.FieldDeclarationContext) {
-            CorgiParser.FieldDeclarationContext fieldCtx = (CorgiParser.FieldDeclarationContext) ctx;
-
-            if(fieldCtx.typeType() != null) {
-                CorgiParser.TypeTypeContext typeCtx = fieldCtx.typeType();
-
-                //check if its a primitive type
-                if(MainAnalyzer.isPrimitiveDeclaration(typeCtx)) {
-                    CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
-                    this.identifiedTokenHolder.addToken(PRIMITIVE_TYPE_KEY, primitiveTypeCtx.getText());
-
-                    //create a field analyzer to walk through declarations
-                    FieldAnalyzer fieldAnalyzer = new FieldAnalyzer(this.identifiedTokenHolder, this.mainScope);
-                    fieldAnalyzer.analyze(fieldCtx.variableDeclarators());
-
-                    //clear tokens for reause
-                    this.identifiedTokenHolder.clearTokens();
-                }
-
-                //check if its array declaration
-                else if(MainAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
-//                    Console.log(LogType.DEBUG, "Primitive array declaration: " +fieldCtx.getText());
-                    ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, this.mainScope);
-                    arrayAnalyzer.analyze(fieldCtx);
-                }
-
-                //this is for class type ctx
-                else {
-
-                    //a string identified
-                    if(typeCtx.classOrInterfaceType().getText().contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
-                        CorgiParser.ClassOrInterfaceTypeContext classInterfaceCtx = typeCtx.classOrInterfaceType();
-                        this.identifiedTokenHolder.addToken(PRIMITIVE_TYPE_KEY, classInterfaceCtx.getText());
-                    }
-
-                    //create a field analyzer to walk through declarations
-                    FieldAnalyzer fieldAnalyzer = new FieldAnalyzer(this.identifiedTokenHolder, this.mainScope);
-                    fieldAnalyzer.analyze(fieldCtx.variableDeclarators());
-
-                    //clear tokens for reause
-                    this.identifiedTokenHolder.clearTokens();
-                }
-            }
         }
-
-        else if(ctx instanceof CorgiParser.MethodDeclarationContext) {
-            CorgiParser.MethodDeclarationContext methodDecCtx = (CorgiParser.MethodDeclarationContext) ctx;
-            MethodAnalyzer methodAnalyzer = new MethodAnalyzer(this.identifiedTokenHolder, this.mainScope);
-            methodAnalyzer.analyze(methodDecCtx);
-
-            //reuse tokens
-            this.identifiedTokenHolder.clearTokens();
+        else {
+            System.out.println("Already found main in " + ExecutionManager.getInstance().getEntryClassName());
         }
     }
 
-    public static boolean isPrimitiveDeclaration(CorgiParser.TypeTypeContext typeCtx) {
-        if(typeCtx.primitiveType() != null) {
-            List<TerminalNode> lBrackToken = typeCtx.getTokens(CorgiLexer.LBRACK);
-            List<TerminalNode> rBrackToken = typeCtx.getTokens(CorgiLexer.RBRACK);
+    @Override
+    public void visitTerminal(TerminalNode terminalNode) {
 
-            return (lBrackToken.size() == 0 && rBrackToken.size() == 0);
-        }
-
-        return false;
     }
 
-    public static boolean isPrimitiveArrayDeclaration(CorgiParser.TypeTypeContext typeCtx) {
-        if(typeCtx.primitiveType() != null) {
-            List<TerminalNode> lBrackToken = typeCtx.getTokens(CorgiLexer.LBRACK);
-            List<TerminalNode> rBrackToken = typeCtx.getTokens(CorgiLexer.RBRACK);
+    @Override
+    public void visitErrorNode(ErrorNode errorNode) {
 
-            return (lBrackToken.size() > 0 && rBrackToken.size() > 0);
-        }
-
-        return false;
     }
 
-//    private void analyzeModifier(CorgiParser.ClassOrInterfaceModifierContext ctx) {
-//        if(ctx.getTokens(CorgiLexer.PUBLIC).size() > 0 || ctx.getTokens(CorgiLexer.PRIVATE).size() > 0
-//                || ctx.getTokens(CorgiLexer.PROTECTED).size() > 0) {
-////            Console.log(LogType.DEBUG, "Detected accessor: " +ctx.getText());
-//            this.identifiedTokenHolder.addToken(ACCESS_CONTROL_KEY, ctx.getText());
-//        }
-//        else if(ctx.getTokens(CorgiLexer.FINAL).size() > 0) {
-////            Console.log(LogType.DEBUG, "Detected const: " +ctx.getText());
-//            this.identifiedTokenHolder.addToken(CONST_CONTROL_KEY, ctx.getText());
-//        }
-//        else if(ctx.getTokens(CorgiLexer.STATIC).size() > 0) {
-////            Console.log(LogType.DEBUG, "Detected static: " +ctx.getText());
-//            this.identifiedTokenHolder.addToken(STATIC_CONTROL_KEY, ctx.getText());
-//        }
-//    }
+    @Override
+    public void enterEveryRule(ParserRuleContext parserRuleContext) {
+        if(parserRuleContext instanceof CorgiParser.MethodBodyContext) {
+            CorgiParser.BlockContext blockCtx = ((CorgiParser.MethodBodyContext) parserRuleContext).block();
 
+            BlockAnalyzer blockAnalyzer = new BlockAnalyzer();
+            blockAnalyzer.analyze(blockCtx);
+        }
+    }
+
+    @Override
+    public void exitEveryRule(ParserRuleContext parserRuleContext) {
+
+    }
 }

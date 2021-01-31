@@ -44,14 +44,14 @@ public class FunctionCallCommand implements ICommand {
     }
 
     private void verifyParameters() {
-        if (this.exprCtx.arguments() == null || this.exprCtx.arguments().expressionList() == null
+        if(this.exprCtx.arguments() == null || this.exprCtx.arguments().expressionList() == null
                 || this.exprCtx.arguments().expressionList().expression() == null) {
             return;
         }
 
         List<CorgiParser.ExpressionContext> exprCtxList = this.exprCtx.arguments().expressionList().expression();
         //map values in parameters
-        for (int i = 0; i < exprCtxList.size(); i++) {
+        for(int i = 0; i < exprCtxList.size(); i++) {
             CorgiParser.ExpressionContext parameterExprCtx = exprCtxList.get(i);
             this.corgiFunction.verifyParameterByValueAt(parameterExprCtx, i);
         }
@@ -75,10 +75,10 @@ public class FunctionCallCommand implements ICommand {
         List<CorgiParser.ExpressionContext> exprCtxList = this.exprCtx.expressionList().expression();
 
         //map values in parameters
-        for (int i = 0; i < exprCtxList.size(); i++) {
+        for(int i = 0; i < exprCtxList.size(); i++) {
             CorgiParser.ExpressionContext parameterExprCtx = exprCtxList.get(i);
 
-            if (this.corgiFunction.getParameterAt(i).getPrimitiveType() == PrimitiveType.ARRAY) {
+            if(this.corgiFunction.getParameterAt(i).getPrimitiveType() == PrimitiveType.ARRAY) {
                 CorgiValue corgiValue = VariableSearcher.searchVariable(parameterExprCtx.getText());
                 this.corgiFunction.mapArrayAt(corgiValue, i, parameterExprCtx.getText());
             } else {

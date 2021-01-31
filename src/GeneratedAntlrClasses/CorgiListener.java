@@ -138,6 +138,16 @@ public interface CorgiListener extends ParseTreeListener {
 	 */
 	void exitClassBody(CorgiParser.ClassBodyContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CorgiParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void enterStart(CorgiParser.StartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CorgiParser#start}.
+	 * @param ctx the parse tree
+	 */
+	void exitStart(CorgiParser.StartContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CorgiParser#interfaceBody}.
 	 * @param ctx the parse tree
 	 */
@@ -157,16 +167,6 @@ public interface CorgiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassBodyDeclaration(CorgiParser.ClassBodyDeclarationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CorgiParser#start}.
-	 * @param ctx the parse tree
-	 */
-	void enterStart(CorgiParser.StartContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CorgiParser#start}.
-	 * @param ctx the parse tree
-	 */
-	void exitStart(CorgiParser.StartContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CorgiParser#memberDeclaration}.
 	 * @param ctx the parse tree

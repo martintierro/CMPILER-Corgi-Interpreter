@@ -89,6 +89,12 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassBody(CorgiParser.ClassBodyContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CorgiParser#start}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStart(CorgiParser.StartContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CorgiParser#interfaceBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -100,12 +106,6 @@ public interface CorgiVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClassBodyDeclaration(CorgiParser.ClassBodyDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CorgiParser#start}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStart(CorgiParser.StartContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CorgiParser#memberDeclaration}.
 	 * @param ctx the parse tree

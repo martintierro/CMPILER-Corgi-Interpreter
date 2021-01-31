@@ -17,13 +17,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FieldAnalyzer implements ParseTreeListener {
 
-    private final static String TAG = "MobiProg_FieldAnalyzer";
-
     private MainScope mainScope;
-    private IdentifiedTokenHolder identifiedTokens;
+    private IdentifiedTokenHolder identifiedTokenHolder;
 
-    public FieldAnalyzer(IdentifiedTokenHolder identifiedTokens, MainScope mainScope) {
-        this.identifiedTokens = identifiedTokens;
+    public FieldAnalyzer(IdentifiedTokenHolder identifiedTokenHolder, MainScope mainScope) {
+        this.identifiedTokenHolder = identifiedTokenHolder;
         this.mainScope = mainScope;
     }
 
@@ -53,16 +51,16 @@ public class FieldAnalyzer implements ParseTreeListener {
             MultipleVarDecChecker multipleDeclaredChecker = new MultipleVarDecChecker(varCtx.variableDeclaratorId());
             multipleDeclaredChecker.verify();
 
-            this.identifiedTokens.addToken(MainAnalyzer.IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
-            this.createMobiValue();
+            this.identifiedTokenHolder.addToken(ClassAnalyzer.IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
+            this.createCorgiValue();
 
             if(varCtx.variableInitializer() != null) {
 
                 //we do not evaluate strings.
-                if(this.identifiedTokens.containsTokens(MainAnalyzer.PRIMITIVE_TYPE_KEY)) {
-                    String primitiveTypeString = this.identifiedTokens.getToken(MainAnalyzer.PRIMITIVE_TYPE_KEY);
+                if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.PRIMITIVE_TYPE_KEY)) {
+                    String primitiveTypeString = this.identifiedTokenHolder.getToken(ClassAnalyzer.PRIMITIVE_TYPE_KEY);
                     if(primitiveTypeString.contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
-                        this.identifiedTokens.addToken(MainAnalyzer.IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
+                        this.identifiedTokenHolder.addToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
                         return;
                     }
                 }
@@ -70,9 +68,9 @@ public class FieldAnalyzer implements ParseTreeListener {
                 MappingCommand mappingCommand = new MappingCommand(varCtx.variableDeclaratorId().getText(), varCtx.variableInitializer().expression());
                 ExecutionManager.getInstance().addCommand(mappingCommand);
 
-                CorgiValue declaredMobiValue = this.mainScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
+                CorgiValue corgiValue = this.mainScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
-                TypeChecker typeChecker = new TypeChecker(declaredMobiValue, varCtx.variableInitializer().expression());
+                TypeChecker typeChecker = new TypeChecker(corgiValue, varCtx.variableInitializer().expression());
                 typeChecker.verify();
             }
 
@@ -88,19 +86,18 @@ public class FieldAnalyzer implements ParseTreeListener {
     /*
      * Attempts to create an intermediate representation of the variable once a sufficient amount of info has been retrieved.
      */
-    private void createMobiValue() {
+    private void createCorgiValue() {
 
-        if(this.identifiedTokens.containsTokens(MainAnalyzer.ACCESS_CONTROL_KEY, MainAnalyzer.PRIMITIVE_TYPE_KEY, MainAnalyzer.IDENTIFIER_KEY)) {
+        if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.PRIMITIVE_TYPE_KEY, ClassAnalyzer.IDENTIFIER_KEY)) {
 
-            String classModifierString = this.identifiedTokens.getToken(MainAnalyzer.ACCESS_CONTROL_KEY);
-            String primitiveTypeString = this.identifiedTokens.getToken(MainAnalyzer.PRIMITIVE_TYPE_KEY);
-            String identifierString = this.identifiedTokens.getToken(MainAnalyzer.IDENTIFIER_KEY);
+            String primitiveTypeString = this.identifiedTokenHolder.getToken(ClassAnalyzer.PRIMITIVE_TYPE_KEY);
+            String identifierString = this.identifiedTokenHolder.getToken(ClassAnalyzer.IDENTIFIER_KEY);
             String identifierValueString = null;
 
-//            Console.log(LogType.DEBUG, "Class modifier: " +classModifierString);
+            //Console.log(LogType.DEBUG, "Class modifier: " +classModifierString);
 
-            if(this.identifiedTokens.containsTokens(MainAnalyzer.IDENTIFIER_VALUE_KEY)) {
-                identifierValueString = this.identifiedTokens.getToken(MainAnalyzer.IDENTIFIER_VALUE_KEY);
+            if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.IDENTIFIER_VALUE_KEY)) {
+                identifierValueString = this.identifiedTokenHolder.getToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY);
                 this.mainScope.addInitializedVariable(primitiveTypeString, identifierString, identifierValueString);
             }
             else {
@@ -109,15 +106,15 @@ public class FieldAnalyzer implements ParseTreeListener {
 
             CorgiValue declaredValue = this.mainScope.searchVariableIncludingLocal(identifierString);
             //verify if the declared variable is a constant
-            if(this.identifiedTokens.containsTokens(MainAnalyzer.CONST_CONTROL_KEY)) {
+            if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.CONST_CONTROL_KEY)) {
                 declaredValue.makeFinal();
             }
 
 
 
             //remove the following tokens
-            this.identifiedTokens.removeToken(MainAnalyzer.IDENTIFIER_KEY);
-            this.identifiedTokens.removeToken(MainAnalyzer.IDENTIFIER_VALUE_KEY);
+            this.identifiedTokenHolder.removeToken(ClassAnalyzer.IDENTIFIER_KEY);
+            this.identifiedTokenHolder.removeToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY);
         }
     }
 }

@@ -59,6 +59,10 @@ classBody
     :   '{' classBodyDeclaration* '}'
     ;
 
+start
+    : classBodyDeclaration*
+    ;
+
 interfaceBody
     :   '{' interfaceBodyDeclaration* '}'
     ;
@@ -69,11 +73,11 @@ classBodyDeclaration
     |    memberDeclaration
     ;
 
-start
-    :   ';'
-    |    block
-    |    memberDeclaration
-    ;
+//start
+//    :   ';'
+//    |    block
+//    |    memberDeclaration
+//    ;
 
 
 memberDeclaration

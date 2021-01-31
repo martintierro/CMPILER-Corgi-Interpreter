@@ -203,8 +203,12 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
         Pattern functionPattern = Pattern.compile("([a-zA-Z0-9]+)\\(([ ,.a-zA-Z0-9]*)\\)");
 
         if (exprCtx.expressionList() != null || functionPattern.matcher(exprCtx.getText()).matches()) {
+
             return true;
         } else {
+            System.out.println(exprCtx.expressionList());
+            System.out.println(functionPattern.matcher(exprCtx.getText()).matches());
+            System.out.println("isnotfunction");
             return false;
         }
     }

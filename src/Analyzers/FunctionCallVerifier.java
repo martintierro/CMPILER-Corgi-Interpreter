@@ -1,5 +1,6 @@
 package Analyzers;
 
+import Builder.ParserHandler;
 import ErrorChecker.ParameterMismatchChecker;
 import Commands.EvaluationCommand;
 import GeneratedAntlrClasses.CorgiParser;
@@ -30,8 +31,8 @@ public class FunctionCallVerifier implements ParseTreeListener {
         if(ctx instanceof CorgiParser.ExpressionContext) {
             CorgiParser.ExpressionContext exprCtx = (CorgiParser.ExpressionContext) ctx;
             if (EvaluationCommand.isFunctionCall(exprCtx)) {
-//                if(exprCtx.expression(0).Identifier() == null)
-//                    return;
+                if(exprCtx.expression(0) == null)
+                    return;
 
                 String functionName = exprCtx.expression(0).getText();
 

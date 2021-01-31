@@ -5,39 +5,54 @@ import Representations.CorgiValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LocalScope implements IScope{
+public class LocalScope implements IScope {
 
     private IScope parentScope;
     private ArrayList<LocalScope> childScopeList = null;
 
     private HashMap<String, CorgiValue> localVariables = null;
 
-    public LocalScope(){
+    public LocalScope() {
         this.parentScope = null;
-        localVariables = new HashMap<>();
-        childScopeList = new ArrayList<>();
     }
 
-    public LocalScope(IScope parentScope){
-        this.parentScope = parentScope;
-        localVariables = new HashMap<>();
-        childScopeList = new ArrayList<>();
-    }
-
-    public void setParent(IScope parentScope){
+    public LocalScope(IScope parentScope) {
         this.parentScope = parentScope;
     }
 
-    public void addChild(LocalScope localScope){
+    /*
+     * Initialize the moment a variable is about to be placed.
+     */
+    public void initializeLocalVariableMap() {
+        if(this.localVariables == null) {
+            this.localVariables = new HashMap<>();
+        }
+    }
+
+    /*
+     * Initialize the child list the moment a child scope is about to be placed
+     */
+    public void initializeChildList() {
+        if(this.childScopeList == null) {
+            this.childScopeList = new ArrayList<LocalScope>();
+        }
+    }
+
+    public void setParent(IScope parentScope) {
+        this.parentScope = parentScope;
+    }
+
+    public void addChild(LocalScope localScope) {
+        this.initializeChildList();
+
         this.childScopeList.add(localScope);
     }
 
-    @Override
-    public boolean isParent(){
+    public boolean isParent() {
         return (this.parentScope == null);
     }
 
-    public IScope getParent(){
+    public IScope getParent() {
         return this.parentScope;
     }
 
@@ -57,42 +72,85 @@ public class LocalScope implements IScope{
 
     @Override
     public CorgiValue searchVariableIncludingLocal(String identifier) {
-        if(this.containsVariable(identifier)){
+        if(this.containsVariable(identifier)) {
             return this.localVariables.get(identifier);
-        }else{
-            System.err.println(identifier + " not found!");
+        }
+        else {
             return null;
         }
     }
 
     public boolean containsVariable(String identifier) {
-        return this.localVariables != null && this.localVariables.containsKey(identifier);
+        if(this.localVariables!= null && this.localVariables.containsKey(identifier)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public void addEmptyVariable(String primitiveTypeString, String identifierString){
-        CorgiValue value = CorgiValue.createEmptyVariable(primitiveTypeString);
-        this.localVariables.put(identifierString, value);
+    /*
+     * Adds an empty variable based from keywords
+     */
+    public void addEmptyVariable(String primitiveTypeString, String identifierString) {
+        this.initializeLocalVariableMap();
+
+        CorgiValue corgiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
+        this.localVariables.put(identifierString, corgiValue);
     }
 
-    public void addInitializedVariable(String primitiveTypeString, String identifierString, String valueString){
+    /*
+     * Adds an initialized variable based from keywords
+     */
+    public void addInitializedVariable(String primitiveTypeString, String identifierString, String valueString) {
+        this.initializeLocalVariableMap();
+
         this.addEmptyVariable(primitiveTypeString, identifierString);
         CorgiValue corgiValue = this.localVariables.get(identifierString);
         corgiValue.setValue(valueString);
     }
 
+    public void addFinalEmptyVariable(String primitiveTypeString, String identifierString) {
+        this.initializeLocalVariableMap();
+
+        CorgiValue corgiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
+        corgiValue.makeFinal();
+        this.localVariables.put(identifierString, corgiValue);
+    }
+
+    public void addFinalInitVariable(String primitiveTypeString, String identifierString, String valueString) {
+        this.initializeLocalVariableMap();
+
+        this.addEmptyVariable(primitiveTypeString, identifierString);
+        CorgiValue corgiValue = this.localVariables.get(identifierString);
+        corgiValue.setValue(valueString);
+        corgiValue.makeFinal();
+    }
+
     public void addCorgiValue(String identifier, CorgiValue corgiValue) {
+        this.initializeLocalVariableMap();
         this.localVariables.put(identifier, corgiValue);
     }
 
-    public int getDepth(){
+    /*
+     * Returns the depth of this local scope.
+     */
+    public int getDepth() {
         int depthCount = -1;
+
         LocalScope scope = (LocalScope) this;
-        while(scope != null){
+
+        while(scope != null) {
             depthCount++;
+
             IScope abstractScope = scope.getParent();
+
+            if(abstractScope instanceof MainScope)
+                break;
+
             scope = (LocalScope) abstractScope;
         }
+
         return depthCount;
     }
-
 }
