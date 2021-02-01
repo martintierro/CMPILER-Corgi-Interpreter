@@ -11,26 +11,13 @@ import GeneratedAntlrClasses.CorgiParser;
 import Semantics.LocalScope;
 import Semantics.MainScope;
 import Utlities.KeywordRecognizer;
-import Representations.PrimitiveType;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
 public class CorgiFunction implements IControlledCommand{
-
-    public enum FunctionType {
-        INT_TYPE,
-        BOOLEAN_TYPE,
-        BYTE_TYPE,
-        CHAR_TYPE,
-        DOUBLE_TYPE,
-        FLOAT_TYPE,
-        LONG_TYPE,
-        SHORT_TYPE,
-        STRING_TYPE,
-        VOID_TYPE,
-    }
 
     private String functionName;
     private List<ICommand> commandSequences; //the list of commands execution by the function

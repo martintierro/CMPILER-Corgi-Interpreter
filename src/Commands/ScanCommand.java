@@ -42,7 +42,7 @@ public class ScanCommand implements ICommand, NotificationListener{
          */
         String valueEntered = "";
 
-        CorgiValue corgiValue = CorgiValueSearcher.searchCorgiValue(identifier);
+        CorgiValue corgiValue = CorgiValueSearcher.searchVariable(identifier);
         corgiValue.setValue(valueEntered);
 
         NotificationCenter.getInstance().removeObserver(Notifications.ON_SCAN_DIALOG_DISMISSED, this); //remove observer after using

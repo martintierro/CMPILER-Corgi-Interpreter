@@ -6,7 +6,6 @@ import GeneratedAntlrClasses.CorgiParser;
 import Mapping.IValueMapper;
 import Mapping.IdentifierMapper;
 import Utlities.ConditionalEvaluator;
-import Utlities.LocalVariableTracker;
 
 import java.util.ArrayList;
 import java.util.List;

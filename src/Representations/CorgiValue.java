@@ -38,7 +38,7 @@ public class CorgiValue {
     /*
      * Marks this value as final if there is a final keyword
      */
-    public void markFinal() {
+    public void makeFinal() {
         this.finalFlag = true;
     }
 

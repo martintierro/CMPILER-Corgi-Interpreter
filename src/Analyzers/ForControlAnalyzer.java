@@ -3,7 +3,6 @@ package Analyzers;
 import Commands.AssignmentCommand;
 import Commands.ICommand;
 import Commands.IncDecCommand;
-import Commands.ShorthandCommand;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import org.antlr.v4.runtime.ParserRuleContext;

@@ -94,7 +94,7 @@ public class PrintCommand implements ICommand, ParseTreeListener {
             else if(primaryCtx.Identifier() != null && this.complexExpr == false) {
                 String identifier = primaryCtx.getText();
 
-                CorgiValue value = CorgiValueSearcher.searchCorgiValue(identifier);
+                CorgiValue value = CorgiValueSearcher.searchVariable(identifier);
                 if(value.getPrimitiveType() == PrimitiveType.ARRAY) {
                     this.arrayAccess = true;
                     this.evaluateArrayPrint(value, primaryCtx);

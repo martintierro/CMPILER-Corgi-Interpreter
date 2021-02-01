@@ -113,7 +113,7 @@ public class LocalScope implements IScope {
         mobiValue.setValue(valueString);
     }
 
-    public void addMobiValue(String identifier, CorgiValue corgiValue) {
+    public void addCorgiValue(String identifier, CorgiValue corgiValue) {
         this.initializeLocalVariableMap();
         this.localVariables.put(identifier, corgiValue);
     }

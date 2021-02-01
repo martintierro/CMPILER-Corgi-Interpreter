@@ -7,7 +7,6 @@ import Controller.Controller;
 import Execution.ExecutionManager;
 import IDE.Dialog.*;
 import Statements.StatementControlOverseer;
-import Utlities.LocalVariableTracker;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -101,7 +100,7 @@ public class View extends Application {
         //LocalScopeCreator.initialize();
         StatementControlOverseer.initialize();
         //FunctionTracker.initialize();
-        LocalVariableTracker.initialize();
+//        LocalVariableTracker.initialize();
     }
 
     public static void main(String[] args) {

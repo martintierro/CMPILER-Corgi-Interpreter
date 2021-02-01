@@ -84,7 +84,7 @@ public class AssignmentCommand implements ICommand{
         evaluationCommand.execute();
 
         //create a new array value to replace value at specified index
-        CorgiValue newArrayValue = new CorgiValue(null, corgiArray.getArrayType());
+        CorgiValue newArrayValue = new CorgiValue(null, corgiArray.getPrimitiveType());
         newArrayValue.setValue(resultString);
         corgiArray.updateValueAt(newArrayValue, evaluationCommand.getResult().intValue());
 

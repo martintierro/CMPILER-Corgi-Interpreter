@@ -4,12 +4,9 @@ import ANTLR.CorgiError;
 import Builder.BuildChecker;
 import Builder.ParserHandler;
 import Execution.ExecutionManager;
-import Execution.FunctionTracker;
 import IDE.View;
 import Semantics.LocalScopeCreator;
-import Semantics.SymbolTableManager;
 import Statements.StatementControlOverseer;
-import Utlities.LocalVariableTracker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ public class Controller {
         BuildChecker.reset();
         StatementControlOverseer.reset();
        // FunctionTracker.reset();
-        LocalVariableTracker.reset();
+//        LocalVariableTracker.reset();
 
         view.resetConsole();
 
@@ -99,7 +96,7 @@ public class Controller {
         BuildChecker.reset();
         StatementControlOverseer.reset();
        // FunctionTracker.reset();
-        LocalVariableTracker.reset();
+//        LocalVariableTracker.reset();
 
         System.out.println(input);
 
