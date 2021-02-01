@@ -9,10 +9,13 @@ import java.util.Stack;
 public class LocalScopeCreator {
     private final static String TAG = "MobiProg_ScopeCreator";
 
-    private static LocalScopeCreator sharedInstance = null;
+    private static LocalScopeCreator instance = null;
 
     public static LocalScopeCreator getInstance() {
-        return sharedInstance;
+        if(instance == null) {
+            instance = new LocalScopeCreator();
+        }
+        return instance;
     }
 
     private LocalScope activeLocalScope = null;
@@ -22,11 +25,12 @@ public class LocalScopeCreator {
     }
 
     public static void initialize() {
-        sharedInstance = new LocalScopeCreator();
+        instance = new LocalScopeCreator();
     }
 
     public static void reset() {
-        sharedInstance.activeLocalScope = null;
+        if(instance != null && instance.activeLocalScope != null)
+            instance.activeLocalScope = null;
     }
 
     /*

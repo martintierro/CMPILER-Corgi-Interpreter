@@ -38,8 +38,8 @@ public class ParserHandler {
         InputStream stream = new ByteArrayInputStream(textToParse.getBytes(StandardCharsets.UTF_8));
         CharStream charStream = CharStreams.fromStream(stream);
         this.corgiLexer = new CorgiLexer(charStream);
-        CommonTokenStream tokens = new CommonTokenStream((TokenSource) this.corgiParser);
-        this.corgiParser = new CorgiParser((TokenStream) tokens);
+        CommonTokenStream tokens = new CommonTokenStream(this.corgiLexer);
+        this.corgiParser = new CorgiParser(tokens);
         this.corgiParser.removeErrorListeners();
         this.corgiParser.addErrorListener(BuildChecker.getInstance());
 
