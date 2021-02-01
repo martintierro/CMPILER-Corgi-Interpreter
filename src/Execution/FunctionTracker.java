@@ -7,14 +7,14 @@ import java.util.Stack;
 public class FunctionTracker {
     private final static String TAG = "MobiProg_CallGraphManager";
 
-    private static FunctionTracker sharedInstance = null;
+    private static FunctionTracker instance = null;
 
     private Stack<CorgiFunction> callStack;
 
     public static FunctionTracker getInstance() {
-        if(sharedInstance == null)
-            sharedInstance = new FunctionTracker();
-        return sharedInstance;
+        if(instance == null)
+            instance = new FunctionTracker();
+        return instance;
     }
 
     private FunctionTracker() {
