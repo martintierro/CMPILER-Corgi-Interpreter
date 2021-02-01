@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class SymbolTableManager {
     private static SymbolTableManager instance = null;
     private MainScope mainScope;
-    private HashMap<String, MainScope> classTable;
+    private HashMap<String, LocalScope> classTable;
 
 
     public static SymbolTableManager getInstance(){

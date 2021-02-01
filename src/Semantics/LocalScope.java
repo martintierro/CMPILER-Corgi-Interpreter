@@ -12,7 +12,7 @@ public class LocalScope implements IScope {
     private IScope parentScope;
     private ArrayList<LocalScope> childScopeList = null;
 
-    private HashMap<String, CorgiValue> localVariables = null;
+    private HashMap<String, CorgiValue> localVariables = new HashMap<String, CorgiValue>();
 
     public LocalScope() {
         this.parentScope = null;

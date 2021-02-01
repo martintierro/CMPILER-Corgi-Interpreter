@@ -34,8 +34,9 @@ public class MappingCommand implements ICommand{
 
         EvaluationCommand evaluationCommand = new EvaluationCommand(this.parentExprCtx);
         evaluationCommand.execute();
-
+        System.out.println(this.identifierString);
         CorgiValue corgiValue = VariableSearcher.searchVariable(this.identifierString);
+        System.out.println(corgiValue);
         AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
     }
 

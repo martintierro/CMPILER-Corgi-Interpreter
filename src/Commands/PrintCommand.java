@@ -58,7 +58,7 @@ public class PrintCommand implements ICommand, ParseTreeListener {
 
                 this.statementToPrint += StringUtilities.removeQuotes(quotedString);
             }
-			/*else if(literalCtx.IntegerLiteral() != null) {
+			else if(literalCtx.IntegerLiteral() != null) {
 				int value = Integer.parseInt(literalCtx.IntegerLiteral().getText());
 				this.statementToPrint += value;
 			}
@@ -73,8 +73,9 @@ public class PrintCommand implements ICommand, ParseTreeListener {
 			}
 
 			else if(literalCtx.CharacterLiteral() != null) {
-				this.statementToPrint += literalCtx.CharacterLiteral().getText();
-			}*/
+                String quotedString = literalCtx.CharacterLiteral().getText();
+                this.statementToPrint +=  StringUtilities.removeQuotes(quotedString);
+			}
         }
 
         else if(ctx instanceof CorgiParser.PrimaryContext) {
