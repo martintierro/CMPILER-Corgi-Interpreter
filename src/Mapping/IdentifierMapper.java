@@ -5,6 +5,7 @@ import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiValue;
 
 public class IdentifierMapper implements IValueMapper{
+    private final static String TAG = "MobiProg_IdentifierMapper";
 
     private IValueMapper valueMapper;
 
@@ -14,28 +15,28 @@ public class IdentifierMapper implements IValueMapper{
         }
     }
 
-
     @Override
     public void analyze(CorgiParser.ExpressionContext exprCtx) {
-
+        this.valueMapper.analyze(exprCtx);
     }
 
+    @Override
     public void analyze(CorgiParser.ParExpressionContext exprCtx) {
-
+        this.valueMapper.analyze(exprCtx);
     }
 
     @Override
     public String getOriginalExp() {
-        return null;
+        return this.valueMapper.getOriginalExp();
     }
 
     @Override
     public String getModifiedExp() {
-        return null;
+        return this.valueMapper.getModifiedExp();
     }
 
     @Override
     public CorgiValue getCorgiValue() {
-        return null;
+        return this.valueMapper.getCorgiValue();
     }
 }

@@ -33,10 +33,10 @@ public class NotificationCenter {
         if(this.notificationMap.containsKey(notificationString)) {
             ArrayList<NotificationListener> listenerList = this.notificationMap.get(notificationString);
             if(listenerList.remove(listener)) {
-                System.out.println(TAG + ": " + "Removed observer " +listener);
+                System.err.println("Removed observer " +listener);
             }
             else {
-                System.out.println(TAG + ": " + "Listener not found. Doing nothing");
+                System.err.println("Listener not found. Doing nothing");
             }
         }
     }

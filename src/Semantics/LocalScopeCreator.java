@@ -7,21 +7,33 @@ import java.util.List;
 import java.util.Stack;
 
 public class LocalScopeCreator {
-    private static LocalScopeCreator instance = null;
+    private final static String TAG = "MobiProg_ScopeCreator";
 
-    public static LocalScopeCreator getInstance(){
-        if(instance==null){
-            instance = new LocalScopeCreator();
-        }
-        return instance;
+    private static LocalScopeCreator sharedInstance = null;
+
+    public static LocalScopeCreator getInstance() {
+        return sharedInstance;
     }
 
     private LocalScope activeLocalScope = null;
 
-    private LocalScopeCreator(){
+    private LocalScopeCreator() {
 
     }
 
+    public static void initialize() {
+        sharedInstance = new LocalScopeCreator();
+    }
+
+    public static void reset() {
+        sharedInstance.activeLocalScope = null;
+    }
+
+    /*
+     * Opens a new local scope instance. If the active local scope instance is null,
+     * it creates a new one and sets it as a parent. Otherwise, the active local scope is set as
+     * a parent of the new instance, then the new instance becomes the active local scope.
+     */
     public LocalScope openLocalScope() {
         if(this.activeLocalScope == null) {
             this.activeLocalScope = new LocalScope();
@@ -40,30 +52,36 @@ public class LocalScopeCreator {
         return this.activeLocalScope;
     }
 
+    /*
+     * Closes the active local scope which changes the pointer to the parent of the active local scope.
+     */
     public void closeLocalScope() {
         if(this.activeLocalScope.getParent() != null && this.activeLocalScope.getParent() instanceof LocalScope) {
             this.activeLocalScope = (LocalScope) this.activeLocalScope.getParent();
         }
         else if(this.activeLocalScope.getParent() == null) {
-            System.err.println("Cannot change parent. Current active local scope no longer has a parent."); //TODO: Change to IDE
+            System.err.println("Cannot change parent. Current active local scope no longer has a parent.");
         }
         else {
-            System.err.println("Cannot change parent. Current active local's parent is now a class scope."); //TODO: Change to IDE
+            System.err.println("Cannot change parent. Current active local scope's parent is now a class scope.");
         }
     }
 
+    /*
+     * Searches for a local variable using an iterative depth-first search.
+     */
     public static CorgiValue searchVariableInLocalIterative(String identifier, LocalScope localScope) {
 
         if(localScope == null) {
-            System.err.println(identifier + " not found in any local scope!"); //TODO: Change to IDE
+            System.err.println(identifier + " not found in any local scope!");
             return null;
         }
 
-        Stack<LocalScope> stack = new Stack<>();
+        Stack<LocalScope> stack = new Stack<LocalScope>();
 
         stack.push(localScope);
 
-        List<LocalScope> discoveredScopes = new ArrayList<>();
+        List<LocalScope> discoveredScopes = new ArrayList<LocalScope>();
         LocalScope scope;
 
         while(!stack.isEmpty()) {
@@ -83,17 +101,7 @@ public class LocalScopeCreator {
             }
         }
 
-
-        System.err.println(identifier + " not found in any local scope!"); //TODO: Change to IDE
+        System.err.println(identifier + " not found in any local scope!");
         return null;
     }
-
-    public static void reset() {
-        if(instance==null){
-            getInstance();
-        }
-        instance.activeLocalScope = null;
-    }
-
-
 }

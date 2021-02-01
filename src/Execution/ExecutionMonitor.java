@@ -5,6 +5,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ExecutionMonitor {
+
+
     private boolean executionFlag = true;
 
     private final Lock lock = new ReentrantLock();
@@ -21,8 +23,8 @@ public class ExecutionMonitor {
         this.lock.lock();
 
         try {
-            while(!executionFlag) {
-                System.err.println("Execution flag has been set to false. Execution sleeps!"); //TODO change to IDE
+            while(executionFlag == false) {
+                System.err.println("Execution flag has been set to false. Execution sleeps!");
                 this.executionGate.await();
             }
 

@@ -26,25 +26,25 @@ public class VariableSearcher {
         return corgiValue;
     }
 
-    public static CorgiValue searchVariableInFunction(CorgiFunction corgiFunction, String identifierString) {
-        CorgiValue corgiValue = null;
+    public static CorgiValue searchVariableInFunction(CorgiFunction mobiFunction, String identifierString) {
+        CorgiValue mobiValue = null;
 
-        if(corgiFunction.hasParameter(identifierString)) {
-            corgiValue = corgiFunction.getParameter(identifierString);
+        if(mobiFunction.hasParameter(identifierString)) {
+            mobiValue = mobiFunction.getParameter(identifierString);
         }
         else {
-            corgiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, corgiFunction.getParentLocalScope());
+            mobiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, mobiFunction.getParentLocalScope());
         }
 
-        return corgiValue;
+        return mobiValue;
     }
 
-    public static CorgiValue searchVariableInClassIncludingLocal(MainScope mainScope, String identifierString) {
-        return mainScope.searchVariableIncludingLocal(identifierString);
+    public static CorgiValue searchVariableInClassIncludingLocal(MainScope classScope, String identifierString) {
+        return classScope.searchVariableIncludingLocal(identifierString);
     }
 
-    public static CorgiValue searchVariableInClass(MainScope mainScope, String identifierString) {
-        return mainScope.getVariable(identifierString);
+    public static CorgiValue searchVariableInClass(MainScope classScope, String identifierString) {
+        return classScope.getVariable(identifierString);
     }
 
 }

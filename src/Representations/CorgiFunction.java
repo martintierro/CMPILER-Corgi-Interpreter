@@ -9,28 +9,43 @@ import Execution.ExecutionMonitor;
 import Execution.FunctionTracker;
 import GeneratedAntlrClasses.CorgiParser;
 import Semantics.LocalScope;
+import Semantics.MainScope;
 import Utlities.KeywordRecognizer;
-
+import Representations.PrimitiveType;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
-public class CorgiFunction implements IControlledCommand {
+public class CorgiFunction implements IControlledCommand{
+
+    public enum FunctionType {
+        INT_TYPE,
+        BOOLEAN_TYPE,
+        BYTE_TYPE,
+        CHAR_TYPE,
+        DOUBLE_TYPE,
+        FLOAT_TYPE,
+        LONG_TYPE,
+        SHORT_TYPE,
+        STRING_TYPE,
+        VOID_TYPE,
+    }
 
     private String functionName;
-    private List<ICommand> commandList;
+    private List<ICommand> commandSequences; //the list of commands execution by the function
 
-    private LocalScope parentLocalScope;
+    private LocalScope parentLocalScope; //refers to the parent local scope of this function.
 
+    private LinkedHashMap<String, MainScope> parameterReferences; //the list of parameters accepted that follows the 'call-by-reference' standard.
     private LinkedHashMap<String, CorgiValue> parameterValues;	//the list of parameters accepted that follows the 'call-by-value' standard.
     private CorgiValue returnValue; //the return value of the function. null if it's a void type
     private FunctionType returnType = FunctionType.VOID_TYPE; //the return type of the function
-    private boolean validReturn = true;
 
-    public CorgiFunction(){
-        this.commandList = new ArrayList<>();
-        this.parameterValues = new LinkedHashMap<>();
+    public CorgiFunction() {
+        this.commandSequences = new ArrayList<ICommand>();
+        this.parameterValues = new LinkedHashMap<String,CorgiValue>();
+        this.parameterReferences = new LinkedHashMap<String, MainScope>();
     }
 
     public void setParentLocalScope(LocalScope localScope) {
@@ -59,14 +74,6 @@ public class CorgiFunction implements IControlledCommand {
         return this.returnType;
     }
 
-    public boolean isValidReturn(){
-        return this.validReturn;
-    }
-
-    public void setValidReturn(boolean b) {
-        validReturn = b;
-    }
-
     public void setFunctionName(String functionName) {
         this.functionName = functionName;
     }
@@ -75,6 +82,9 @@ public class CorgiFunction implements IControlledCommand {
         return this.functionName;
     }
 
+    /*
+     * Maps parameters by values, which means that the value is copied to its parameter listing
+     */
     public void mapParameterByValue(String... values) {
         for(int i = 0; i < values.length; i++) {
             CorgiValue corgiValue = this.getParameterAt(i);
@@ -87,24 +97,24 @@ public class CorgiFunction implements IControlledCommand {
             return;
         }
 
-        CorgiValue corgiValue = this.getParameterAt(index);
-        corgiValue.setValue(value);
+        CorgiValue mobiValue = this.getParameterAt(index);
+        mobiValue.setValue(value);
     }
 
-    public void mapArrayAt(CorgiValue corgiValue, int index, String identifier) {
+    public void mapArrayAt(CorgiValue mobiValue, int index, String identifier) {
         if(index >= this.parameterValues.size()) {
             return;
         }
 
-        CorgiArray corgiArray = (CorgiArray) corgiValue.getValue();
+        CorgiArray mobiArray = (CorgiArray) mobiValue.getValue();
 
-        CorgiArray newArray = new CorgiArray(corgiArray.getArrayType(), identifier);
+        CorgiArray newArray = new CorgiArray(mobiArray.getPrimitiveType(), identifier);
         CorgiValue newValue = new CorgiValue(newArray, PrimitiveType.ARRAY);
 
-        newArray.initializeSize(corgiArray.getSize());
+        newArray.initializeSize(mobiArray.getSize());
 
         for(int i = 0; i < newArray.getSize(); i++) {
-            newArray.updateValueAt(corgiArray.getValueAt(i), i);
+            newArray.updateValueAt(mobiArray.getValueAt(i), i);
         }
 
         this.parameterValues.put(this.getParameterKeyAt(index), newValue);
@@ -120,26 +130,32 @@ public class CorgiFunction implements IControlledCommand {
             return;
         }
 
-        CorgiValue mobiValue = this.getParameterAt(index);
-        TypeChecker typeChecker = new TypeChecker(mobiValue, exprCtx);
+        CorgiValue corgiValue = this.getParameterAt(index);
+        TypeChecker typeChecker = new TypeChecker(corgiValue, exprCtx);
         typeChecker.verify();
+    }
+
+    /*
+     * Maps parameters by reference, in this case, accept a class scope.
+     */
+    public void mapParameterByReference(MainScope... classScopes) {
+        System.err.println("Mapping of parameter by reference not yet supported.");
     }
 
     public void addParameter(String identifierString, CorgiValue corgiValue) {
         this.parameterValues.put(identifierString, corgiValue);
-        System.out.println(this.functionName + " added an empty parameter " +identifierString+ " type " +corgiValue.getPrimitiveType()); //TODO Make IDE
+      //  Console.log(LogType.DEBUG, this.functionName + " added an empty parameter " +identifierString+ " type " +mobiValue.getPrimitiveType());
     }
 
     public boolean hasParameter(String identifierString) {
         return this.parameterValues.containsKey(identifierString);
     }
-
     public CorgiValue getParameter(String identifierString) {
         if(this.hasParameter(identifierString)) {
             return this.parameterValues.get(identifierString);
         }
         else {
-            System.err.println(identifierString + " not found in parameter list");//TODO Change to IDE
+            System.err.println(identifierString + " not found in parameter list");
             return null;
         }
     }
@@ -155,7 +171,7 @@ public class CorgiFunction implements IControlledCommand {
             i++;
         }
 
-        System.err.println(index + " has exceeded parameter list.");//TODO Change to IDE
+        System.err.println(index + " has exceeded parameter list.");
         return null;
     }
 
@@ -170,13 +186,13 @@ public class CorgiFunction implements IControlledCommand {
             i++;
         }
 
-        System.err.println(index + " has exceeded parameter list.");//TODO Change to IDE
+        System.err.println(index + " has exceeded parameter list.");
         return null;
     }
 
     public CorgiValue getReturnValue() {
         if(this.returnType == FunctionType.VOID_TYPE) {
-            System.out.println(this.functionName + " is a void function. Null mobi value is returned");//TODO Change to IDE
+//            Console.log(LogType.DEBUG, this.functionName + " is a void function. Null mobi value is returned");
             return null;
         }
         else {
@@ -186,26 +202,25 @@ public class CorgiFunction implements IControlledCommand {
 
     @Override
     public void addCommand(ICommand command) {
-        this.commandList.add(command);
+        this.commandSequences.add(command);
         //Console.log("Command added to " +this.functionName);
     }
 
     @Override
     public void execute() {
         ExecutionMonitor executionMonitor = ExecutionManager.getInstance().getExecutionMonitor();
-        FunctionTracker.getInstance().enterFunction(this);
+        FunctionTracker.getInstance().reportEnterFunction(this);
         try {
-            for(ICommand command : this.commandList) {
+            for(ICommand command : this.commandSequences) {
                 executionMonitor.tryExecution();
                 command.execute();
             }
 
         } catch(InterruptedException e) {
-            //Log.e(TAG, "Monitor block interrupted! " +e.getMessage());
-            System.err.println("Monitor block interrupted" + e.getMessage());
+            System.err.println("Monitor block interrupted! " +e.getMessage());
         }
 
-        FunctionTracker.getInstance().exitFunction();
+        FunctionTracker.getInstance().reportExitFunction();
     }
 
     @Override
@@ -213,10 +228,12 @@ public class CorgiFunction implements IControlledCommand {
         return ControlTypeEnum.FUNCTION_TYPE;
     }
 
-    public static FunctionType identifyFunctionType(String primitiveTypeString){
+    public static FunctionType identifyFunctionType(String primitiveTypeString) {
+
         if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_BOOLEAN, primitiveTypeString)) {
             return FunctionType.BOOLEAN_TYPE;
         }
+
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_CHAR, primitiveTypeString)) {
             return FunctionType.CHAR_TYPE;
         }
@@ -226,6 +243,7 @@ public class CorgiFunction implements IControlledCommand {
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_INT, primitiveTypeString)) {
             return FunctionType.INT_TYPE;
         }
+
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_STRING, primitiveTypeString)) {
             return FunctionType.STRING_TYPE;
         }

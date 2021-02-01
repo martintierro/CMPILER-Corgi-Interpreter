@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 public class ExecutionManager implements NotificationListener {
 
-    private final static String TAG = "ExecutionManager";
 
     private static ExecutionManager sharedInstance = null;
 
@@ -32,12 +31,6 @@ public class ExecutionManager implements NotificationListener {
     private IExecutionAdder activeExecutionAdder;
     private MainExecutionAdder mainExecutionAdder;
 
-//    private IAttemptCommand.CatchTypeEnum currentCatchType = null;
-//    private IAttemptCommand currentTryCommand = null;
-
-    private boolean aborted = false;
-    private int currentCheckedLineNumber = -1;
-
     private ExecutionManager() {
         this.mainExecutionAdder = new MainExecutionAdder(this.executionList);
         this.activeExecutionAdder = this.mainExecutionAdder;
@@ -53,55 +46,9 @@ public class ExecutionManager implements NotificationListener {
         sharedInstance.entryClassName = null;
         sharedInstance.clearAllActions();
 
-        sharedInstance.aborted = false;
-
         NotificationCenter.getInstance().removeObserver(Notifications.ON_EXECUTION_FINISHED, sharedInstance);
     }
 
-//    public IAttemptCommand getCurrentTryCommand() {
-//        return this.currentTryCommand;
-//    }
-//
-//    public void setCurrentTryCommand(IAttemptCommand command) {
-//        this.currentTryCommand = command;
-//    }
-//
-//    public IAttemptCommand.CatchTypeEnum getCurrentCatchType() {
-//        return this.currentCatchType;
-//    }
-//
-//    public void setCurrentCatchType(IAttemptCommand.CatchTypeEnum catchType) {
-//
-//        if (catchType == null) {
-//            this.currentCatchType = null;
-//            return;
-//        }
-//
-//        if (this.currentTryCommand != null && this.currentTryCommand.hasCatchFor(catchType))
-//            this.currentCatchType = catchType;
-//        else {
-//
-//            this.aborted = true;
-//
-//            if (catchType == IAttemptCommand.CatchTypeEnum.ARRAY_OUT_OF_BOUNDS) {
-//                BuildChecker.reportCustomError(ErrorRepository.RUNTIME_ARRAY_OUT_OF_BOUNDS, "", this.currentCheckedLineNumber);
-//            } else if (catchType == IAttemptCommand.CatchTypeEnum.NEGATIVE_ARRAY_SIZE) {
-//                BuildChecker.reportCustomError(ErrorRepository.RUNTIME_NEGATIVE_ARRAY_SIZE, "", this.currentCheckedLineNumber);
-//            } else if (catchType == IAttemptCommand.CatchTypeEnum.ARITHMETIC_EXCEPTION) {
-//                BuildChecker.reportCustomError(ErrorRepository.RUNTIME_ARITHMETIC_EXCEPTION, "", this.currentCheckedLineNumber);
-//            }
-//
-//            this.clearAllActions();
-//        }
-//    }
-
-    public boolean isAborted () {
-        return aborted;
-    }
-
-    public void setCurrentCheckedLineNumber (int n) {
-        this.currentCheckedLineNumber = n;
-    }
     /*
      * Reported by the parser walker if void main() has been found which means that an entry point for execution has been found.
      * Required the class name in which main() has been found
@@ -133,8 +80,8 @@ public class ExecutionManager implements NotificationListener {
     /*
      * Opens a function. Any succeeding commands to be added will be put to the function control flow.
      */
-    public void openFunctionExecution(CorgiFunction corgiFunction) {
-        FunctionExecutionAdder functionExecutionAdder = new FunctionExecutionAdder(corgiFunction);
+    public void openFunctionExecution(CorgiFunction mobiFunction) {
+        FunctionExecutionAdder functionExecutionAdder = new FunctionExecutionAdder(mobiFunction);
         this.activeExecutionAdder = functionExecutionAdder;
     }
 
@@ -155,7 +102,8 @@ public class ExecutionManager implements NotificationListener {
             return functionExecAdder.getAssignedFunction();
         }
         else {
-            System.out.println(TAG + ": " + "Execution manager is not in a function!");
+            //Log.e(TAG, "Execution manager is not in a function!");
+            System.err.println("Execution manager is not in a function!");
             return null;
         }
     }
@@ -202,7 +150,7 @@ public class ExecutionManager implements NotificationListener {
         return this.executionMonitor;
     }
 
-    @Override
+    @Override //TODO: REMOVE IF NEEDED
     public void onNotify(String notificationString, Parameters params) {
         if(notificationString == Notifications.ON_EXECUTION_FINISHED) {
             //SymbolTableManager.getInstance().resetClassTables(); //TODO: does not work as intended

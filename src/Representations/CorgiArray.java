@@ -3,30 +3,27 @@ package Representations;
 import Utlities.KeywordRecognizer;
 
 public class CorgiArray {
+    private final static String TAG = "MobiProg_MobiArray";
 
     private CorgiValue[] corgiValueArray;
-    private PrimitiveType arrayType;
-    private String arrayName;
+    private PrimitiveType arrayPrimitiveType;
+    private String arrayIdentifier;
     private boolean finalFlag = false;
 
     public CorgiArray(PrimitiveType primitiveType, String identifier) {
-        this.arrayType = primitiveType;
-        this.arrayName = identifier;
+        this.arrayPrimitiveType = primitiveType;
+        this.arrayIdentifier = identifier;
     }
 
-    public void setArrayType(PrimitiveType arrayType) {
-        this.arrayType = arrayType;
+    public void setPrimitiveType(PrimitiveType primitiveType) {
+        this.arrayPrimitiveType = primitiveType;
     }
 
-    public int getSize() {
-        return this.corgiValueArray.length;
+    public PrimitiveType getPrimitiveType() {
+        return this.arrayPrimitiveType;
     }
 
-    public PrimitiveType getArrayType() {
-        return arrayType;
-    }
-
-    public void makeFinal() {
+    public void markFinal() {
         this.finalFlag = true;
     }
 
@@ -35,25 +32,25 @@ public class CorgiArray {
     }
 
     public void initializeSize(int size) {
-        try{
-            this.corgiValueArray = new CorgiValue[size];
-        }catch (NegativeArraySizeException ex){
-            this.corgiValueArray = null;
-        }
-//        System.out.println("Corgi array initialized to size " +this.corgiValueArray.length);
+        this.corgiValueArray = new CorgiValue[size];
+        System.err.println("Mobi array initialized to size " +this.corgiValueArray.length);
     }
 
-    public void updateValueAt(CorgiValue corgiValue, int index) {
+    public int getSize() {
+        return this.corgiValueArray.length;
+    }
+
+    public void updateValueAt(CorgiValue mobiValue, int index) {
         if(index >= this.corgiValueArray.length) {
-            System.err.println("Array out of bounds"); //TODO: Change to IDE
+           // Console.log(LogType.ERROR, String.format(ErrorRepository.getErrorMessage(ErrorRepository.RUNTIME_ARRAY_OUT_OF_BOUNDS), this.arrayIdentifier));
             return;
         }
-        this.corgiValueArray[index] = corgiValue;
+        this.corgiValueArray[index] = mobiValue;
     }
 
     public CorgiValue getValueAt(int index) {
         if(index >= this.corgiValueArray.length) {
-            System.err.println("Array out of bounds"); //TODO: Change to IDE
+           // Console.log(LogType.ERROR, String.format(ErrorRepository.getErrorMessage(ErrorRepository.RUNTIME_ARRAY_OUT_OF_BOUNDS), this.arrayIdentifier));
             return this.corgiValueArray[this.corgiValueArray.length - 1];
         }
         else {
@@ -61,6 +58,9 @@ public class CorgiArray {
         }
     }
 
+    /*
+     * Utility function that returns an arary of specified primitive type.
+     */
     public static CorgiArray createArray(String primitiveTypeString, String arrayIdentifier) {
         //identify primitive type
         PrimitiveType primitiveType = PrimitiveType.NOT_YET_IDENTIFIED;
@@ -71,12 +71,14 @@ public class CorgiArray {
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_CHAR, primitiveTypeString)) {
             primitiveType = PrimitiveType.CHAR;
         }
+
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_FLOAT, primitiveTypeString)) {
             primitiveType = PrimitiveType.FLOAT;
         }
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_INT, primitiveTypeString)) {
             primitiveType = PrimitiveType.INT;
         }
+
         else if(KeywordRecognizer.matchesKeyword(KeywordRecognizer.PRIMITIVE_TYPE_STRING, primitiveTypeString)) {
             primitiveType = PrimitiveType.STRING;
         }

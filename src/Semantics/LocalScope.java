@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 public class LocalScope implements IScope {
 
+    private final static String TAG = "MobiProg_LocalScope";
+
     private IScope parentScope;
     private ArrayList<LocalScope> childScopeList = null;
 
@@ -25,7 +27,7 @@ public class LocalScope implements IScope {
      */
     public void initializeLocalVariableMap() {
         if(this.localVariables == null) {
-            this.localVariables = new HashMap<>();
+            this.localVariables = new HashMap<String, CorgiValue>();
         }
     }
 
@@ -76,6 +78,7 @@ public class LocalScope implements IScope {
             return this.localVariables.get(identifier);
         }
         else {
+            System.err.println(identifier + " not found!");
             return null;
         }
     }
@@ -95,8 +98,8 @@ public class LocalScope implements IScope {
     public void addEmptyVariable(String primitiveTypeString, String identifierString) {
         this.initializeLocalVariableMap();
 
-        CorgiValue corgiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
-        this.localVariables.put(identifierString, corgiValue);
+        CorgiValue mobiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
+        this.localVariables.put(identifierString, mobiValue);
     }
 
     /*
@@ -106,28 +109,11 @@ public class LocalScope implements IScope {
         this.initializeLocalVariableMap();
 
         this.addEmptyVariable(primitiveTypeString, identifierString);
-        CorgiValue corgiValue = this.localVariables.get(identifierString);
-        corgiValue.setValue(valueString);
+        CorgiValue mobiValue = this.localVariables.get(identifierString);
+        mobiValue.setValue(valueString);
     }
 
-    public void addFinalEmptyVariable(String primitiveTypeString, String identifierString) {
-        this.initializeLocalVariableMap();
-
-        CorgiValue corgiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
-        corgiValue.makeFinal();
-        this.localVariables.put(identifierString, corgiValue);
-    }
-
-    public void addFinalInitVariable(String primitiveTypeString, String identifierString, String valueString) {
-        this.initializeLocalVariableMap();
-
-        this.addEmptyVariable(primitiveTypeString, identifierString);
-        CorgiValue corgiValue = this.localVariables.get(identifierString);
-        corgiValue.setValue(valueString);
-        corgiValue.makeFinal();
-    }
-
-    public void addCorgiValue(String identifier, CorgiValue corgiValue) {
+    public void addMobiValue(String identifier, CorgiValue corgiValue) {
         this.initializeLocalVariableMap();
         this.localVariables.put(identifier, corgiValue);
     }
@@ -151,6 +137,8 @@ public class LocalScope implements IScope {
             scope = (LocalScope) abstractScope;
         }
 
+
         return depthCount;
     }
+
 }

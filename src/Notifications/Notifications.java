@@ -1,6 +1,7 @@
 package Notifications;
 
 public class Notifications {
+
     public final static String ON_BUILD_EVENT = "ON_BUILD_EVENT"; //called by a build action request
     public final static String ON_RUN_EVENT = "ON_RUN_EVENT"; //called by a run action request
     public final static String ON_EXECUTION_FINISHED = "ON_EXECUTION_FINISHED"; //called if the execution has finished.

@@ -9,7 +9,6 @@ import java.util.Stack;
 
 public class StatementControlOverseer {
 
-    private final static String TAG = "MobiProg_StatementControlOverseer";
 
     private static StatementControlOverseer sharedInstance = null;
 
@@ -24,7 +23,9 @@ public class StatementControlOverseer {
     private boolean isInPositive = true; //used for conditional statements to indicate if the series of commands should go to the positive command list.
 
     private StatementControlOverseer() {
-        this.procedureCallStack = new Stack<>();
+        this.procedureCallStack = new Stack<ICommand>();
+
+        System.err.println("Stack initialized!");
     }
 
     public static void initialize() {
@@ -33,7 +34,6 @@ public class StatementControlOverseer {
 
     public static void reset() {
         sharedInstance.procedureCallStack.clear();
-        //sharedInstance.rootControlledCommand = null;
         sharedInstance.activeControlledCommand = null;
     }
 
@@ -92,7 +92,7 @@ public class StatementControlOverseer {
             IControlledCommand controlledCommand = (IControlledCommand) this.activeControlledCommand;
             controlledCommand.addCommand(command);
 
-            //Console.log(LogType.DEBUG, "Adding to " +controlledCommand.getControlType());
+          //  Console.log(LogType.DEBUG, "Adding to " +controlledCommand.getControlType());
 
             this.procedureCallStack.push(command);
             this.activeControlledCommand = command;
@@ -126,7 +126,7 @@ public class StatementControlOverseer {
             }
         }
         else {
-            //Log.i(TAG, "Procedure call stack is now empty.");
+            System.err.println("Procedure call stack is now empty.");
         }
     }
 

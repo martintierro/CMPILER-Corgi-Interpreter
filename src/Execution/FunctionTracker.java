@@ -5,37 +5,45 @@ import Representations.CorgiFunction;
 import java.util.Stack;
 
 public class FunctionTracker {
+    private final static String TAG = "MobiProg_CallGraphManager";
 
-    private static FunctionTracker instance = null;
+    private static FunctionTracker sharedInstance = null;
 
-    public Stack<CorgiFunction> functionCallStack;
+    private Stack<CorgiFunction> callStack;
 
-    public static FunctionTracker getInstance(){
-        if(instance == null){
-            instance = new FunctionTracker();
-        }
-        return instance;
+    public static FunctionTracker getInstance() {
+        return sharedInstance;
     }
 
-    private FunctionTracker(){
-        this.functionCallStack = new Stack<>();
+    private FunctionTracker() {
+        this.callStack = new Stack<CorgiFunction>();
     }
 
-    public void enterFunction(CorgiFunction function){
-        this.functionCallStack.push(function);
+    public static void initialize() {
+        sharedInstance = new FunctionTracker();
     }
 
-    public void exitFunction(){
-        this.functionCallStack.pop();
+    public static void reset() {
+
     }
 
-    public CorgiFunction getLatestFunction(){
-        return this.functionCallStack.peek();
+    public void reportEnterFunction(CorgiFunction corgiFunction) {
+        this.callStack.push(corgiFunction);
     }
 
+    public void reportExitFunction() {
+        this.callStack.pop();
+    }
+
+    public CorgiFunction getLatestFunction() {
+        return this.callStack.peek();
+    }
+
+    /*
+     * Returns true if the control flow is currently inside a function
+     */
     public boolean isInsideFunction() {
-        return (this.functionCallStack.size() != 0);
+        return (this.callStack.size() != 0);
     }
-
 
 }
