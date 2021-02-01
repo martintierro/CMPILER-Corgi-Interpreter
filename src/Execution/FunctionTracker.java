@@ -12,19 +12,13 @@ public class FunctionTracker {
     private Stack<CorgiFunction> callStack;
 
     public static FunctionTracker getInstance() {
+        if(sharedInstance == null)
+            sharedInstance = new FunctionTracker();
         return sharedInstance;
     }
 
     private FunctionTracker() {
-        this.callStack = new Stack<CorgiFunction>();
-    }
-
-    public static void initialize() {
-        sharedInstance = new FunctionTracker();
-    }
-
-    public static void reset() {
-
+        this.callStack = new Stack<>();
     }
 
     public void reportEnterFunction(CorgiFunction corgiFunction) {
