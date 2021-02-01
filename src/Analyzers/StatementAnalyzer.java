@@ -20,7 +20,7 @@ public class StatementAnalyzer {
     public void analyze(CorgiParser.StatementContext ctx) {
         //print statement
         if(ctx.printStatement() != null) {
-            this.handlePrintStatement(ctx);
+            this.handlePrintStatement(ctx.printStatement());
         }
         else if(ctx.scanStatement() != null) {
             this.handleScanStatement(ctx);
@@ -123,7 +123,7 @@ public class StatementAnalyzer {
         }
     }
 
-    private void handlePrintStatement(CorgiParser.StatementContext ctx) {
+    private void handlePrintStatement(CorgiParser.PrintStatementContext ctx) {
 //        System.out.println("HANDLE PRINT: " + ctx.expression().size());
 
         PrintCommand printCommand = new PrintCommand(ctx.expression());
