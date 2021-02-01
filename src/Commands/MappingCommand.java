@@ -35,15 +35,8 @@ public class MappingCommand implements ICommand{
         EvaluationCommand evaluationCommand = new EvaluationCommand(this.parentExprCtx);
         evaluationCommand.execute();
 
-        if (evaluationCommand.hasException())
-            return;
-
         CorgiValue corgiValue = VariableSearcher.searchVariable(this.identifierString);
-
-        if (evaluationCommand.isNumericResult())
-            AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
-        else
-            AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getStringResult());
+        AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
     }
 
     /*
@@ -51,13 +44,5 @@ public class MappingCommand implements ICommand{
      */
     public String getModifiedExp() {
         return this.modifiedExp;
-    }
-
-    public String getIdentifierString() {
-        return identifierString;
-    }
-
-    public CorgiParser.ExpressionContext getParentExprCtx() {
-        return parentExprCtx;
     }
 }

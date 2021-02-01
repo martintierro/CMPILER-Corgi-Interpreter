@@ -24,9 +24,6 @@ public class ParameterMismatchChecker implements IErrorChecker {
         this.lineNumber = argumentsCtx.getStart().getLine();
     }
 
-    /* (non-Javadoc)
-     * @see com.neildg.mobiprog.builder.errorcheckers.IErrorChecker#verify()
-     */
     @Override
     public void verify() {
         if(this.corgiFunction == null) {

@@ -25,8 +25,8 @@ public class ParserHandler {
         return sharedInstance;
     }
 
-    private CorgiLexer sharedLexer;
-    private CorgiParser sharedParser;
+    private CorgiLexer corgiLexer;
+    private CorgiParser corgiParser;
 
     private String currentClassName; //the current class being parsed
 
@@ -37,16 +37,15 @@ public class ParserHandler {
     public void parseText(String textToParse) throws IOException {
         InputStream stream = new ByteArrayInputStream(textToParse.getBytes(StandardCharsets.UTF_8));
         CharStream charStream = CharStreams.fromStream(stream);
-        this.sharedLexer = new CorgiLexer(charStream);
-        CommonTokenStream tokens = new CommonTokenStream((TokenSource) this.sharedLexer);
-        this.sharedParser = new CorgiParser((TokenStream) tokens);
-        this.sharedParser.removeErrorListeners();
-        this.sharedParser.addErrorListener(BuildChecker.getInstance());
+        this.corgiLexer = new CorgiLexer(charStream);
+        CommonTokenStream tokens = new CommonTokenStream((TokenSource) this.corgiParser);
+        this.corgiParser = new CorgiParser((TokenStream) tokens);
+        this.corgiParser.removeErrorListeners();
+        this.corgiParser.addErrorListener(BuildChecker.getInstance());
 
-        ParserRuleContext parserRuleContext = this.sharedParser.start();
+        ParserRuleContext parserRuleContext = this.corgiParser.start();
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();
-      //  treeWalker.walk(new JavaBaseImplementor(), parserRuleContext);
         treeWalker.walk(new CorgiBaseListener(), parserRuleContext);
 
     }

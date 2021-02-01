@@ -11,9 +11,6 @@ public class DoWhileCommand extends WhileCommand {
         super(parExprCtr);
     }
 
-    /* (non-Javadoc)
-     * @see com.neildg.mobiprog.execution.commands.ICommand#execute()
-     */
     @Override
     public void execute() {
         this.executeFirstCommandSequence();
@@ -28,22 +25,15 @@ public class DoWhileCommand extends WhileCommand {
 
         ExecutionMonitor executionMonitor = ExecutionManager.getInstance().getExecutionMonitor();
 
-        LocalVariableTracker.resetLocalVars(super.getLocalVars());
-
         try {
             for(ICommand command : this.commandSequences) {
                 executionMonitor.tryExecution();
                 command.execute();
-
-                LocalVariableTracker.getInstance().populateLocalVars(command);
-
-                if (ExecutionManager.getInstance().isAborted())
-                    break;
             }
 
         } catch(InterruptedException e) {
             //Log.e(TAG, "Monitor block interrupted! " +e.getMessage());
-            System.out.println("DoWhileCommand: Monitor block interrupted! " + e.getMessage());
+            System.err.println("DoWhileCommand: Monitor block interrupted! " + e.getMessage()); //TODO Change to IDE
         }
     }
 

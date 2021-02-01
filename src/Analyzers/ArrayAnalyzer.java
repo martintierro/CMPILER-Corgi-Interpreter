@@ -1,9 +1,6 @@
 package Analyzers;
 
 import Commands.ArrayInitializeCommand;
-import Commands.IConditionalCommand;
-import Commands.IControlledCommand;
-import ErrorChecker.MultipleVarDecChecker;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiArray;
@@ -11,7 +8,6 @@ import Representations.CorgiValue;
 import Representations.PrimitiveType;
 import Semantics.LocalScope;
 import Semantics.MainScope;
-import Statements.StatementControlOverseer;
 import Utlities.IdentifiedTokenHolder;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -19,7 +15,8 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class ArrayAnalyzer implements ParseTreeListener {
+public class ArrayAnalyzer implements ParseTreeListener{
+    private final static String TAG = "MobiProg_ArrayAnalyzer";
 
     private final static String ARRAY_PRIMITIVE_KEY = "ARRAY_PRIMITIVE_KEY";
     private final static String ARRAY_IDENTIFIER_KEY = "ARRAY_IDENTIFIER_KEY";
@@ -64,8 +61,6 @@ public class ArrayAnalyzer implements ParseTreeListener {
         }
         else if(ctx instanceof CorgiParser.VariableDeclaratorIdContext) {
             CorgiParser.VariableDeclaratorIdContext varDecIdCtx = (CorgiParser.VariableDeclaratorIdContext) ctx;
-            MultipleVarDecChecker multipleDeclaredChecker = new MultipleVarDecChecker(varDecIdCtx);
-            multipleDeclaredChecker.verify();
             this.identifiedTokenHolder.addToken(ARRAY_IDENTIFIER_KEY, varDecIdCtx.getText());
 
             this.analyzeArray();
@@ -89,10 +84,12 @@ public class ArrayAnalyzer implements ParseTreeListener {
     private void analyzeArray() {
 
         if(this.mainScope != null) {
-            if(this.identifiedTokenHolder.containsTokens(ARRAY_PRIMITIVE_KEY, ARRAY_IDENTIFIER_KEY)) {
+            if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.ACCESS_CONTROL_KEY, ARRAY_PRIMITIVE_KEY, ARRAY_IDENTIFIER_KEY)) {
+                String accessControlString = this.identifiedTokenHolder.getToken(ClassAnalyzer.ACCESS_CONTROL_KEY);
                 String arrayTypeString = this.identifiedTokenHolder.getToken(ARRAY_PRIMITIVE_KEY);
                 String arrayIdentifierString = this.identifiedTokenHolder.getToken(ARRAY_IDENTIFIER_KEY);
 
+                //initialize an array mobivalue
                 this.declaredArray = CorgiArray.createArray(arrayTypeString, arrayIdentifierString);
                 CorgiValue corgiValue = new CorgiValue(this.declaredArray, PrimitiveType.ARRAY);
 
@@ -122,38 +119,6 @@ public class ArrayAnalyzer implements ParseTreeListener {
 
     private void createInitializeCommand(CorgiParser.ArrayCreatorRestContext arrayCreatorCtx) {
         ArrayInitializeCommand arrayInitializeCommand = new ArrayInitializeCommand(this.declaredArray, arrayCreatorCtx);
-
-        //ExecutionManager.getInstance().addCommand(arrayInitializeCommand);
-
-        StatementControlOverseer statementControl = StatementControlOverseer.getInstance();
-        //add to conditional controlled command
-        if(statementControl.isInConditionalCommand()) {
-            IConditionalCommand conditionalCommand = (IConditionalCommand) statementControl.getActiveControlledCommand();
-
-            if(statementControl.isInPositiveRule()) {
-                conditionalCommand.addPositiveCommand(arrayInitializeCommand);
-            }
-            else {
-                conditionalCommand.addNegativeCommand(arrayInitializeCommand);
-            }
-        }
-
-        else if(statementControl.isInControlledCommand()) {
-            IControlledCommand controlledCommand = (IControlledCommand) statementControl.getActiveControlledCommand();
-            controlledCommand.addCommand(arrayInitializeCommand);
-        }
-//        else if (statementControl.isInAttemptCommand()) {
-//            IAttemptCommand attemptCommand = (IAttemptCommand) statementControl.getActiveControlledCommand();
-//
-//            if(statementControl.isInTryBlock()) {
-//                attemptCommand.addTryCommand(arrayInitializeCommand);
-//            } else {
-//                attemptCommand.addCatchCommand(statementControl.getCurrentCatchType(), arrayInitializeCommand);
-//            }
-//        }
-        else {
-            ExecutionManager.getInstance().addCommand(arrayInitializeCommand);
-        }
-
+        ExecutionManager.getInstance().addCommand(arrayInitializeCommand);
     }
 }

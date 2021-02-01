@@ -1,17 +1,16 @@
 package Commands;
 
-import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiArray;
 
 public class ArrayInitializeCommand implements ICommand {
     private final static String TAG = "ArrayInitializeCommand";
 
-    private CorgiArray corgiArray;
+    private CorgiArray assignedCorgiArray;
     private CorgiParser.ArrayCreatorRestContext arrayCreatorCtx;
 
     public ArrayInitializeCommand(CorgiArray corgiArray, CorgiParser.ArrayCreatorRestContext arrayCreatorCtx) {
-        this.corgiArray = corgiArray;
+        this.assignedCorgiArray = corgiArray;
         this.arrayCreatorCtx = arrayCreatorCtx;
     }
 
@@ -23,8 +22,7 @@ public class ArrayInitializeCommand implements ICommand {
             EvaluationCommand evaluationCommand = new EvaluationCommand(exprCtx);
             evaluationCommand.execute();
 
-            ExecutionManager.getInstance().setCurrentCheckedLineNumber(exprCtx.getStart().getLine());
-            this.corgiArray.initializeSize(evaluationCommand.getResult().intValue());
+            this.assignedCorgiArray.initializeSize(evaluationCommand.getResult().intValue());
         }
 
     }

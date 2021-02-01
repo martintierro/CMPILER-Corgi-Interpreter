@@ -17,12 +17,6 @@ public class IncDecCommand implements ICommand {
     public IncDecCommand(CorgiParser.ExpressionContext exprCtx, int tokenSign) {
         this.exprCtx = exprCtx;
         this.tokenSign = tokenSign;
-
-        ConstChecker constChecker = new ConstChecker(this.exprCtx);
-        constChecker.verify();
-
-        UndeclaredChecker undeclaredChecker = new UndeclaredChecker(this.exprCtx);
-        undeclaredChecker.verify();
     }
 
     @Override
@@ -34,9 +28,7 @@ public class IncDecCommand implements ICommand {
 
         CorgiValue corgiValue = leftHandMapper.getCorgiValue();
 
-        if(!corgiValue.isFinal())
-            this.performOperation(corgiValue);
-
+        this.performOperation(corgiValue);
     }
 
     /*
@@ -44,7 +36,7 @@ public class IncDecCommand implements ICommand {
      */
     private void performOperation(CorgiValue corgiValue) {
         if(corgiValue.getPrimitiveType() == PrimitiveType.INT) {
-            int value = Integer.valueOf(corgiValue.getValue().toString());
+            int value = Integer.parseInt(corgiValue.getValue().toString());
 
             if(this.tokenSign == CorgiLexer.INC) {
                 value++;
@@ -56,7 +48,7 @@ public class IncDecCommand implements ICommand {
             }
         }
         else if(corgiValue.getPrimitiveType() == PrimitiveType.FLOAT) {
-            float value = Float.valueOf(corgiValue.getValue().toString());
+            float value = Float.parseFloat(corgiValue.getValue().toString());
 
             if(this.tokenSign == CorgiLexer.INC) {
                 value++;
@@ -69,7 +61,4 @@ public class IncDecCommand implements ICommand {
         }
     }
 
-    public String getIdentifierString() {
-        return exprCtx.primary().Identifier().getText();
-    }
 }

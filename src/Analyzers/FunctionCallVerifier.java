@@ -1,6 +1,5 @@
 package Analyzers;
 
-import Builder.ParserHandler;
 import ErrorChecker.ParameterMismatchChecker;
 import Commands.EvaluationCommand;
 import GeneratedAntlrClasses.CorgiParser;

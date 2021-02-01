@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.dfa.DFA;
 import java.util.BitSet;
 
 public class BuildChecker implements ANTLRErrorListener {
-    private final static String TAG = "MobiProg_BuildChecker";
 
     private static BuildChecker sharedInstance = null;
 
@@ -42,7 +41,7 @@ public class BuildChecker implements ANTLRErrorListener {
     public void syntaxError(Recognizer<?, ?> recognizer,
                             Object offendingSymbol, int line, int charPositionInLine,
                             String msg, RecognitionException e) {
-        System.err.println("Syntax error at line " +line+ ". " +msg);
+        System.err.println("Syntax error at line " +line+ ". " +msg); //TODO: change to IDE
 
         this.successful = false;
     }
@@ -71,7 +70,7 @@ public class BuildChecker implements ANTLRErrorListener {
 
     public static void reportCustomError(int errorCode, String additionalMessage) {
         String errorMessage = SemanticErrorDictionary.getErrorMessage(errorCode) + " " + additionalMessage;
-        System.err.println(errorMessage);
+        System.err.println(errorMessage); //TODO Change to IDE
 
         sharedInstance.successful = false;
     }

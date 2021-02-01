@@ -13,7 +13,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeChecker implements IErrorChecker, ParseTreeListener {
-    private final static String TAG = "MobiProg_TypeChecker";
 
     private CorgiValue corgiValue;
     private CorgiParser.ExpressionContext exprCtx;

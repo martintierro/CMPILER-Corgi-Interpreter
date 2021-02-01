@@ -7,7 +7,7 @@ public class IdentifiedTokenHolder {
     private HashMap<String, String> tokenMapping;
 
     public IdentifiedTokenHolder() {
-        this.tokenMapping = new HashMap<>();
+        this.tokenMapping = new HashMap<String, String>();
     }
 
     public void addToken(String key, String text) {

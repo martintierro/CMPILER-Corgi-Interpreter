@@ -18,7 +18,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class ConstChecker implements IErrorChecker, ParseTreeListener {
-    private final static String TAG = "MobiProg_ConstChecker";
 
     private CorgiParser.ExpressionContext exprCtx;
     private int lineNumber;

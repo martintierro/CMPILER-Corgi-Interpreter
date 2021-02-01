@@ -1,17 +1,13 @@
 package Analyzers;
 
-import Commands.IConditionalCommand;
-import Commands.IControlledCommand;
 import Commands.MappingCommand;
 import ErrorChecker.MultipleVarDecChecker;
 import ErrorChecker.TypeChecker;
 import Execution.ExecutionManager;
-import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiValue;
 import Semantics.LocalScope;
 import Semantics.LocalScopeCreator;
-import Statements.StatementControlOverseer;
 import Utlities.IdentifiedTokenHolder;
 import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -22,9 +18,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class LocalVariableAnalyzer implements ParseTreeListener {
 
-    private final static String TAG = "MobiProg_LocalVariableAnalyzer";
-
-    private final static String FINAL_TYPE_KEY = "FINAL_TYPE_KEY";
     private final static String PRIMITIVE_TYPE_KEY = "PRIMITIVE_TYPE_KEY";
     private final static String IDENTIFIER_KEY = "IDENTIFIER_KEY";
     private final static String IDENTIFIER_VALUE_KEY = "IDENTIFIER_VALUE_KEY";
@@ -68,20 +61,10 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
     }
 
     private void analyzeVariables(ParserRuleContext ctx) {
-
-        if(ctx instanceof CorgiParser.VariableModifierContext){
-            CorgiParser.VariableModifierContext varModCtx = (CorgiParser.VariableModifierContext) ctx;
-
-            if (ctx.getTokens(CorgiLexer.FINAL).size() > 0) {
-                this.identifiedTokenHolder.addToken(FINAL_TYPE_KEY, varModCtx.getText());
-            }
-
-        }
-
         if(ctx instanceof CorgiParser.TypeTypeContext) {
             CorgiParser.TypeTypeContext typeCtx = (CorgiParser.TypeTypeContext) ctx;
             //clear tokens for reuse
-            //this.identifiedTokens.clearTokens();
+            this.identifiedTokenHolder.clearTokens();
 
             if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
@@ -114,7 +97,6 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
             CorgiParser.VariableDeclaratorContext varCtx = (CorgiParser.VariableDeclaratorContext) ctx;
 
             if(this.hasPassedArrayDeclaration) {
-
                 return;
             }
 
@@ -132,7 +114,6 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
                 //we do not evaluate strings.
                 if(this.identifiedTokenHolder.containsTokens(PRIMITIVE_TYPE_KEY)) {
                     String primitiveTypeString = this.identifiedTokenHolder.getToken(PRIMITIVE_TYPE_KEY);
-
                     if(primitiveTypeString.contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
                         this.identifiedTokenHolder.addToken(IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
                     }
@@ -143,7 +124,6 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
                 LocalScope localScope = LocalScopeCreator.getInstance().getActiveLocalScope();
                 CorgiValue declaredCorgiValue = localScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
-                //type check the mobivalue
                 TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
                 typeChecker.verify();
             }
@@ -164,37 +144,7 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
         }
         else {
             MappingCommand mappingCommand = new MappingCommand(varCtx.variableDeclaratorId().getText(), varCtx.variableInitializer().expression());
-
-            StatementControlOverseer statementControl = StatementControlOverseer.getInstance();
-            //add to conditional controlled command
-            if(statementControl.isInConditionalCommand()) {
-                IConditionalCommand conditionalCommand = (IConditionalCommand) statementControl.getActiveControlledCommand();
-
-                if(statementControl.isInPositiveRule()) {
-                    conditionalCommand.addPositiveCommand(mappingCommand);
-                }
-                else {
-                    conditionalCommand.addNegativeCommand(mappingCommand);
-                }
-            }
-
-            else if(statementControl.isInControlledCommand()) {
-                IControlledCommand controlledCommand = (IControlledCommand) statementControl.getActiveControlledCommand();
-                controlledCommand.addCommand(mappingCommand);
-            }
-//            else if (statementControl.isInAttemptCommand()) {
-//                IAttemptCommand attemptCommand = (IAttemptCommand) statementControl.getActiveControlledCommand();
-//
-//                if(statementControl.isInTryBlock()) {
-//                    attemptCommand.addTryCommand(mappingCommand);
-//                } else {
-//                    attemptCommand.addCatchCommand(statementControl.getCurrentCatchType(), mappingCommand);
-//                }
-//            }
-            else {
-                ExecutionManager.getInstance().addCommand(mappingCommand);
-            }
-
+            ExecutionManager.getInstance().addCommand(mappingCommand);
         }
     }
 
@@ -218,16 +168,9 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
             if(this.identifiedTokenHolder.containsTokens(IDENTIFIER_VALUE_KEY)) {
                 identifierValueString = this.identifiedTokenHolder.getToken(IDENTIFIER_VALUE_KEY);
                 localScope.addInitializedVariable(primitiveTypeString, identifierString, identifierValueString);
-
-                if (this.identifiedTokenHolder.containsTokens(FINAL_TYPE_KEY))
-                    localScope.addFinalInitVariable(primitiveTypeString, identifierString, identifierValueString);
-
             }
             else {
                 localScope.addEmptyVariable(primitiveTypeString, identifierString);
-
-                if (this.identifiedTokenHolder.containsTokens(FINAL_TYPE_KEY))
-                    localScope.addFinalEmptyVariable(primitiveTypeString, identifierString);
             }
 
             //remove the following tokens

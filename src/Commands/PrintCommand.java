@@ -2,6 +2,11 @@ package Commands;
 
 import ErrorChecker.UndeclaredChecker;
 import GeneratedAntlrClasses.CorgiParser;
+import Representations.CorgiArray;
+import Representations.CorgiValue;
+import Representations.CorgiValueSearcher;
+import Representations.PrimitiveType;
+import Utlities.StringUtilities;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -10,25 +15,17 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class PrintCommand implements ICommand, ParseTreeListener {
 
-    private final static String TAG = "PrintCommand";
-
     private CorgiParser.ExpressionContext expressionCtx;
 
     private String statementToPrint = "";
-//    private boolean isLN = false;
+    private boolean complexExpr = false;
+    private boolean arrayAccess = false;
 
-    private boolean evaluatedExp = false;
+    public PrintCommand(CorgiParser.ExpressionContext expressionCtx) {
+        this.expressionCtx = expressionCtx;
 
-    public PrintCommand(CorgiParser.StatementContext sCtx) {
-
-//        isLN = sCtx.PRINTLN() != null;
-
-        this.expressionCtx = sCtx.expression();
-
-        UndeclaredChecker undeclaredChecker = new UndeclaredChecker(expressionCtx);
+        UndeclaredChecker undeclaredChecker = new UndeclaredChecker(this.expressionCtx);
         undeclaredChecker.verify();
-
-        statementToPrint = "";
     }
 
     @Override
@@ -36,12 +33,8 @@ public class PrintCommand implements ICommand, ParseTreeListener {
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         treeWalker.walk(this, this.expressionCtx);
 
-        statementToPrint += "\n";
-
-        //TODO: Print statement on front-end
-
-        statementToPrint = "";
-        evaluatedExp = false;
+        System.out.println(this.statementToPrint);//TODO PRINT STATEMENT ON FRONT END
+        this.statementToPrint = ""; //reset statement to print afterwards
     }
 
     @Override
@@ -57,21 +50,61 @@ public class PrintCommand implements ICommand, ParseTreeListener {
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
+        if(ctx instanceof CorgiParser.LiteralContext) {
+            CorgiParser.LiteralContext literalCtx = (CorgiParser.LiteralContext) ctx;
 
-        if (ctx instanceof CorgiParser.ExpressionContext && !evaluatedExp) {
+            if(literalCtx.StringLiteral() != null) {
+                String quotedString = literalCtx.StringLiteral().getText();
 
-            CorgiParser.ExpressionContext expCtx = (CorgiParser.ExpressionContext) ctx;
+                this.statementToPrint += StringUtilities.removeQuotes(quotedString);
+            }
+			/*else if(literalCtx.IntegerLiteral() != null) {
+				int value = Integer.parseInt(literalCtx.IntegerLiteral().getText());
+				this.statementToPrint += value;
+			}
 
-            EvaluationCommand evComm = new EvaluationCommand(expCtx);
-            evComm.execute();
+			else if(literalCtx.FloatingPointLiteral() != null) {
+				float value = Float.parseFloat(literalCtx.FloatingPointLiteral().getText());
+				this.statementToPrint += value;
+			}
 
-            if (evComm.isNumericResult())
-                statementToPrint += evComm.getResult().toEngineeringString();
-            else
-                statementToPrint += evComm.getStringResult();
+			else if(literalCtx.BooleanLiteral() != null) {
+				this.statementToPrint += literalCtx.BooleanLiteral().getText();
+			}
 
-            evaluatedExp = true;
+			else if(literalCtx.CharacterLiteral() != null) {
+				this.statementToPrint += literalCtx.CharacterLiteral().getText();
+			}*/
+        }
 
+        else if(ctx instanceof CorgiParser.PrimaryContext) {
+            CorgiParser.PrimaryContext primaryCtx = (CorgiParser.PrimaryContext) ctx;
+
+            if(primaryCtx.expression() != null) {
+                CorgiParser.ExpressionContext exprCtx = primaryCtx.expression();
+                this.complexExpr = true;
+//                Console.log(LogType.DEBUG, "Complex expression detected: " +exprCtx.getText());
+
+                EvaluationCommand evaluationCommand = new EvaluationCommand(exprCtx);
+                evaluationCommand.execute();
+
+                this.statementToPrint += evaluationCommand.getResult().toEngineeringString();
+            }
+
+            else if(primaryCtx.Identifier() != null && this.complexExpr == false) {
+                String identifier = primaryCtx.getText();
+
+                CorgiValue value = CorgiValueSearcher.searchCorgiValue(identifier);
+                if(value.getPrimitiveType() == PrimitiveType.ARRAY) {
+                    this.arrayAccess = true;
+                    this.evaluateArrayPrint(value, primaryCtx);
+                }
+                else if(this.arrayAccess == false) {
+                    this.statementToPrint += value.getValue();
+                }
+
+
+            }
         }
     }
 
@@ -83,5 +116,22 @@ public class PrintCommand implements ICommand, ParseTreeListener {
     public String getStatementToPrint() {
         return this.statementToPrint;
     }
+
+    private void evaluateArrayPrint(CorgiValue corgiValue, CorgiParser.PrimaryContext primaryCtx) {
+
+        //move up and determine expression contexts
+        CorgiParser.ExpressionContext parentExprCtx = (CorgiParser.ExpressionContext) primaryCtx.getParent().getParent();
+        CorgiParser.ExpressionContext arrayIndexExprCtx = parentExprCtx.expression(1);
+
+        EvaluationCommand evaluationCommand = new EvaluationCommand(arrayIndexExprCtx);
+        evaluationCommand.execute();
+
+        CorgiArray corgiArray = (CorgiArray) corgiValue.getValue();
+        CorgiValue arrayCorgiValue = corgiArray.getValueAt(evaluationCommand.getResult().intValue());
+
+        this.statementToPrint += arrayCorgiValue.getValue().toString();
+    }
+
+
 
 }

@@ -21,9 +21,6 @@ public class MultipleFuncDecChecker implements IErrorChecker {
         this.lineNumber = firstToken.getLine();
     }
 
-    /* (non-Javadoc)
-     * @see com.neildg.mobiprog.builder.errorcheckers.IErrorChecker#verify()
-     */
     @Override
     public void verify() {
         this.verifyFunctionCall(this.methodDecCtx.Identifier().getText());
@@ -31,8 +28,8 @@ public class MultipleFuncDecChecker implements IErrorChecker {
 
     private void verifyFunctionCall(String identifierString) {
 
-        MainScope classScope = SymbolTableManager.getInstance().getMainScope();
-        CorgiFunction corgiFunction = classScope.getFunction(identifierString);
+        MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiFunction corgiFunction = mainScope.getFunction(identifierString);
 
         if(corgiFunction != null) {
             BuildChecker.reportCustomError(SemanticErrorDictionary.MULTIPLE_FUNCTION, "", identifierString, this.lineNumber);

@@ -20,7 +20,7 @@ public class ParameterAnalyzer implements ParseTreeListener {
     private final static String IS_ARRAY_KEY = "IS_ARRAY_KEY";
 
 
-    private IdentifiedTokenHolder identifiedTokens;
+    private IdentifiedTokenHolder identifiedTokenHolder;
     private CorgiFunction declaredCorgiFunction;
 
     public ParameterAnalyzer(CorgiFunction declaredCorgiFunction) {
@@ -28,7 +28,7 @@ public class ParameterAnalyzer implements ParseTreeListener {
     }
 
     public void analyze(CorgiParser.FormalParameterListContext ctx) {
-        this.identifiedTokens = new IdentifiedTokenHolder();
+        this.identifiedTokenHolder = new IdentifiedTokenHolder();
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         treeWalker.walk(this, ctx);
@@ -79,27 +79,27 @@ public class ParameterAnalyzer implements ParseTreeListener {
             //return type is a primitive type
             if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
-                this.identifiedTokens.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
+                this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
             }
             //check if its array declaration
             else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
-                this.identifiedTokens.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
-                this.identifiedTokens.addToken(IS_ARRAY_KEY, IS_ARRAY_KEY);
+                this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
+                this.identifiedTokenHolder.addToken(IS_ARRAY_KEY, IS_ARRAY_KEY);
             }
 
             //return type is a string or a class type
             else {
                 //a string type
                 if(typeCtx.classOrInterfaceType().getText().contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
-                    this.identifiedTokens.addToken(PARAMETER_TYPE_KEY, typeCtx.classOrInterfaceType().getText());
+                    this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, typeCtx.classOrInterfaceType().getText());
                 }
             }
         }
 
         if(formalParamCtx.variableDeclaratorId() != null) {
             TerminalNode identifier = formalParamCtx.variableDeclaratorId().Identifier();
-            this.identifiedTokens.addToken(PARAMETER_IDENTIFIER_KEY, identifier.getText());
+            this.identifiedTokenHolder.addToken(PARAMETER_IDENTIFIER_KEY, identifier.getText());
 
             this.createCorgiValue();
         }
@@ -107,25 +107,25 @@ public class ParameterAnalyzer implements ParseTreeListener {
     }
 
     private void createCorgiValue() {
-        if(this.identifiedTokens.containsTokens(IS_ARRAY_KEY, PARAMETER_TYPE_KEY, PARAMETER_IDENTIFIER_KEY)) {
-            String typeString = this.identifiedTokens.getToken(PARAMETER_TYPE_KEY);
-            String identifierString = this.identifiedTokens.getToken(PARAMETER_IDENTIFIER_KEY);
+        if(this.identifiedTokenHolder.containsTokens(IS_ARRAY_KEY, PARAMETER_TYPE_KEY, PARAMETER_IDENTIFIER_KEY)) {
+            String typeString = this.identifiedTokenHolder.getToken(PARAMETER_TYPE_KEY);
+            String identifierString = this.identifiedTokenHolder.getToken(PARAMETER_IDENTIFIER_KEY);
 
-            //initialize an array mobivalue
             CorgiArray declaredArray = CorgiArray.createArray(typeString, identifierString);
             CorgiValue corgiValue = new CorgiValue(declaredArray, PrimitiveType.ARRAY);
             this.declaredCorgiFunction.addParameter(identifierString, corgiValue);
 
             //Console.log(LogType.DEBUG, "Created array parameter for " +this.declaredBaracoMethod.getFunctionName());
         }
-        else if(this.identifiedTokens.containsTokens(PARAMETER_TYPE_KEY, PARAMETER_IDENTIFIER_KEY)) {
-            String typeString = this.identifiedTokens.getToken(PARAMETER_TYPE_KEY);
-            String identifierString = this.identifiedTokens.getToken(PARAMETER_IDENTIFIER_KEY);
+        else if(this.identifiedTokenHolder.containsTokens(PARAMETER_TYPE_KEY, PARAMETER_IDENTIFIER_KEY)) {
+            String typeString = this.identifiedTokenHolder.getToken(PARAMETER_TYPE_KEY);
+            String identifierString = this.identifiedTokenHolder.getToken(PARAMETER_IDENTIFIER_KEY);
 
             CorgiValue corgiValue = CorgiValue.createEmptyVariable(typeString);
             this.declaredCorgiFunction.addParameter(identifierString, corgiValue);
         }
 
-        this.identifiedTokens.clearTokens();
+        this.identifiedTokenHolder.clearTokens();
     }
+
 }

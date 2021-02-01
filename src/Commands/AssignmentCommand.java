@@ -16,7 +16,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
 
-public class AssignmentCommand implements ICommand {
+public class AssignmentCommand implements ICommand{
+
+    private final static String TAG = "MobiProg_NewAssignmentCommand";
 
     private CorgiParser.ExpressionContext leftHandExprCtx;
     private CorgiParser.ExpressionContext rightHandExprCtx;
@@ -34,7 +36,6 @@ public class AssignmentCommand implements ICommand {
 
         undeclaredChecker = new UndeclaredChecker(this.rightHandExprCtx);
         undeclaredChecker.verify();
-
 
         ParseTreeWalker functionWalker = new ParseTreeWalker();
         functionWalker.walk(new FunctionCallVerifier(), this.rightHandExprCtx);
@@ -56,35 +57,16 @@ public class AssignmentCommand implements ICommand {
         EvaluationCommand evaluationCommand = new EvaluationCommand(this.rightHandExprCtx);
         evaluationCommand.execute();
 
-        if(evaluationCommand.hasException())
-            return;
-
         if(this.isLeftHandArrayAccessor()) {
-
-            if(evaluationCommand.isNumericResult())
-                this.handleArrayAssignment(evaluationCommand.getResult().toEngineeringString());
-            else
-                this.handleArrayAssignment(evaluationCommand.getStringResult());
+            this.handleArrayAssignment(evaluationCommand.getResult().toEngineeringString());
         }
         else {
             CorgiValue corgiValue = VariableSearcher.searchVariable(this.leftHandExprCtx.getText());
-
-            if (evaluationCommand.isNumericResult()) {
-
-                if (!corgiValue.isFinal()) {
-                    AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
-                }
-
-            } else {
-
-                if (!corgiValue.isFinal()) {
-                    AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getStringResult());
-                }
-            }
+            AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
         }
     }
 
-    public boolean isLeftHandArrayAccessor() {
+    private boolean isLeftHandArrayAccessor() {
         List<TerminalNode> lBrackTokens = this.leftHandExprCtx.getTokens(CorgiLexer.LBRACK);
         List<TerminalNode> rBrackTokens = this.leftHandExprCtx.getTokens(CorgiLexer.RBRACK);
 
@@ -101,21 +83,11 @@ public class AssignmentCommand implements ICommand {
         EvaluationCommand evaluationCommand = new EvaluationCommand(arrayIndexExprCtx);
         evaluationCommand.execute();
 
-        ExecutionManager.getInstance().setCurrentCheckedLineNumber(arrayIndexExprCtx.getStart().getLine());
-
         //create a new array value to replace value at specified index
         CorgiValue newArrayValue = new CorgiValue(null, corgiArray.getArrayType());
         newArrayValue.setValue(resultString);
         corgiArray.updateValueAt(newArrayValue, evaluationCommand.getResult().intValue());
 
         //Console.log("Index to access: " +evaluationCommand.getResult().intValue()+ " Updated with: " +resultString);
-    }
-
-    public CorgiParser.ExpressionContext getLeftHandExprCtx() {
-        return leftHandExprCtx;
-    }
-
-    public CorgiParser.ExpressionContext getRightHandExprCtx() {
-        return rightHandExprCtx;
     }
 }

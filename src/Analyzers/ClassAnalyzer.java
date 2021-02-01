@@ -1,6 +1,5 @@
 package Analyzers;
 
-import ErrorChecker.ClassNameChecker;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Semantics.MainScope;
@@ -19,7 +18,6 @@ public class ClassAnalyzer implements ParseTreeListener {
 
     private MainScope mainScope;
     private IdentifiedTokenHolder identifiedTokenHolder;
-
 
     public final static String ACCESS_CONTROL_KEY = "ACCESS_CONTROL_KEY";
     public final static String CONST_CONTROL_KEY = "CONST_CONSTROL_KEY";
@@ -60,17 +58,11 @@ public class ClassAnalyzer implements ParseTreeListener {
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
-//        if(ctx instanceof CorgiParser.StartContext) {
-////            SymbolTableManager.getInstance().addClassScope(this.mainScope.getClassName(), this.mainScope);
-//            CorgiParser.StartContext startContext = (CorgiParser.StartContext) ctx;
-//            for (CorgiParser.ClassBodyDeclarationContext decCtx:((CorgiParser.StartContext) ctx).classBodyDeclaration()) {
-//                this.analyzeClassMembers(decCtx.memberDeclaration());
-//            }
+//        if(ctx instanceof ClassDeclarationContext) {
+//            SymbolTableManager.getInstance().addClassScope(this.mainScope.getClassName(), this.mainScope);
 //        }
 
         this.analyzeClassMembers(ctx);
-
-
     }
 
     @Override
@@ -79,15 +71,14 @@ public class ClassAnalyzer implements ParseTreeListener {
     }
 
     private void analyzeClassMembers(ParserRuleContext ctx) {
-//        if(ctx instanceof CorgiParser.ClassOrInterfaceModifierContext) {
-//            CorgiParser.ClassOrInterfaceModifierContext classModifierCtx = (BaracoParser.ClassOrInterfaceModifierContext) ctx;
+//        if(ctx instanceof ClassOrInterfaceModifierContext) {
+//            ClassOrInterfaceModifierContext classModifierCtx = (ClassOrInterfaceModifierContext) ctx;
 //
 //            this.analyzeModifier(classModifierCtx);
 //        }
-        System.out.println(ctx.getClass().getName());
 
         //else
-            if(ctx instanceof CorgiParser.FieldDeclarationContext) {
+        if(ctx instanceof CorgiParser.FieldDeclarationContext) {
             CorgiParser.FieldDeclarationContext fieldCtx = (CorgiParser.FieldDeclarationContext) ctx;
 
             if(fieldCtx.typeType() != null) {
@@ -164,18 +155,18 @@ public class ClassAnalyzer implements ParseTreeListener {
         return false;
     }
 
-//    private void analyzeModifier(CorgiParser.ClassOrInterfaceModifierContext ctx) {
-//        if(ctx.getTokens(CorgiLexer.PUBLIC).size() > 0 || ctx.getTokens(CorgiLexer.PRIVATE).size() > 0
-//                || ctx.getTokens(CorgiLexer.PROTECTED).size() > 0) {
-//            //Console.log(LogType.DEBUG, "Detected accessor: " +ctx.getText());
+//    private void analyzeModifier(ClassOrInterfaceModifierContext ctx) {
+//        if(ctx.getTokens(JavaLexer.PUBLIC).size() > 0 || ctx.getTokens(JavaLexer.PRIVATE).size() > 0
+//                || ctx.getTokens(JavaLexer.PROTECTED).size() > 0) {
+//            Console.log(LogType.DEBUG, "Detected accessor: " +ctx.getText());
 //            this.identifiedTokenHolder.addToken(ACCESS_CONTROL_KEY, ctx.getText());
 //        }
-//        else if(ctx.getTokens(CorgiLexer.FINAL).size() > 0) {
-//            //Console.log(LogType.DEBUG, "Detected const: " +ctx.getText());
+//        else if(ctx.getTokens(JavaLexer.FINAL).size() > 0) {
+//            Console.log(LogType.DEBUG, "Detected const: " +ctx.getText());
 //            this.identifiedTokenHolder.addToken(CONST_CONTROL_KEY, ctx.getText());
 //        }
-//        else if(ctx.getTokens(CorgiLexer.STATIC).size() > 0) {
-//            //Console.log(LogType.DEBUG, "Detected static: " +ctx.getText());
+//        else if(ctx.getTokens(JavaLexer.STATIC).size() > 0) {
+//            Console.log(LogType.DEBUG, "Detected static: " +ctx.getText());
 //            this.identifiedTokenHolder.addToken(STATIC_CONTROL_KEY, ctx.getText());
 //        }
 //    }

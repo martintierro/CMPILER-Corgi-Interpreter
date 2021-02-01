@@ -19,6 +19,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.List;
 
 public class MainAnalyzer implements ParseTreeListener {
+
     public MainAnalyzer() {
 
     }
@@ -28,9 +29,9 @@ public class MainAnalyzer implements ParseTreeListener {
 //            ExecutionManager.getInstance().reportFoundEntryPoint(ParserHandler.getInstance().getCurrentClassName());
 
             //automatically create a local scope for main() whose parent is the class scope
-            MainScope classScope = SymbolTableManager.getInstance().getMainScope();
+            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
             LocalScope localScope = LocalScopeCreator.getInstance().openLocalScope();
-            localScope.setParent(classScope);
+            localScope.setParent(mainScope);
 
             ParseTreeWalker treeWalker = new ParseTreeWalker();
             treeWalker.walk(this, ctx);

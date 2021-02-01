@@ -17,7 +17,6 @@ import java.util.List;
 
 public class StatementExpressionAnalyzer implements ParseTreeListener {
 
-    private int called = 0;
     private CorgiParser.ExpressionContext readRightHandExprCtx; //used to avoid mistakenly reading right hand expressions as direct function calls as well.
 
     //TODO: find a way to not rely on tree depth for function calls.
@@ -65,57 +64,12 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
                 this.handleStatementExecution(assignmentCommand);
 
             }
-            else if(isAddAssignExpression(exprCtx)) {
-                System.out.println("Add assign expr detected: " + exprCtx.getText());
-
-                List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
-                ShorthandCommand shorthandCommand = new ShorthandCommand(exprListCtx.get(0), exprListCtx.get(1), CorgiLexer.ADD_ASSIGN);
-
-                this.readRightHandExprCtx = exprListCtx.get(1);
-                this.handleStatementExecution(shorthandCommand);
-            }
-            else if(isSubAssignExpression(exprCtx)) {
-                System.out.println("Sub assign expr detected: " + exprCtx.getText());
-
-                List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
-                ShorthandCommand shorthandCommand = new ShorthandCommand(exprListCtx.get(0), exprListCtx.get(1), CorgiLexer.SUB_ASSIGN);
-
-                this.readRightHandExprCtx = exprListCtx.get(1);
-                this.handleStatementExecution(shorthandCommand);
-            }
-            else if(isMulAssignExpression(exprCtx)) {
-                System.out.println("Mul assign expr detected: " + exprCtx.getText());
-
-                List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
-                ShorthandCommand shorthandCommand = new ShorthandCommand(exprListCtx.get(0), exprListCtx.get(1), CorgiLexer.MUL_ASSIGN);
-
-                this.readRightHandExprCtx = exprListCtx.get(1);
-                this.handleStatementExecution(shorthandCommand);
-            }
-            else if(isDivAssignExpression(exprCtx)) {
-                System.out.println("Div assign expr detected: " + exprCtx.getText());
-
-                List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
-                ShorthandCommand shorthandCommand = new ShorthandCommand(exprListCtx.get(0), exprListCtx.get(1), CorgiLexer.DIV_ASSIGN);
-
-                this.readRightHandExprCtx = exprListCtx.get(1);
-                this.handleStatementExecution(shorthandCommand);
-            }
-            else if(isModAssignExpression(exprCtx)) {
-                System.out.println("Mod assign expr detected: " + exprCtx.getText());
-
-                List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
-                ShorthandCommand shorthandCommand = new ShorthandCommand(exprListCtx.get(0), exprListCtx.get(1), CorgiLexer.MOD_ASSIGN);
-
-                this.readRightHandExprCtx = exprListCtx.get(1);
-                this.handleStatementExecution(shorthandCommand);
-            }
             else if(isIncrementExpression(exprCtx)) {
                 System.out.println("Increment expr detected: " +exprCtx.getText());
 
                 List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
 
-                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0), CorgiLexer.INC);
+                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0) ,CorgiLexer.INC);
                 this.handleStatementExecution(incDecCommand);
             }
 
@@ -124,59 +78,18 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
                 List<CorgiParser.ExpressionContext> exprListCtx = exprCtx.expression();
 
-                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0), CorgiLexer.DEC);
+                IncDecCommand incDecCommand = new IncDecCommand(exprListCtx.get(0) ,CorgiLexer.DEC);
                 this.handleStatementExecution(incDecCommand);
 
             }
-            else if(isFunctionCall(exprCtx))
-                handleFunctionCall(exprCtx);
-            else {
 
-                ParserRuleContext prCtx = exprCtx;
-
-                while(!(prCtx instanceof CorgiParser.StatementExpressionContext)) {
-                    prCtx = prCtx.getParent();
-                }
-
-                CorgiParser.StatementExpressionContext stExCtx = (CorgiParser.StatementExpressionContext) prCtx;
-
-                if(stExCtx.expression() != null) {
-                    CorgiParser.ExpressionContext expCtx = stExCtx.expression();
-
-                    if (!(isAssignmentExpression(expCtx) ||
-                            isAddAssignExpression(expCtx) ||
-                            isSubAssignExpression(expCtx) ||
-                            isMulAssignExpression(expCtx) ||
-                            isDivAssignExpression(expCtx) ||
-                            isModAssignExpression(expCtx) ||
-                            isIncrementExpression(expCtx) ||
-                            isDecrementExpression(expCtx) ||
-                            isFunctionCall(expCtx))) {
-
-                        int lineNumber = expCtx.getStart().getLine();
-
-                        BuildChecker.reportCustomError(SemanticErrorDictionary.NOT_A_STATEMENT, "", expCtx.getText(), lineNumber);
-
-                        expCtx.children = null;
-
-                    }
-                }
-
-            }
-
-            /*else if(this.isFunctionCallWithParams(exprCtx)) {
+            else if(this.isFunctionCallWithParams(exprCtx)) {
                 this.handleFunctionCallWithParams(exprCtx);
             }
 
-            else if(isFunctionCallWithNoParams(exprCtx)) {
-               int i = exprCtx.depth();
-               TerminalNode n = exprCtx.Identifier();
-                called++;
-                if(called % 2 == 1) {
-                    System.out.println("depth: " + exprCtx.depth());
-                    this.handleFunctionCallWithNoParams(exprCtx);
-                }
-            }*/
+            else if(this.isFunctionCallWithNoParams(exprCtx)) {
+                this.handleFunctionCallWithNoParams(exprCtx);
+            }
         }
     }
 
@@ -206,15 +119,6 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
             IControlledCommand controlledCommand = (IControlledCommand) statementControl.getActiveControlledCommand();
             controlledCommand.addCommand(command);
         }
-//        else if (statementControl.isInAttemptCommand()) {
-//            IAttemptCommand attemptCommand = (IAttemptCommand) statementControl.getActiveControlledCommand();
-//
-//            if(statementControl.isInTryBlock()) {
-//                attemptCommand.addTryCommand(command);
-//            } else {
-//                attemptCommand.addCatchCommand(statementControl.getCurrentCatchType(), command);
-//            }
-//        }
         else {
             ExecutionManager.getInstance().addCommand(command);
         }
@@ -224,17 +128,6 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
     private void handleFunctionCallWithParams(CorgiParser.ExpressionContext funcExprCtx) {
         CorgiParser.ExpressionContext functionExprCtx = funcExprCtx.expression(0);
         String functionName = functionExprCtx.getText();
-        //String functionName = functionExprCtx.Identifier().getText();
-
-        FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
-        this.handleStatementExecution(functionCallCommand);
-
-        System.out.println("Function call with params detected: " +functionName);
-    }
-
-    private void handleFunctionCallWithNoParams(CorgiParser.ExpressionContext funcExprCtx) {
-        System.out.println("HANDLEEEE: " + funcExprCtx.expression(0).getText());
-        String functionName = funcExprCtx.start.getText();
 
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
         this.handleStatementExecution(functionCallCommand);
@@ -242,47 +135,15 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
         System.out.println("Function call with no params detected: " +functionName);
     }
 
-    private void handleFunctionCall(CorgiParser.ExpressionContext funcExprCtx) {
+    private void handleFunctionCallWithNoParams(CorgiParser.ExpressionContext funcExprCtx) {
         String functionName = funcExprCtx.expression(0).getText();
 
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
         this.handleStatementExecution(functionCallCommand);
 
     }
-
     public static boolean isAssignmentExpression(CorgiParser.ExpressionContext exprCtx) {
         List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.ASSIGN);
-
-        return (tokenList.size() > 0);
-    }
-
-    public static boolean isAddAssignExpression(CorgiParser.ExpressionContext exprCtx) {
-        List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.ADD_ASSIGN);
-
-        return (tokenList.size() > 0);
-    }
-
-    public static boolean isSubAssignExpression(CorgiParser.ExpressionContext exprCtx) {
-        List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.SUB_ASSIGN);
-
-        return (tokenList.size() > 0);
-    }
-
-    public static boolean isMulAssignExpression(CorgiParser.ExpressionContext exprCtx) {
-        List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.MUL_ASSIGN);
-
-        return (tokenList.size() > 0);
-    }
-
-    public static boolean isDivAssignExpression(CorgiParser.ExpressionContext exprCtx) {
-        List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.DIV_ASSIGN);
-
-        return (tokenList.size() > 0);
-    }
-
-    public static boolean isModAssignExpression(CorgiParser.ExpressionContext exprCtx) {
-        List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.MOD_ASSIGN);
-
         return (tokenList.size() > 0);
     }
 
@@ -298,11 +159,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
         return (decrementList.size() > 0);
     }
 
-    public boolean isFunctionCall(CorgiParser.ExpressionContext exprCtx) {
-        return exprCtx.expression(0) != null && exprCtx != this.readRightHandExprCtx && EvaluationCommand.isFunctionCall(exprCtx);
-    }
-
-    public boolean isFunctionCallWithParams(CorgiParser.ExpressionContext exprCtx) {
+    private boolean isFunctionCallWithParams(CorgiParser.ExpressionContext exprCtx) {
         CorgiParser.ExpressionContext firstExprCtx = exprCtx.expression(0);
 
         if(firstExprCtx != null) {

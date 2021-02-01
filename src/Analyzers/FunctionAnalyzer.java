@@ -1,7 +1,5 @@
 package Analyzers;
 
-import Builder.BuildChecker;
-import Builder.SemanticErrorDictionary;
 import ErrorChecker.MultipleFuncDecChecker;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
@@ -22,8 +20,6 @@ public class FunctionAnalyzer implements ParseTreeListener {
     private MainScope mainScope;
     private IdentifiedTokenHolder identifiedTokenHolder;
     private CorgiFunction declaredCorgiFunction;
-
-    private boolean paramsFlag = false;
 
     public FunctionAnalyzer(IdentifiedTokenHolder identifiedTokens, MainScope mainScope) {
         this.identifiedTokenHolder = identifiedTokens;
@@ -68,27 +64,13 @@ public class FunctionAnalyzer implements ParseTreeListener {
     @Override
     public void exitEveryRule(ParserRuleContext ctx) {
         if(ctx instanceof CorgiParser.MethodDeclarationContext) {
-
-            CorgiParser.MethodDeclarationContext mdCtx = (CorgiParser.MethodDeclarationContext) ctx;
-
-            if (!this.declaredCorgiFunction.isValidReturn()) {
-
-                int lineNumber = 0;
-
-                if (mdCtx.Identifier() != null)
-                    lineNumber = mdCtx.Identifier().getSymbol().getLine();
-
-                BuildChecker.reportCustomError(SemanticErrorDictionary.NO_RETURN_STATEMENT, "", this.declaredCorgiFunction.getFunctionName(), lineNumber);
-            }
-
-
             ExecutionManager.getInstance().closeFunctionExecution();
         }
     }
 
     private void analyzeMethod(ParserRuleContext ctx) {
 
-        if(ctx instanceof CorgiParser.TypeTypeContext && !paramsFlag) {
+        if(ctx instanceof CorgiParser.TypeTypeContext) {
             CorgiParser.TypeTypeContext typeCtx = (CorgiParser.TypeTypeContext) ctx;
 
             //return type is a primitive type
@@ -103,9 +85,6 @@ public class FunctionAnalyzer implements ParseTreeListener {
         }
 
         else if(ctx instanceof CorgiParser.FormalParametersContext) {
-
-            paramsFlag = true;
-
             CorgiParser.FormalParametersContext formalParamsCtx = (CorgiParser.FormalParametersContext) ctx;
             this.analyzeParameters(formalParamsCtx);
             this.storeCorgiFunction();
@@ -153,7 +132,6 @@ public class FunctionAnalyzer implements ParseTreeListener {
             String accessToken = this.identifiedTokenHolder.getToken(ClassAnalyzer.ACCESS_CONTROL_KEY);
 
             this.mainScope.addFunction(this.declaredCorgiFunction.getFunctionName(), this.declaredCorgiFunction);
-
 
             this.identifiedTokenHolder.clearTokens(); //clear tokens for reuse
         }

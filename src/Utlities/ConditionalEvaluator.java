@@ -8,6 +8,34 @@ import java.math.BigDecimal;
 
 public class ConditionalEvaluator {
 
+    private final static String TAG = "MobiProg_ConditionEvaluator";
+
+    /*
+     * Evaluates the modified conditional expression via Eval-Ex
+     */
+	/*public static boolean evaluateCondition(String modifiedConditionExpr) {
+
+		//catch rules if the if value has direct boolean flags
+		if(modifiedConditionExpr.contains("(true)")) {
+			return true;
+		}
+		else if(modifiedConditionExpr.contains("(false)")) {
+			return false;
+		}
+
+		Expression expr = new Expression(modifiedConditionExpr);
+		int result = expr.eval().intValue();
+
+		//Console.log("Evaluating " +modifiedConditionExpr+ ". result is " +result);
+
+		if(result == 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}*/
+
     public static boolean evaluateCondition(CorgiParser.ParExpressionContext parExprCtx) {
 
         CorgiParser.ExpressionContext conditionExprCtx = parExprCtx.expression();
@@ -30,54 +58,21 @@ public class ConditionalEvaluator {
         return (result == 1);
     }
 
-    public static boolean evaluateCondition(CorgiParser.ExpressionContext expressionContext) {
-
+    public static boolean evaluateCondition(CorgiParser.ExpressionContext conditionExprCtx) {
 
         //catch rules if the if value has direct boolean flags
-        if(expressionContext.getText().contains("true")) {
+        if(conditionExprCtx.getText().contains("(true)")) {
             return true;
         }
-        else if(expressionContext.getText().contains("false")) {
+        else if(conditionExprCtx.getText().contains("(false)")) {
             return false;
         }
 
-        EvaluationCommand evaluationCommand = new EvaluationCommand(expressionContext);
+        EvaluationCommand evaluationCommand = new EvaluationCommand(conditionExprCtx);
         evaluationCommand.execute();
 
         int result = evaluationCommand.getResult().intValue();
 
-        //Console.log("Evaluating: " +conditionExprCtx.getText() + " Result: " +result);
-
         return (result == 1);
-    }
-
-    public static boolean evaluateCondition(String condition) {
-
-        //catch rules if the if value has direct boolean flags
-        if(condition.contains("(true)")) {
-            return true;
-        }
-        else if(condition.contains("(false)")) {
-            return false;
-        }
-
-        if (condition.contains("!")) {
-            condition = condition.replaceAll("!", "not");
-            condition = condition.replaceAll("not=", "!=");
-        }
-
-        if (condition.contains("and")) {
-            condition = condition.replaceAll("and", "&&");
-        }
-
-        if (condition.contains("or")) {
-            condition = condition.replaceAll("or", "||");
-        }
-
-        Expression expression = new Expression(condition);
-
-        BigDecimal result = expression.eval();
-
-        return (1 == Integer.parseInt(result.toEngineeringString()));
     }
 }

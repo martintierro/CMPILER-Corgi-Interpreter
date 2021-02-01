@@ -68,9 +68,9 @@ public class FieldAnalyzer implements ParseTreeListener {
                 MappingCommand mappingCommand = new MappingCommand(varCtx.variableDeclaratorId().getText(), varCtx.variableInitializer().expression());
                 ExecutionManager.getInstance().addCommand(mappingCommand);
 
-                CorgiValue corgiValue = this.mainScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
+                CorgiValue declaredCorgiValue = this.mainScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
-                TypeChecker typeChecker = new TypeChecker(corgiValue, varCtx.variableInitializer().expression());
+                TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
                 typeChecker.verify();
             }
 

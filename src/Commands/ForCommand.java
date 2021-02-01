@@ -24,8 +24,6 @@ public class ForCommand implements IControlledCommand {
 
     private String modifiedConditionExpr;
 
-    private ArrayList<String> localVars = new ArrayList<>();
-
     public ForCommand(CorgiParser.LocalVariableDeclarationContext localVarDecCtx, CorgiParser.ExpressionContext conditionalExpr, ICommand updateCommand) {
         this.localVarDecCtx = localVarDecCtx;
         this.conditionalExpr = conditionalExpr;
@@ -36,12 +34,10 @@ public class ForCommand implements IControlledCommand {
 
     @Override
     public void execute() {
-        //this.evaluateLocalVariable();
+        this.evaluateLocalVariable();
         this.identifyVariables();
 
         ExecutionMonitor executionMonitor = ExecutionManager.getInstance().getExecutionMonitor();
-
-        LocalVariableTracker.resetLocalVars(localVars);
 
         try {
             //evaluate the given condition
@@ -49,23 +45,14 @@ public class ForCommand implements IControlledCommand {
                 for(ICommand command : this.commandSequences) {
                     executionMonitor.tryExecution();
                     command.execute();
-
-                    LocalVariableTracker.getInstance().populateLocalVars(command);
-
-                    if (ExecutionManager.getInstance().isAborted())
-                        break;
                 }
 
-                if (ExecutionManager.getInstance().isAborted())
-                    break;
-
-                executionMonitor.tryExecution();
                 this.updateCommand.execute(); //execute the update command
                 this.identifyVariables(); //identify variables again to detect changes to such variables used.
             }
 
         } catch(InterruptedException e) {
-            System.out.println(TAG + ": " + "Monitor block interrupted! " +e.getMessage());
+            System.out.println(TAG + ": " + "Monitor block interrupted! " +e.getMessage()); //TODO Change to IDE
         }
     }
 
@@ -92,7 +79,7 @@ public class ForCommand implements IControlledCommand {
     @Override
     public void addCommand(ICommand command) {
 
-        System.out.println("		Added command to FOR");
+        System.out.println("Added command to FOR");
         this.commandSequences.add(command);
     }
 
@@ -100,7 +87,4 @@ public class ForCommand implements IControlledCommand {
         return this.commandSequences.size();
     }
 
-    public ArrayList<String> getLocalVars() {
-        return localVars;
-    }
 }

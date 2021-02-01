@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class ForControlAnalyzer implements ParseTreeListener {
+public class ForControlAnalyzer implements ParseTreeListener{
 
     private CorgiParser.LocalVariableDeclarationContext localVarDecCtx;
     private CorgiParser.ExpressionContext exprCtx;
@@ -51,21 +51,6 @@ public class ForControlAnalyzer implements ParseTreeListener {
             if(StatementExpressionAnalyzer.isAssignmentExpression(exprCtx)) {
                 //this.updateCommand = new AssignmentCommand(exprCtx.expression(0), exprCtx.expression(1));
                 this.updateCommand = new AssignmentCommand(exprCtx.expression(0), exprCtx.expression(1));
-            }
-            else if(StatementExpressionAnalyzer.isAddAssignExpression(exprCtx)) {
-                this.updateCommand = new ShorthandCommand(exprCtx.expression(0), exprCtx.expression(1), CorgiLexer.ADD_ASSIGN);
-            }
-            else if(StatementExpressionAnalyzer.isSubAssignExpression(exprCtx)) {
-                this.updateCommand = new ShorthandCommand(exprCtx.expression(0), exprCtx.expression(1), CorgiLexer.SUB_ASSIGN);
-            }
-            else if(StatementExpressionAnalyzer.isMulAssignExpression(exprCtx)) {
-                this.updateCommand = new ShorthandCommand(exprCtx.expression(0), exprCtx.expression(1), CorgiLexer.MUL_ASSIGN);
-            }
-            else if(StatementExpressionAnalyzer.isDivAssignExpression(exprCtx)) {
-                this.updateCommand = new ShorthandCommand(exprCtx.expression(0), exprCtx.expression(1), CorgiLexer.DIV_ASSIGN);
-            }
-            else if(StatementExpressionAnalyzer.isModAssignExpression(exprCtx)) {
-                this.updateCommand = new ShorthandCommand(exprCtx.expression(0), exprCtx.expression(1), CorgiLexer.MOD_ASSIGN);
             }
             else if(StatementExpressionAnalyzer.isIncrementExpression(exprCtx)) {
                 this.updateCommand = new IncDecCommand(exprCtx.expression(0), CorgiLexer.INC);

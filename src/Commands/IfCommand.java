@@ -10,22 +10,19 @@ import Utlities.ConditionalEvaluator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IfCommand implements IConditionalCommand{
+public class IfCommand implements IConditionalCommand {
 
-    private List<ICommand> positiveCommands;
-    private List<ICommand> negativeCommands;
+    private List<ICommand> positiveCommands; //list of commands to execute if the condition holds true
+    private List<ICommand> negativeCommands; //list of commands to execute if the condition holds false
 
-    private CorgiParser.ParExpressionContext ctx;
-    private String conditionalExpr;
+    private CorgiParser.ParExpressionContext conditionalExpr;
+    private String modifiedConditionExpr;
 
-    public IfCommand(CorgiParser.ParExpressionContext ctx) {
-        this.ctx = ctx;
-        this.positiveCommands = new ArrayList<>();
-        this.negativeCommands = new ArrayList<>();
-    }
+    public IfCommand(CorgiParser.ParExpressionContext conditionalExpr) {
+        this.positiveCommands = new ArrayList<ICommand>();
+        this.negativeCommands = new ArrayList<ICommand>();
 
-    private boolean evaluate(){
-        return true;
+        this.conditionalExpr = conditionalExpr;
     }
 
     @Override
@@ -34,28 +31,32 @@ public class IfCommand implements IConditionalCommand{
 
         ExecutionMonitor executionMonitor = ExecutionManager.getInstance().getExecutionMonitor();
 
-        try{
-            if(ConditionalEvaluator.evaluateCondition(this.ctx)){
+        try {
+            //execute the positive commands
+            if(ConditionalEvaluator.evaluateCondition(this.conditionalExpr)) {
                 for(ICommand command : this.positiveCommands) {
                     executionMonitor.tryExecution();
                     command.execute();
                 }
-            }else{
+            }
+            //execute the negative commands
+            else {
                 for(ICommand command : this.negativeCommands) {
                     executionMonitor.tryExecution();
                     command.execute();
                 }
             }
         }catch(InterruptedException e) {
-            System.err.println("Monitor block interrupted! " +e.getMessage());
+            System.err.println("Monitor block interrupted! " +e.getMessage()); //TODO Change to IDE
         }
+
     }
 
     private void identifyVariables() {
-        IValueMapper identifierMapper = new IdentifierMapper(this.ctx.getText());
-        identifierMapper.analyze(this.ctx);
+        IValueMapper identifierMapper = new IdentifierMapper(this.conditionalExpr.getText());
+        identifierMapper.analyze(this.conditionalExpr);
 
-        this.conditionalExpr = identifierMapper.getModifiedExp();
+        this.modifiedConditionExpr = identifierMapper.getModifiedExp();
     }
 
     @Override
@@ -85,4 +86,5 @@ public class IfCommand implements IConditionalCommand{
     public int getNegativeCommandsCount() {
         return this.negativeCommands.size();
     }
+
 }

@@ -18,7 +18,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class MultipleVarDecChecker implements IErrorChecker, ParseTreeListener {
-    private final static String TAG = "MobiProg_MultipleVarDecChecker";
 
     private CorgiParser.VariableDeclaratorIdContext varDecIdCtx;
     private int lineNumber;
@@ -69,8 +68,8 @@ public class MultipleVarDecChecker implements IErrorChecker, ParseTreeListener {
         CorgiValue corgiValue = null;
 
         if(ExecutionManager.getInstance().isInFunctionExecution()) {
-            CorgiFunction mobiFunction = ExecutionManager.getInstance().getCurrentFunction();
-            corgiValue = VariableSearcher.searchVariableInFunction(mobiFunction, identifierString);
+            CorgiFunction corgiFunction = ExecutionManager.getInstance().getCurrentFunction();
+            corgiValue = VariableSearcher.searchVariableInFunction(corgiFunction, identifierString);
         }
 
         //if after function finding, mobi value is still null, search local scope

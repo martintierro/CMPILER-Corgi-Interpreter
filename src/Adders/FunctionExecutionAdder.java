@@ -5,20 +5,19 @@ import Representations.CorgiFunction;
 
 public class FunctionExecutionAdder implements IExecutionAdder {
 
-    private CorgiFunction assignedFunction;
+    private CorgiFunction assignedCorgiFunction;
 
     public FunctionExecutionAdder(CorgiFunction corgiFunction) {
-        this.assignedFunction = corgiFunction;
+        this.assignedCorgiFunction = corgiFunction;
     }
-
 
     @Override
     public void addCommand(ICommand command) {
-        this.assignedFunction.addCommand(command);
+        this.assignedCorgiFunction.addCommand(command);
     }
 
     public CorgiFunction getAssignedFunction() {
-        return this.assignedFunction;
+        return this.assignedCorgiFunction;
     }
 
 }
