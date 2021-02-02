@@ -4,7 +4,6 @@ import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiArray;
 
 public class ArrayInitializeCommand implements ICommand {
-    private final static String TAG = "ArrayInitializeCommand";
 
     private CorgiArray assignedCorgiArray;
     private CorgiParser.ArrayCreatorRestContext arrayCreatorCtx;

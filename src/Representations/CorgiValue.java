@@ -7,7 +7,6 @@ import java.util.Stack;
 
 public class CorgiValue {
 
-    private final static String TAG = "MobiProg_MobiValue";
 
     //these are the accepted primitive types
 

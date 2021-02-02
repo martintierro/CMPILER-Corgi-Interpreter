@@ -8,7 +8,6 @@ import Representations.CorgiFunction;
 import java.util.List;
 
 public class ParameterMismatchChecker implements IErrorChecker {
-    private final static String TAG = "MobiProg_ParameterMismatchChecker";
 
     private CorgiFunction corgiFunction;
     private List<CorgiParser.ExpressionContext> exprCtxList;

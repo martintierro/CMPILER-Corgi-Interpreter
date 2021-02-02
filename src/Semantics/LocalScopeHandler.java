@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Stack;
 
 public class LocalScopeHandler {
-    private final static String TAG = "MobiProg_ScopeCreator";
 
     private static LocalScopeHandler instance = null;
 

@@ -5,7 +5,6 @@ import Representations.CorgiFunction;
 import java.util.Stack;
 
 public class FunctionTracker {
-    private final static String TAG = "MobiProg_CallGraphManager";
 
     private static FunctionTracker instance = null;
 

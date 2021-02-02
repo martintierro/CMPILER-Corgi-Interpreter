@@ -8,7 +8,6 @@ import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 
 public class VariableSearcher {
-    private final static String TAG = "VariableSearcher";
 
     public static CorgiValue searchVariable(String identifierString) {
         CorgiValue corgiValue = null;

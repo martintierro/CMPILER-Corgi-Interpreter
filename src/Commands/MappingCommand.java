@@ -4,8 +4,10 @@ import Analyzers.FunctionCallVerifier;
 import ErrorChecker.UndeclaredChecker;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiValue;
+import Representations.PrimitiveType;
 import Searcher.VariableSearcher;
 import Utlities.AssignmentUtilities;
+import Utlities.StringUtilities;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class MappingCommand implements ICommand{
@@ -32,10 +34,24 @@ public class MappingCommand implements ICommand{
     public void execute() {
         this.modifiedExp = this.parentExprCtx.getText();
         System.out.println("Executing Mapping Command");
-        EvaluationCommand evaluationCommand = new EvaluationCommand(this.parentExprCtx);
-        evaluationCommand.execute();
+        String value = "";
+        EvaluationCommand evaluationCommand;
         CorgiValue corgiValue = VariableSearcher.searchVariable(this.identifierString);
-        AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
+        if(this.modifiedExp.contains("\"")) {
+            value = StringUtilities.removeQuotes(this.modifiedExp);
+            corgiValue.setPrimitiveType(PrimitiveType.STRING);
+            corgiValue.setValue(value);
+        }else if(this.modifiedExp.contains("'")){
+            value = StringUtilities.removeQuotes(this.modifiedExp);
+            corgiValue.setPrimitiveType(PrimitiveType.CHAR);
+            corgiValue.setValue(value);
+        }
+        else {
+            evaluationCommand = new EvaluationCommand(this.parentExprCtx);
+            evaluationCommand.execute();
+            AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
+        }
+
     }
 
     /*

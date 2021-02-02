@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 public class ExecutionManager implements NotificationListener {
 
-
     private static ExecutionManager sharedInstance = null;
 
     public static ExecutionManager getInstance() {

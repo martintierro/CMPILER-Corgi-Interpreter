@@ -9,7 +9,6 @@ import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.Token;
 
 public class MultipleFuncDecChecker implements IErrorChecker {
-    private final static String TAG = "MobiProg_MultipleFuncDecChecker";
 
     private CorgiParser.MethodDeclarationContext methodDecCtx;
     private int lineNumber;

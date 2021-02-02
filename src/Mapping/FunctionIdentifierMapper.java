@@ -14,7 +14,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper {
-    private final static String TAG = "MobiProg_FunctionIdentifierMapper";
 
     private String originalExp = null;
     private String modifiedExp = null;

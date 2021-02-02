@@ -7,8 +7,6 @@ import java.util.HashMap;
 
 public class LocalScope implements IScope {
 
-    private final static String TAG = "MobiProg_LocalScope";
-
     private IScope parentScope;
     private ArrayList<LocalScope> childScopeList = null;
 

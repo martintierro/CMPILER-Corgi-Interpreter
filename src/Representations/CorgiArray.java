@@ -3,7 +3,6 @@ package Representations;
 import Utlities.KeywordRecognizer;
 
 public class CorgiArray {
-    private final static String TAG = "MobiProg_MobiArray";
 
     private CorgiValue[] corgiValueArray;
     private PrimitiveType arrayPrimitiveType;

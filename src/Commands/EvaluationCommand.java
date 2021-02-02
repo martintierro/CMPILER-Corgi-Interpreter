@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class EvaluationCommand implements ICommand, ParseTreeListener {
-    private final static String TAG = "MobiProg_EvaluationCommand";
 
     private CorgiParser.ExpressionContext parentExprCtx;
     private String modifiedExp;

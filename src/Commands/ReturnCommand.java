@@ -8,7 +8,6 @@ import Representations.CorgiValue;
 import Utlities.AssignmentUtilities;
 
 public class ReturnCommand implements ICommand {
-    private final static String TAG = "MobiProg_ReturnCommand";
 
     private CorgiParser.ExpressionContext expressionCtx;
     private CorgiFunction assignedCorgiFunction;

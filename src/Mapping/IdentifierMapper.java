@@ -5,7 +5,6 @@ import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiValue;
 
 public class IdentifierMapper implements IValueMapper{
-    private final static String TAG = "MobiProg_IdentifierMapper";
 
     private IValueMapper valueMapper;
 

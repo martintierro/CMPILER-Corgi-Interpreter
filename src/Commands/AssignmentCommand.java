@@ -18,7 +18,6 @@ import java.util.List;
 
 public class AssignmentCommand implements ICommand{
 
-    private final static String TAG = "MobiProg_NewAssignmentCommand";
 
     private CorgiParser.ExpressionContext leftHandExprCtx;
     private CorgiParser.ExpressionContext rightHandExprCtx;

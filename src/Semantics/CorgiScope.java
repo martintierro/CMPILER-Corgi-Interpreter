@@ -7,9 +7,6 @@ import java.util.HashMap;
 
 public class CorgiScope implements IScope {
 
-    private final static String TAG = "MobiProg_ClassScope";
-
-
     private HashMap<String, CorgiValue> variables;
 
     private HashMap<String, CorgiFunction> functions;
