@@ -23,7 +23,7 @@ public class StatementAnalyzer {
             this.handlePrintStatement(ctx.printStatement());
         }
         else if(ctx.scanStatement() != null) {
-            this.handleScanStatement(ctx);
+            this.handleScanStatement(ctx.scanStatement());
         }
         //an expression
         else if(ctx.statementExpression() != null) {
@@ -151,8 +151,8 @@ public class StatementAnalyzer {
 
     }
 
-    private void handleScanStatement(CorgiParser.StatementContext ctx) {
-        ScanCommand scanCommand = new ScanCommand(ctx.scanStatement().expression().getText(), ctx.Identifier().getText());
+    private void handleScanStatement(CorgiParser.ScanStatementContext ctx) {
+        ScanCommand scanCommand = new ScanCommand(ctx.expression().getText(), ctx.Identifier().getText());
         UndeclaredChecker.verifyVarOrConstForScan(ctx.Identifier().getText(), ctx);
 
         StatementControlOverseer statementControl = StatementControlOverseer.getInstance();

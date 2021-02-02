@@ -37,10 +37,11 @@ public class ScanCommand implements ICommand, NotificationListener{
     }
 
     private void acquireInputFromUser(Parameters params) {
-        /*String valueEntered = params.getStringExtra(ScanUIHandler.VALUE_ENTERED_KEY, "");
-            TODO Change to IDE Front-End
-         */
         String valueEntered = "";
+
+        valueEntered = params.getStringExtra(KeyNames.VALUE_ENTERED_KEY, "");
+            //TODO Change to IDE Front-End
+
 
         CorgiValue corgiValue = CorgiValueSearcher.searchVariable(identifier);
         corgiValue.setValue(valueEntered);

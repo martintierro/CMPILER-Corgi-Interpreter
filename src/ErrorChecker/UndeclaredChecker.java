@@ -110,7 +110,7 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
     /*
      * Verifies a var or const identifier from a scan statement since scan grammar is different.
      */
-    public static void verifyVarOrConstForScan(String identifier, CorgiParser.StatementContext statementCtx) {
+    public static void verifyVarOrConstForScan(String identifier, CorgiParser.ScanStatementContext statementCtx) {
         CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
         CorgiValue corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, identifier);
 
