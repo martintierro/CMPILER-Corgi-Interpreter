@@ -101,35 +101,32 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
             }
 
             //check for duplicate declarations
-            if(!this.executeMappingImmediate) {
+            if(this.executeMappingImmediate == false) {
                 MultipleVarDecChecker multipleDeclaredChecker = new MultipleVarDecChecker(varCtx.variableDeclaratorId());
                 multipleDeclaredChecker.verify();
             }
 
             this.identifiedTokenHolder.addToken(IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
+            this.createCorgiValue();
+
             if(varCtx.variableInitializer() != null) {
 
                 //we do not evaluate strings.
                 if(this.identifiedTokenHolder.containsTokens(PRIMITIVE_TYPE_KEY)) {
                     String primitiveTypeString = this.identifiedTokenHolder.getToken(PRIMITIVE_TYPE_KEY);
-//                    if(primitiveTypeString.contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
+                    if(primitiveTypeString.contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
                         this.identifiedTokenHolder.addToken(IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
-//                    }
+                    }
                 }
 
                 this.processMapping(varCtx);
+
                 LocalScope localScope = LocalScopeHandler.getInstance().getActiveLocalScope();
                 CorgiValue declaredCorgiValue = localScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
                 TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
                 typeChecker.verify();
-
             }
-
-            this.createCorgiValue();
-
-
-
 
         }
 

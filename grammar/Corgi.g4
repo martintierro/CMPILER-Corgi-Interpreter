@@ -189,7 +189,7 @@ primitiveType
     :   'bool'
     |   'char'
     |   'int'
-    |   'decimal'
+    |   'float'
     |   'string'
     |   'array'
     ;
