@@ -8,7 +8,7 @@ import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Representations.CorgiValue;
 import Searcher.VariableSearcher;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -73,8 +73,8 @@ public class ConstChecker implements IErrorChecker, ParseTreeListener {
 
         //if after function finding, mobi value is still null, search class
         if(corgiValue == null) {
-            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-            corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(mainScope, varExprCtx.primary().Identifier().getText());
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, varExprCtx.primary().Identifier().getText());
         }
 
         if(corgiValue != null && corgiValue.isFinal()) {

@@ -124,14 +124,14 @@ public class LocalScope implements IScope {
     public int getDepth() {
         int depthCount = -1;
 
-        LocalScope scope = (LocalScope) this;
+        LocalScope scope =  this;
 
         while(scope != null) {
             depthCount++;
 
             IScope abstractScope = scope.getParent();
 
-            if(abstractScope instanceof MainScope)
+            if(abstractScope instanceof CorgiScope)
                 break;
 
             scope = (LocalScope) abstractScope;

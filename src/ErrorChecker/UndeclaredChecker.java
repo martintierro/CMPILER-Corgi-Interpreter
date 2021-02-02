@@ -1,7 +1,6 @@
 package ErrorChecker;
 
 import Builder.BuildChecker;
-import Builder.ParserHandler;
 import Builder.SemanticErrorDictionary;
 import Commands.EvaluationCommand;
 import Execution.ExecutionManager;
@@ -9,7 +8,7 @@ import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Representations.CorgiValue;
 import Searcher.VariableSearcher;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -77,7 +76,7 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
 
         String functionName = funcExprCtx.expression(0).getText();
 
-        MainScope classScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiScope classScope = SymbolTableManager.getInstance().getMainScope();
         CorgiFunction corgiFunction = classScope.getFunction(functionName);
 
         if(corgiFunction == null) {
@@ -98,8 +97,8 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
 
         //if after function finding, mobi value is still null, search class
         if(corgiValue == null) {
-            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-            corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(mainScope, varExprCtx.primary().Identifier().getText());
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, varExprCtx.primary().Identifier().getText());
         }
 
         //after second pass, we conclude if it cannot be found already
@@ -112,8 +111,8 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
      * Verifies a var or const identifier from a scan statement since scan grammar is different.
      */
     public static void verifyVarOrConstForScan(String identifier, CorgiParser.StatementContext statementCtx) {
-        MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-        CorgiValue corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(mainScope, identifier);
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiValue corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, identifier);
 
         Token firstToken = statementCtx.getStart();
 

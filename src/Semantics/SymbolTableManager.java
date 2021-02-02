@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class SymbolTableManager {
     private static SymbolTableManager instance = null;
-    private MainScope mainScope;
+    private CorgiScope corgiScope;
     private HashMap<String, LocalScope> classTable;
 
 
@@ -19,17 +19,17 @@ public class SymbolTableManager {
         instance = new SymbolTableManager();
     }
     private SymbolTableManager(){
-        mainScope = new MainScope();
+        corgiScope = new CorgiScope();
     }
 
-    public MainScope getMainScope(){
-        return mainScope;
+    public CorgiScope getMainScope(){
+        return corgiScope;
     }
 
 
 
     public void resetClassTables() {
-        MainScope[] classScopes = this.classTable.values().toArray(new MainScope[this.classTable.size()]);
+        CorgiScope[] classScopes = this.classTable.values().toArray(new CorgiScope[this.classTable.size()]);
 
         for(int i = 0; i < classScopes.length; i++) {
             classScopes[i].resetValues();

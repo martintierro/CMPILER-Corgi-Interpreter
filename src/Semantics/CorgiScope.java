@@ -5,7 +5,7 @@ import Representations.CorgiValue;
 
 import java.util.HashMap;
 
-public class MainScope implements IScope {
+public class CorgiScope implements IScope {
 
     private final static String TAG = "MobiProg_ClassScope";
 
@@ -16,7 +16,7 @@ public class MainScope implements IScope {
 
     private LocalScope parentLocalScope; //represents the parent local scope which is the local scope covered by the main() function. Other classes may not contain this.
 
-    public MainScope() {
+    public CorgiScope() {
         this.variables = new HashMap<>();
         this.functions = new HashMap<>();
     }
@@ -118,7 +118,7 @@ public class MainScope implements IScope {
             value = this.getVariable(identifier);
         }
         else {
-            value = LocalScopeCreator.searchVariableInLocalIterative(identifier, this.parentLocalScope);
+            value = LocalScopeHandler.searchVariableInLocalIterative(identifier, this.parentLocalScope);
         }
 
         return value;

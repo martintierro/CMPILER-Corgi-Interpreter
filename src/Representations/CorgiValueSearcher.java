@@ -1,9 +1,8 @@
 package Representations;
 
-import Builder.ParserHandler;
 import Execution.FunctionTracker;
-import Semantics.LocalScopeCreator;
-import Semantics.MainScope;
+import Semantics.LocalScopeHandler;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 
 public class CorgiValueSearcher {
@@ -17,8 +16,8 @@ public class CorgiValueSearcher {
         }
 
         if(corgiValue == null) {
-            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-            corgiValue = searchVariableInClassIncludingLocal(mainScope, identifierString);
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            corgiValue = searchVariableInClassIncludingLocal(corgiScope, identifierString);
         }
 
         return corgiValue;
@@ -31,18 +30,18 @@ public class CorgiValueSearcher {
             corgiValue = mobiFunction.getParameter(identifierString);
         }
         else {
-            corgiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, mobiFunction.getParentLocalScope());
+            corgiValue = LocalScopeHandler.searchVariableInLocalIterative(identifierString, mobiFunction.getParentLocalScope());
         }
 
         return corgiValue;
     }
 
-    public static CorgiValue searchVariableInClassIncludingLocal(MainScope mainScope, String identifierString) {
-        return mainScope.searchVariableIncludingLocal(identifierString);
+    public static CorgiValue searchVariableInClassIncludingLocal(CorgiScope corgiScope, String identifierString) {
+        return corgiScope.searchVariableIncludingLocal(identifierString);
     }
 
-    public static CorgiValue searchVariableInClass(MainScope mainScope, String identifierString) {
-        return mainScope.getVariable(identifierString);
+    public static CorgiValue searchVariableInClass(CorgiScope corgiScope, String identifierString) {
+        return corgiScope.getVariable(identifierString);
     }
 
 }

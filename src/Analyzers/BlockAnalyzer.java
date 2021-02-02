@@ -1,14 +1,14 @@
 package Analyzers;
 
 import GeneratedAntlrClasses.CorgiParser;
-import Semantics.LocalScopeCreator;
+import Semantics.LocalScopeHandler;
 
 import java.util.List;
 
 public class BlockAnalyzer {
 
     public BlockAnalyzer() {
-        LocalScopeCreator.getInstance().openLocalScope();
+        LocalScopeHandler.getInstance().openLocalScope();
     }
 
     public void analyze(CorgiParser.BlockContext ctx) {
@@ -29,6 +29,6 @@ public class BlockAnalyzer {
             }
         }
 
-        LocalScopeCreator.getInstance().closeLocalScope();
+        LocalScopeHandler.getInstance().closeLocalScope();
     }
 }

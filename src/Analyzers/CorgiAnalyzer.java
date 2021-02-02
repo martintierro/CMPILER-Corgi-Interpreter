@@ -2,8 +2,7 @@ package Analyzers;
 
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
-import Semantics.MainScope;
-import Semantics.SymbolTableManager;
+import Semantics.CorgiScope;
 import Utlities.IdentifiedTokenHolder;
 import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -14,9 +13,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
 
-public class ClassAnalyzer implements ParseTreeListener {
+public class CorgiAnalyzer implements ParseTreeListener {
 
-    private MainScope mainScope;
+    private CorgiScope corgiScope;
     private IdentifiedTokenHolder identifiedTokenHolder;
 
     public final static String ACCESS_CONTROL_KEY = "ACCESS_CONTROL_KEY";
@@ -26,7 +25,7 @@ public class ClassAnalyzer implements ParseTreeListener {
     public final static String IDENTIFIER_KEY = "IDENTIFIER_KEY";
     public final static String IDENTIFIER_VALUE_KEY = "IDENTIFIER_VALUE_KEY";
 
-    public ClassAnalyzer() {
+    public CorgiAnalyzer() {
 
     }
 
@@ -37,7 +36,7 @@ public class ClassAnalyzer implements ParseTreeListener {
 //        ClassNameChecker classNameChecker = new ClassNameChecker(className);
 //        classNameChecker.verify();
 
-        this.mainScope = new MainScope();
+        this.corgiScope = new CorgiScope();
         this.identifiedTokenHolder = new IdentifiedTokenHolder();
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();
@@ -85,12 +84,12 @@ public class ClassAnalyzer implements ParseTreeListener {
                 CorgiParser.TypeTypeContext typeCtx = fieldCtx.typeType();
 
                 //check if its a primitive type
-                if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
+                if(CorgiAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                     CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                     this.identifiedTokenHolder.addToken(PRIMITIVE_TYPE_KEY, primitiveTypeCtx.getText());
 
                     //create a field analyzer to walk through declarations
-                    FieldAnalyzer fieldAnalyzer = new FieldAnalyzer(this.identifiedTokenHolder, this.mainScope);
+                    FieldAnalyzer fieldAnalyzer = new FieldAnalyzer(this.identifiedTokenHolder, this.corgiScope);
                     fieldAnalyzer.analyze(fieldCtx.variableDeclarators());
 
                     //clear tokens for reause
@@ -98,9 +97,9 @@ public class ClassAnalyzer implements ParseTreeListener {
                 }
 
                 //check if its array declaration
-                else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
+                else if(CorgiAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
                     //Console.log(LogType.DEBUG, "Primitive array declaration: " +fieldCtx.getText());
-                    ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, this.mainScope);
+                    ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, this.corgiScope);
                     arrayAnalyzer.analyze(fieldCtx);
                 }
 
@@ -114,7 +113,7 @@ public class ClassAnalyzer implements ParseTreeListener {
                     }
 
                     //create a field analyzer to walk through declarations
-                    FieldAnalyzer fieldAnalyzer = new FieldAnalyzer(this.identifiedTokenHolder, this.mainScope);
+                    FieldAnalyzer fieldAnalyzer = new FieldAnalyzer(this.identifiedTokenHolder, this.corgiScope);
                     fieldAnalyzer.analyze(fieldCtx.variableDeclarators());
 
                     //clear tokens for reause
@@ -125,7 +124,7 @@ public class ClassAnalyzer implements ParseTreeListener {
 
         else if(ctx instanceof CorgiParser.MethodDeclarationContext) {
             CorgiParser.MethodDeclarationContext methodDecCtx = (CorgiParser.MethodDeclarationContext) ctx;
-            FunctionAnalyzer functionAnalyzer = new FunctionAnalyzer(this.identifiedTokenHolder, this.mainScope);
+            FunctionAnalyzer functionAnalyzer = new FunctionAnalyzer(this.identifiedTokenHolder, this.corgiScope);
             functionAnalyzer.analyze(methodDecCtx);
 
             //reuse tokens

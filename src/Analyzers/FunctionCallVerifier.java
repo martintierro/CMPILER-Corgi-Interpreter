@@ -4,7 +4,7 @@ import ErrorChecker.ParameterMismatchChecker;
 import Commands.EvaluationCommand;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -35,8 +35,8 @@ public class FunctionCallVerifier implements ParseTreeListener {
 
                 String functionName = exprCtx.expression(0).getText();
 
-                MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-                CorgiFunction corgiFunction = mainScope.getFunction(functionName);
+                CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+                CorgiFunction corgiFunction = corgiScope.getFunction(functionName);
 
                 if (exprCtx.arguments() != null) {
                     ParameterMismatchChecker paramsMismatchChecker = new ParameterMismatchChecker(corgiFunction, exprCtx.arguments());

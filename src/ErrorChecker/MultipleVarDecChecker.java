@@ -7,8 +7,8 @@ import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Representations.CorgiValue;
 import Searcher.VariableSearcher;
-import Semantics.LocalScopeCreator;
-import Semantics.MainScope;
+import Semantics.LocalScopeHandler;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -74,13 +74,13 @@ public class MultipleVarDecChecker implements IErrorChecker, ParseTreeListener {
 
         //if after function finding, mobi value is still null, search local scope
         if(corgiValue == null) {
-            corgiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, LocalScopeCreator.getInstance().getActiveLocalScope());
+            corgiValue = LocalScopeHandler.searchVariableInLocalIterative(identifierString, LocalScopeHandler.getInstance().getActiveLocalScope());
         }
 
         //if mobi value is still null, search class
         if(corgiValue == null) {
-            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-            corgiValue = VariableSearcher.searchVariableInClass(mainScope, identifierString);
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            corgiValue = VariableSearcher.searchVariableInClass(corgiScope, identifierString);
         }
 
 

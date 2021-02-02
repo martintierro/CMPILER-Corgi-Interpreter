@@ -6,26 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class LocalScopeCreator {
+public class LocalScopeHandler {
     private final static String TAG = "MobiProg_ScopeCreator";
 
-    private static LocalScopeCreator instance = null;
+    private static LocalScopeHandler instance = null;
 
-    public static LocalScopeCreator getInstance() {
+    public static LocalScopeHandler getInstance() {
         if(instance == null) {
-            instance = new LocalScopeCreator();
+            instance = new LocalScopeHandler();
         }
         return instance;
     }
 
     private LocalScope activeLocalScope = null;
 
-    private LocalScopeCreator() {
+    private LocalScopeHandler() {
 
     }
 
     public static void initialize() {
-        instance = new LocalScopeCreator();
+        instance = new LocalScopeHandler();
     }
 
     public static void reset() {

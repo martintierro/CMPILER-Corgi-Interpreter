@@ -6,7 +6,7 @@ import ErrorChecker.TypeChecker;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiValue;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Utlities.IdentifiedTokenHolder;
 import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -17,12 +17,12 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FieldAnalyzer implements ParseTreeListener {
 
-    private MainScope mainScope;
+    private CorgiScope corgiScope;
     private IdentifiedTokenHolder identifiedTokenHolder;
 
-    public FieldAnalyzer(IdentifiedTokenHolder identifiedTokenHolder, MainScope mainScope) {
+    public FieldAnalyzer(IdentifiedTokenHolder identifiedTokenHolder, CorgiScope corgiScope) {
         this.identifiedTokenHolder = identifiedTokenHolder;
-        this.mainScope = mainScope;
+        this.corgiScope = corgiScope;
     }
 
     public void analyze(CorgiParser.VariableDeclaratorsContext varDecCtxList) {
@@ -51,16 +51,16 @@ public class FieldAnalyzer implements ParseTreeListener {
             MultipleVarDecChecker multipleDeclaredChecker = new MultipleVarDecChecker(varCtx.variableDeclaratorId());
             multipleDeclaredChecker.verify();
 
-            this.identifiedTokenHolder.addToken(ClassAnalyzer.IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
+            this.identifiedTokenHolder.addToken(CorgiAnalyzer.IDENTIFIER_KEY, varCtx.variableDeclaratorId().getText());
             this.createCorgiValue();
 
             if(varCtx.variableInitializer() != null) {
 
                 //we do not evaluate strings.
-                if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.PRIMITIVE_TYPE_KEY)) {
-                    String primitiveTypeString = this.identifiedTokenHolder.getToken(ClassAnalyzer.PRIMITIVE_TYPE_KEY);
+                if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.PRIMITIVE_TYPE_KEY)) {
+                    String primitiveTypeString = this.identifiedTokenHolder.getToken(CorgiAnalyzer.PRIMITIVE_TYPE_KEY);
                     if(primitiveTypeString.contains(KeywordRecognizer.PRIMITIVE_TYPE_STRING)) {
-                        this.identifiedTokenHolder.addToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
+                        this.identifiedTokenHolder.addToken(CorgiAnalyzer.IDENTIFIER_VALUE_KEY, varCtx.variableInitializer().getText());
                         return;
                     }
                 }
@@ -68,7 +68,7 @@ public class FieldAnalyzer implements ParseTreeListener {
                 MappingCommand mappingCommand = new MappingCommand(varCtx.variableDeclaratorId().getText(), varCtx.variableInitializer().expression());
                 ExecutionManager.getInstance().addCommand(mappingCommand);
 
-                CorgiValue declaredCorgiValue = this.mainScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
+                CorgiValue declaredCorgiValue = this.corgiScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
                 TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
                 typeChecker.verify();
@@ -88,33 +88,33 @@ public class FieldAnalyzer implements ParseTreeListener {
      */
     private void createCorgiValue() {
 
-        if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.PRIMITIVE_TYPE_KEY, ClassAnalyzer.IDENTIFIER_KEY)) {
+        if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.PRIMITIVE_TYPE_KEY, CorgiAnalyzer.IDENTIFIER_KEY)) {
 
-            String primitiveTypeString = this.identifiedTokenHolder.getToken(ClassAnalyzer.PRIMITIVE_TYPE_KEY);
-            String identifierString = this.identifiedTokenHolder.getToken(ClassAnalyzer.IDENTIFIER_KEY);
+            String primitiveTypeString = this.identifiedTokenHolder.getToken(CorgiAnalyzer.PRIMITIVE_TYPE_KEY);
+            String identifierString = this.identifiedTokenHolder.getToken(CorgiAnalyzer.IDENTIFIER_KEY);
             String identifierValueString = null;
 
             //Console.log(LogType.DEBUG, "Class modifier: " +classModifierString);
 
-            if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.IDENTIFIER_VALUE_KEY)) {
-                identifierValueString = this.identifiedTokenHolder.getToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY);
-                this.mainScope.addInitializedVariable(primitiveTypeString, identifierString, identifierValueString);
+            if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.IDENTIFIER_VALUE_KEY)) {
+                identifierValueString = this.identifiedTokenHolder.getToken(CorgiAnalyzer.IDENTIFIER_VALUE_KEY);
+                this.corgiScope.addInitializedVariable(primitiveTypeString, identifierString, identifierValueString);
             }
             else {
-                this.mainScope.addEmptyVariable(primitiveTypeString, identifierString);
+                this.corgiScope.addEmptyVariable(primitiveTypeString, identifierString);
             }
 
-            CorgiValue declaredValue = this.mainScope.searchVariableIncludingLocal(identifierString);
+            CorgiValue declaredValue = this.corgiScope.searchVariableIncludingLocal(identifierString);
             //verify if the declared variable is a constant
-            if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.CONST_CONTROL_KEY)) {
+            if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.CONST_CONTROL_KEY)) {
                 declaredValue.makeFinal();
             }
 
 
 
             //remove the following tokens
-            this.identifiedTokenHolder.removeToken(ClassAnalyzer.IDENTIFIER_KEY);
-            this.identifiedTokenHolder.removeToken(ClassAnalyzer.IDENTIFIER_VALUE_KEY);
+            this.identifiedTokenHolder.removeToken(CorgiAnalyzer.IDENTIFIER_KEY);
+            this.identifiedTokenHolder.removeToken(CorgiAnalyzer.IDENTIFIER_VALUE_KEY);
         }
     }
 }

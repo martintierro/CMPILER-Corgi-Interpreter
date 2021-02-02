@@ -5,7 +5,7 @@ import ErrorChecker.UndeclaredChecker;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
-import Semantics.LocalScopeCreator;
+import Semantics.LocalScopeHandler;
 import Statements.StatementControlOverseer;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -99,7 +99,7 @@ public class StatementAnalyzer {
         else if(isFORStatement(ctx)) {
 //            Console.log(LogType.DEBUG, "FOR expression: " +ctx.forControl().getText());
 
-            LocalScopeCreator.getInstance().openLocalScope();
+            LocalScopeHandler.getInstance().openLocalScope();
 
             ForControlAnalyzer forControlAnalyzer = new ForControlAnalyzer();
             forControlAnalyzer.analyze(ctx.forControl());
@@ -113,7 +113,7 @@ public class StatementAnalyzer {
 
             StatementControlOverseer.getInstance().compileControlledCommand();
 
-            LocalScopeCreator.getInstance().closeLocalScope();
+            LocalScopeHandler.getInstance().closeLocalScope();
 //            Console.log(LogType.DEBUG, "End of FOR loop");
         }
 

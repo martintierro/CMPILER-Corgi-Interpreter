@@ -77,12 +77,12 @@ public class ParameterAnalyzer implements ParseTreeListener {
             CorgiParser.TypeTypeContext typeCtx = formalParamCtx.typeType();
 
             //return type is a primitive type
-            if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
+            if(CorgiAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                 this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
             }
             //check if its array declaration
-            else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
+            else if(CorgiAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                 this.identifiedTokenHolder.addToken(PARAMETER_TYPE_KEY, primitiveTypeCtx.getText());
                 this.identifiedTokenHolder.addToken(IS_ARRAY_KEY, IS_ARRAY_KEY);

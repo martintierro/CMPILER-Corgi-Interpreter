@@ -8,34 +8,6 @@ import java.math.BigDecimal;
 
 public class ConditionalEvaluator {
 
-    private final static String TAG = "MobiProg_ConditionEvaluator";
-
-    /*
-     * Evaluates the modified conditional expression via Eval-Ex
-     */
-	/*public static boolean evaluateCondition(String modifiedConditionExpr) {
-
-		//catch rules if the if value has direct boolean flags
-		if(modifiedConditionExpr.contains("(true)")) {
-			return true;
-		}
-		else if(modifiedConditionExpr.contains("(false)")) {
-			return false;
-		}
-
-		Expression expr = new Expression(modifiedConditionExpr);
-		int result = expr.eval().intValue();
-
-		//Console.log("Evaluating " +modifiedConditionExpr+ ". result is " +result);
-
-		if(result == 1) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}*/
-
     public static boolean evaluateCondition(CorgiParser.ParExpressionContext parExprCtx) {
 
         CorgiParser.ExpressionContext conditionExprCtx = parExprCtx.expression();

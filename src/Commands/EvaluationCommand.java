@@ -1,14 +1,11 @@
 package Commands;
 
-import Builder.ParserHandler;
-import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.*;
 import Searcher.VariableSearcher;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import Utlities.KeywordRecognizer;
-import Utlities.StringUtilities;
 import com.udojava.evalex.Expression;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -18,7 +15,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class EvaluationCommand implements ICommand, ParseTreeListener {
     private final static String TAG = "MobiProg_EvaluationCommand";
@@ -102,8 +98,8 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     private void evaluateFunctionCall(CorgiParser.ExpressionContext exprCtx) {
         String functionName = exprCtx.expression(0).getText();
 
-        MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-        CorgiFunction corgiFunction = mainScope.getFunction(functionName);
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiFunction corgiFunction = corgiScope.getFunction(functionName);
 
         if (exprCtx.arguments().expressionList() != null) {
             List<CorgiParser.ExpressionContext> exprCtxList = exprCtx.arguments()

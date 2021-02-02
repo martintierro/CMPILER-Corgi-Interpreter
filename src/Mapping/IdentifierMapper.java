@@ -12,6 +12,8 @@ public class IdentifierMapper implements IValueMapper{
     public IdentifierMapper(String originalExp) {
         if(FunctionTracker.getInstance().isInsideFunction()) {
             this.valueMapper = new FunctionIdentifierMapper(originalExp, FunctionTracker.getInstance().getLatestFunction());
+        } else{
+            this.valueMapper = new CorgiIdentifierMapper(originalExp);
         }
     }
 

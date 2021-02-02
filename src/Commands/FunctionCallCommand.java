@@ -6,7 +6,7 @@ import Representations.CorgiFunction;
 import Representations.CorgiValue;
 import Representations.PrimitiveType;
 import Searcher.VariableSearcher;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -37,8 +37,8 @@ public class FunctionCallCommand implements ICommand {
     }
 
     private void searchFunction() {
-        MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-        this.corgiFunction = mainScope.getFunction(this.functionName);
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        this.corgiFunction = corgiScope.getFunction(this.functionName);
     }
 
     private void verifyParameters() {

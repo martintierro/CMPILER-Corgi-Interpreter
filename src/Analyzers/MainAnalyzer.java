@@ -1,22 +1,16 @@
 package Analyzers;
 
-import Builder.ParserHandler;
 import Execution.ExecutionManager;
-import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Semantics.LocalScope;
-import Semantics.LocalScopeCreator;
-import Semantics.MainScope;
+import Semantics.LocalScopeHandler;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
-import Utlities.IdentifiedTokenHolder;
-import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.List;
 
 public class MainAnalyzer implements ParseTreeListener {
 
@@ -29,9 +23,9 @@ public class MainAnalyzer implements ParseTreeListener {
 //            ExecutionManager.getInstance().reportFoundEntryPoint(ParserHandler.getInstance().getCurrentClassName());
 
             //automatically create a local scope for main() whose parent is the class scope
-            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-            LocalScope localScope = LocalScopeCreator.getInstance().openLocalScope();
-            localScope.setParent(mainScope);
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            LocalScope localScope = LocalScopeHandler.getInstance().openLocalScope();
+            localScope.setParent(corgiScope);
 
             ParseTreeWalker treeWalker = new ParseTreeWalker();
             treeWalker.walk(this, ctx);

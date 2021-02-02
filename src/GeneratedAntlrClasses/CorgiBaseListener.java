@@ -1,6 +1,6 @@
 // Generated from D:/Projects/CMPILER Projects/InterpreterMP/grammar\Corgi.g4 by ANTLR 4.9.1
 package GeneratedAntlrClasses;
-import Analyzers.ClassAnalyzer;
+import Analyzers.CorgiAnalyzer;
 import Analyzers.MainAnalyzer;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -174,8 +174,8 @@ public class CorgiBaseListener implements CorgiListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterStart(CorgiParser.StartContext ctx) {
-		ClassAnalyzer classAnalyzer = new ClassAnalyzer();
-		classAnalyzer.analyze(ctx);
+		CorgiAnalyzer corgiAnalyzer = new CorgiAnalyzer();
+		corgiAnalyzer.analyze(ctx);
 	}
 	/**
 	 * {@inheritDoc}

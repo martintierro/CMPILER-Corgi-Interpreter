@@ -1,12 +1,10 @@
 package Searcher;
 
-import Builder.ParserHandler;
 import Execution.FunctionTracker;
 import Representations.CorgiFunction;
 import Representations.CorgiValue;
-import Semantics.LocalScope;
-import Semantics.LocalScopeCreator;
-import Semantics.MainScope;
+import Semantics.LocalScopeHandler;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 
 public class VariableSearcher {
@@ -20,8 +18,8 @@ public class VariableSearcher {
         }
 
         if(corgiValue == null) {
-            MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-            corgiValue = searchVariableInClassIncludingLocal(mainScope, identifierString);
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            corgiValue = searchVariableInClassIncludingLocal(corgiScope, identifierString);
         }
 
         return corgiValue;
@@ -34,18 +32,18 @@ public class VariableSearcher {
             corgiValue = corgiFunction.getParameter(identifierString);
         }
         else {
-            corgiValue = LocalScopeCreator.searchVariableInLocalIterative(identifierString, corgiFunction.getParentLocalScope());
+            corgiValue = LocalScopeHandler.searchVariableInLocalIterative(identifierString, corgiFunction.getParentLocalScope());
         }
 
         return corgiValue;
     }
 
-    public static CorgiValue searchVariableInClassIncludingLocal(MainScope mainScope, String identifierString) {
-        return mainScope.searchVariableIncludingLocal(identifierString);
+    public static CorgiValue searchVariableInClassIncludingLocal(CorgiScope corgiScope, String identifierString) {
+        return corgiScope.searchVariableIncludingLocal(identifierString);
     }
 
-    public static CorgiValue searchVariableInClass(MainScope mainScope, String identifierString) {
-        return mainScope.getVariable(identifierString);
+    public static CorgiValue searchVariableInClass(CorgiScope corgiScope, String identifierString) {
+        return corgiScope.getVariable(identifierString);
     }
 
 }

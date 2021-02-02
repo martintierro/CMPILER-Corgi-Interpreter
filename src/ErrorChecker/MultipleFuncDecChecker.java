@@ -4,7 +4,7 @@ import Builder.BuildChecker;
 import Builder.SemanticErrorDictionary;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
-import Semantics.MainScope;
+import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import org.antlr.v4.runtime.Token;
 
@@ -28,8 +28,8 @@ public class MultipleFuncDecChecker implements IErrorChecker {
 
     private void verifyFunctionCall(String identifierString) {
 
-        MainScope mainScope = SymbolTableManager.getInstance().getMainScope();
-        CorgiFunction corgiFunction = mainScope.getFunction(identifierString);
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiFunction corgiFunction = corgiScope.getFunction(identifierString);
 
         if(corgiFunction != null) {
             BuildChecker.reportCustomError(SemanticErrorDictionary.MULTIPLE_FUNCTION, "", identifierString, this.lineNumber);

@@ -5,8 +5,8 @@ import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiFunction;
 import Representations.FunctionType;
-import Semantics.LocalScopeCreator;
-import Semantics.MainScope;
+import Semantics.LocalScopeHandler;
+import Semantics.CorgiScope;
 import Utlities.IdentifiedTokenHolder;
 import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -17,13 +17,13 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FunctionAnalyzer implements ParseTreeListener {
 
-    private MainScope mainScope;
+    private CorgiScope corgiScope;
     private IdentifiedTokenHolder identifiedTokenHolder;
     private CorgiFunction declaredCorgiFunction;
 
-    public FunctionAnalyzer(IdentifiedTokenHolder identifiedTokens, MainScope mainScope) {
+    public FunctionAnalyzer(IdentifiedTokenHolder identifiedTokens, CorgiScope corgiScope) {
         this.identifiedTokenHolder = identifiedTokens;
-        this.mainScope = mainScope;
+        this.corgiScope = corgiScope;
         this.declaredCorgiFunction = new CorgiFunction();
     }
 
@@ -95,7 +95,7 @@ public class FunctionAnalyzer implements ParseTreeListener {
             CorgiParser.BlockContext blockCtx = ((CorgiParser.MethodBodyContext) ctx).block();
 
             BlockAnalyzer blockAnalyzer = new BlockAnalyzer();
-            this.declaredCorgiFunction.setParentLocalScope(LocalScopeCreator.getInstance().getActiveLocalScope());
+            this.declaredCorgiFunction.setParentLocalScope(LocalScopeHandler.getInstance().getActiveLocalScope());
             blockAnalyzer.analyze(blockCtx);
 
         }
@@ -128,10 +128,10 @@ public class FunctionAnalyzer implements ParseTreeListener {
      * Stores the created function in its corresponding class scope
      */
     private void storeCorgiFunction() {
-        if(this.identifiedTokenHolder.containsTokens(ClassAnalyzer.ACCESS_CONTROL_KEY)) {
-            String accessToken = this.identifiedTokenHolder.getToken(ClassAnalyzer.ACCESS_CONTROL_KEY);
+        if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.ACCESS_CONTROL_KEY)) {
+            String accessToken = this.identifiedTokenHolder.getToken(CorgiAnalyzer.ACCESS_CONTROL_KEY);
 
-            this.mainScope.addFunction(this.declaredCorgiFunction.getFunctionName(), this.declaredCorgiFunction);
+            this.corgiScope.addFunction(this.declaredCorgiFunction.getFunctionName(), this.declaredCorgiFunction);
 
             this.identifiedTokenHolder.clearTokens(); //clear tokens for reuse
         }

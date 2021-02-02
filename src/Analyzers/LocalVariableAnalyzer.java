@@ -7,7 +7,7 @@ import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiValue;
 import Semantics.LocalScope;
-import Semantics.LocalScopeCreator;
+import Semantics.LocalScopeHandler;
 import Utlities.IdentifiedTokenHolder;
 import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -66,16 +66,16 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
             //clear tokens for reuse
             this.identifiedTokenHolder.clearTokens();
 
-            if(ClassAnalyzer.isPrimitiveDeclaration(typeCtx)) {
+            if(CorgiAnalyzer.isPrimitiveDeclaration(typeCtx)) {
                 CorgiParser.PrimitiveTypeContext primitiveTypeCtx = typeCtx.primitiveType();
                 this.identifiedTokenHolder.addToken(PRIMITIVE_TYPE_KEY, primitiveTypeCtx.getText());
 
             }
 
             //check if its array declaration
-            else if(ClassAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
+            else if(CorgiAnalyzer.isPrimitiveArrayDeclaration(typeCtx)) {
                 //Console.log(LogType.DEBUG, "Primitive array declaration: " +typeCtx.getText());
-                ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, LocalScopeCreator.getInstance().getActiveLocalScope());
+                ArrayAnalyzer arrayAnalyzer = new ArrayAnalyzer(this.identifiedTokenHolder, LocalScopeHandler.getInstance().getActiveLocalScope());
                 arrayAnalyzer.analyze(typeCtx.getParent());
                 this.hasPassedArrayDeclaration = true;
             }
@@ -124,7 +124,7 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
 
             this.createCorgiValue();
 
-            LocalScope localScope = LocalScopeCreator.getInstance().getActiveLocalScope();
+            LocalScope localScope = LocalScopeHandler.getInstance().getActiveLocalScope();
             CorgiValue declaredCorgiValue = localScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
             TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
@@ -166,7 +166,7 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
             String identifierString = this.identifiedTokenHolder.getToken(IDENTIFIER_KEY);
             String identifierValueString = null;
 
-            LocalScope localScope = LocalScopeCreator.getInstance().getActiveLocalScope();
+            LocalScope localScope = LocalScopeHandler.getInstance().getActiveLocalScope();
 
             if(this.identifiedTokenHolder.containsTokens(IDENTIFIER_VALUE_KEY)) {
                 identifierValueString = this.identifiedTokenHolder.getToken(IDENTIFIER_VALUE_KEY);

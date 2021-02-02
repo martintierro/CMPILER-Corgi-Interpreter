@@ -5,7 +5,7 @@ import Builder.BuildChecker;
 import Builder.ParserHandler;
 import Execution.ExecutionManager;
 import IDE.View;
-import Semantics.LocalScopeCreator;
+import Semantics.LocalScopeHandler;
 import Statements.StatementControlOverseer;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class Controller {
         // Perform interpretation
 
         ExecutionManager.reset();
-        LocalScopeCreator.reset();
+        LocalScopeHandler.reset();
       //  SymbolTableManager.reset();
         BuildChecker.reset();
         StatementControlOverseer.reset();
@@ -91,7 +91,7 @@ public class Controller {
 
     public void buildOnly(String input, String fileName) throws IOException {
         ExecutionManager.reset();
-        LocalScopeCreator.reset();
+        LocalScopeHandler.reset();
      //   SymbolTableManager.reset();
         BuildChecker.reset();
         StatementControlOverseer.reset();
