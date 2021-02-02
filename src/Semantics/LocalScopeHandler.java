@@ -75,7 +75,6 @@ public class LocalScopeHandler {
      * Searches for a local variable using an iterative depth-first search.
      */
     public static CorgiValue searchVariableInLocalIterative(String identifier, LocalScope localScope) {
-
         if(localScope == null) {
             System.err.println(identifier + " not found in any local scope!");
             return null;

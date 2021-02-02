@@ -118,17 +118,17 @@ public class LocalVariableAnalyzer implements ParseTreeListener {
                 }
 
                 this.processMapping(varCtx);
+                LocalScope localScope = LocalScopeHandler.getInstance().getActiveLocalScope();
+                CorgiValue declaredCorgiValue = localScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
+                TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
+                typeChecker.verify();
 
             }
 
             this.createCorgiValue();
 
-            LocalScope localScope = LocalScopeHandler.getInstance().getActiveLocalScope();
-            CorgiValue declaredCorgiValue = localScope.searchVariableIncludingLocal(varCtx.variableDeclaratorId().getText());
 
-            TypeChecker typeChecker = new TypeChecker(declaredCorgiValue, varCtx.variableInitializer().expression());
-            typeChecker.verify();
 
 
         }

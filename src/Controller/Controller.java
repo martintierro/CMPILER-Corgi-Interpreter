@@ -46,7 +46,6 @@ public class Controller {
 
         view.resetConsole();
 
-        System.out.println(input);
 
         ParserHandler.getInstance().parseText(input);
 
@@ -98,7 +97,6 @@ public class Controller {
        // FunctionTracker.reset();
 //        LocalVariableTracker.reset();
 
-        System.out.println(input);
 
         ParserHandler.getInstance().parseText(input);
     }

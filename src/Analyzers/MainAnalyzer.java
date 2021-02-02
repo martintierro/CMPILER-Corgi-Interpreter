@@ -26,7 +26,7 @@ public class MainAnalyzer implements ParseTreeListener {
             CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
             LocalScope localScope = LocalScopeHandler.getInstance().openLocalScope();
             localScope.setParent(corgiScope);
-
+            corgiScope.setParentLocalScope(localScope);
             ParseTreeWalker treeWalker = new ParseTreeWalker();
             treeWalker.walk(this, ctx);
 
