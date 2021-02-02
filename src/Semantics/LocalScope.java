@@ -98,8 +98,8 @@ public class LocalScope implements IScope {
     public void addEmptyVariable(String primitiveTypeString, String identifierString) {
         this.initializeLocalVariableMap();
 
-        CorgiValue mobiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
-        this.localVariables.put(identifierString, mobiValue);
+        CorgiValue corgiValue = CorgiValue.createEmptyVariable(primitiveTypeString);
+        this.localVariables.put(identifierString, corgiValue);
     }
 
     /*
@@ -109,8 +109,8 @@ public class LocalScope implements IScope {
         this.initializeLocalVariableMap();
 
         this.addEmptyVariable(primitiveTypeString, identifierString);
-        CorgiValue mobiValue = this.localVariables.get(identifierString);
-        mobiValue.setValue(valueString);
+        CorgiValue corgiValue = this.localVariables.get(identifierString);
+        corgiValue.setValue(valueString);
     }
 
     public void addCorgiValue(String identifier, CorgiValue corgiValue) {
