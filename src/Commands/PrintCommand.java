@@ -2,6 +2,7 @@ package Commands;
 
 import ErrorChecker.UndeclaredChecker;
 import GeneratedAntlrClasses.CorgiParser;
+import IDE.View;
 import Representations.CorgiArray;
 import Representations.CorgiValue;
 import Representations.CorgiValueSearcher;
@@ -34,6 +35,7 @@ public class PrintCommand implements ICommand, ParseTreeListener {
         treeWalker.walk(this, this.expressionCtx);
 
         System.out.println(this.statementToPrint);//TODO PRINT STATEMENT ON FRONT END
+        View.printInConsole(this.statementToPrint);
         this.statementToPrint = ""; //reset statement to print afterwards
     }
 
