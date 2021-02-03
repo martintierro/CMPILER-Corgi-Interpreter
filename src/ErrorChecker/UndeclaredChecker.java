@@ -56,6 +56,8 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
             CorgiParser.ExpressionContext exprCtx = (CorgiParser.ExpressionContext) ctx;
             if(EvaluationCommand.isFunctionCall(exprCtx)) {
                 this.verifyFunctionCall(exprCtx);
+            } else if(SymbolTableManager.getInstance().getCorgiScope().getFunction(exprCtx.getText()) != null){
+
             }
             else if(EvaluationCommand.isVariableOrConst(exprCtx)) {
                 this.verifyVariableOrConst(exprCtx);

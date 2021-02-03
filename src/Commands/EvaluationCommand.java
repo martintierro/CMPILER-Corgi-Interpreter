@@ -65,8 +65,9 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
             CorgiParser.ExpressionContext exprCtx = (CorgiParser.ExpressionContext) ctx;
             if (EvaluationCommand.isFunctionCall(exprCtx)) {
                 this.evaluateFunctionCall(exprCtx);
-            }
+            } else if(SymbolTableManager.getInstance().getCorgiScope().getFunction(exprCtx.getText()) != null){
 
+            }
             else if (EvaluationCommand.isVariableOrConst(exprCtx)) {
                 this.evaluateVariable(exprCtx);
             }
@@ -79,7 +80,7 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     }
 
     public static boolean isFunctionCall(CorgiParser.ExpressionContext exprCtx) {
-        if (exprCtx.arguments() != null) {
+        if (exprCtx.getText().contains("(") && exprCtx.getText().contains(")")) {
             return true;
         } else {
             return false;
@@ -100,9 +101,8 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
         CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
         CorgiFunction corgiFunction = corgiScope.getFunction(functionName);
 
-        if (exprCtx.arguments().expressionList() != null) {
-            List<CorgiParser.ExpressionContext> exprCtxList = exprCtx.arguments()
-                    .expressionList().expression();
+        if (exprCtx.expressionList() != null) {
+            List<CorgiParser.ExpressionContext> exprCtxList = exprCtx.expressionList().expression();
 
             for (int i = 0; i < exprCtxList.size(); i++) {
                 CorgiParser.ExpressionContext parameterExprCtx = exprCtxList.get(i);
