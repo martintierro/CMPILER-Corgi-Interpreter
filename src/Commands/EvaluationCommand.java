@@ -13,6 +13,9 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -30,13 +33,20 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     @Override
     public void execute() {
         this.modifiedExp = this.parentExprCtx.getText();
-
+        System.out.println("MODDYY: "+modifiedExp);
         //catch rules if the value has direct boolean flags
-        if(this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_TRUE)) {
+        /*if(this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_TRUE)) {
             this.resultValue = new BigDecimal(1);
         }
         else if(this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_FALSE)) {
             this.resultValue = new BigDecimal(0);
+        } */
+        if (this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_TRUE)||this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_FALSE)){
+            try {
+                this.resultValue = new BigDecimal(evaluateBoolean(this.modifiedExp));
+            } catch (ScriptException e) {
+                e.printStackTrace();
+            }
         }
         else {
             ParseTreeWalker treeWalker = new ParseTreeWalker();
@@ -139,4 +149,27 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     public BigDecimal getResult() {
         return this.resultValue;
     }
+
+    private int evaluateBoolean (String exp) throws ScriptException {
+        String temp = exp;
+        exp.replace("&&", "*");
+        exp.replace("||", "+");
+
+        String stringTemp;
+
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+
+        //System.out.println(engine.eval(exp).toString());
+        stringTemp = engine.eval(exp).toString();
+
+        if (stringTemp.equals("false"))
+            return 0;
+        else
+            return 1;
+
+
+    }
+
 }
+
