@@ -132,7 +132,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
         this.handleStatementExecution(functionCallCommand);
 
-        System.out.println("Function call with no params detected: " +functionName);
+        System.out.println("Function call with params detected: " +functionName);
     }
 
     private void handleFunctionCallWithNoParams(CorgiParser.ExpressionContext funcExprCtx) {
@@ -141,6 +141,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
         this.handleStatementExecution(functionCallCommand);
 
+        System.out.println("Function call with no params detected: " +functionName);
     }
     public static boolean isAssignmentExpression(CorgiParser.ExpressionContext exprCtx) {
         List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.ASSIGN);

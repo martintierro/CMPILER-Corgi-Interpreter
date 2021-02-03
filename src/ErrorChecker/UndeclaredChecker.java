@@ -76,7 +76,7 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
 
         String functionName = funcExprCtx.expression(0).getText();
 
-        CorgiScope classScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiScope classScope = SymbolTableManager.getInstance().getCorgiScope();
         CorgiFunction corgiFunction = classScope.getFunction(functionName);
 
         if(corgiFunction == null) {
@@ -97,7 +97,7 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
 
         //if after function finding, mobi value is still null, search class
         if(corgiValue == null) {
-            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, varExprCtx.primary().Identifier().getText());
         }
 
@@ -111,7 +111,7 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
      * Verifies a var or const identifier from a scan statement since scan grammar is different.
      */
     public static void verifyVarOrConstForScan(String identifier, CorgiParser.ScanStatementContext statementCtx) {
-        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
         CorgiValue corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, identifier);
 
         Token firstToken = statementCtx.getStart();

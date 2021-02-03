@@ -21,9 +21,6 @@ public class CorgiIdentifierMapper implements ParseTreeListener, IValueMapper {
         this.modifiedExp = originalExp;
     }
 
-    /* (non-Javadoc)
-     * @see com.neildg.mobiprog.semantics.mapping.IValueMapper#analyze(com.neildg.mobiprog.generatedexp.JavaParser.ExpressionContext)
-     */
     @Override
     public void analyze(CorgiParser.ExpressionContext exprCtx) {
         ParseTreeWalker treeWalker = new ParseTreeWalker();
@@ -61,7 +58,7 @@ public class CorgiIdentifierMapper implements ParseTreeListener, IValueMapper {
 
             if(primaryCtx.Identifier() != null) {
                 String variableKey = primaryCtx.getText();
-                CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+                CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
 
                 this.corgiValue = corgiScope.searchVariableIncludingLocal(variableKey);
                 this.modifiedExp = this.modifiedExp.replace(variableKey, this.corgiValue.getValue().toString());

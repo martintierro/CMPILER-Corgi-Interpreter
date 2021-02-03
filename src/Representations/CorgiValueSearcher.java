@@ -15,7 +15,7 @@ public class CorgiValueSearcher {
         }
 
         if(corgiValue == null) {
-            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             corgiValue = searchVariableInClassIncludingLocal(corgiScope, identifierString);
         }
 

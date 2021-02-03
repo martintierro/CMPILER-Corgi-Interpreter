@@ -79,7 +79,7 @@ public class MultipleVarDecChecker implements IErrorChecker, ParseTreeListener {
 
         //if mobi value is still null, search class
         if(corgiValue == null) {
-            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             corgiValue = VariableSearcher.searchVariableInClass(corgiScope, identifierString);
         }
 

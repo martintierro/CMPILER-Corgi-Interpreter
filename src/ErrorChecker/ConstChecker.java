@@ -73,7 +73,7 @@ public class ConstChecker implements IErrorChecker, ParseTreeListener {
 
         //if after function finding, mobi value is still null, search class
         if(corgiValue == null) {
-            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, varExprCtx.primary().Identifier().getText());
         }
 

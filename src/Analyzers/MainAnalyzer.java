@@ -23,7 +23,7 @@ public class MainAnalyzer implements ParseTreeListener {
 //            ExecutionManager.getInstance().reportFoundEntryPoint(ParserHandler.getInstance().getCurrentClassName());
 
             //automatically create a local scope for main() whose parent is the class scope
-            CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+            CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             LocalScope localScope = LocalScopeHandler.getInstance().openLocalScope();
             localScope.setParent(corgiScope);
             corgiScope.setParentLocalScope(localScope);

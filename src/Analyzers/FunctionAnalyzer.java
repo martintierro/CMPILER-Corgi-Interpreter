@@ -93,7 +93,6 @@ public class FunctionAnalyzer implements ParseTreeListener {
         else if(ctx instanceof CorgiParser.MethodBodyContext) {
 
             CorgiParser.BlockContext blockCtx = ((CorgiParser.MethodBodyContext) ctx).block();
-
             BlockAnalyzer blockAnalyzer = new BlockAnalyzer();
             this.declaredCorgiFunction.setParentLocalScope(LocalScopeHandler.getInstance().getActiveLocalScope());
             blockAnalyzer.analyze(blockCtx);
@@ -125,16 +124,15 @@ public class FunctionAnalyzer implements ParseTreeListener {
     }
 
     /*
-     * Stores the created function in its corresponding class scope
+     * Stores the created function in the corgi scope
      */
     private void storeCorgiFunction() {
-        if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.ACCESS_CONTROL_KEY)) {
-            String accessToken = this.identifiedTokenHolder.getToken(CorgiAnalyzer.ACCESS_CONTROL_KEY);
+//        if(this.identifiedTokenHolder.containsTokens(CorgiAnalyzer.ACCESS_CONTROL_KEY)) {
+//            String accessToken = this.identifiedTokenHolder.getToken(CorgiAnalyzer.ACCESS_CONTROL_KEY);
 
             this.corgiScope.addFunction(this.declaredCorgiFunction.getFunctionName(), this.declaredCorgiFunction);
-
-            this.identifiedTokenHolder.clearTokens(); //clear tokens for reuse
-        }
+//            this.identifiedTokenHolder.clearTokens(); //clear tokens for reuse
+//        }
     }
 
 }

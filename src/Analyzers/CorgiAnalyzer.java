@@ -3,6 +3,7 @@ package Analyzers;
 import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Semantics.CorgiScope;
+import Semantics.SymbolTableManager;
 import Utlities.IdentifiedTokenHolder;
 import Utlities.KeywordRecognizer;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -36,7 +37,7 @@ public class CorgiAnalyzer implements ParseTreeListener {
 //        ClassNameChecker classNameChecker = new ClassNameChecker(className);
 //        classNameChecker.verify();
 
-        this.corgiScope = new CorgiScope();
+        this.corgiScope = SymbolTableManager.getInstance().getCorgiScope();
         this.identifiedTokenHolder = new IdentifiedTokenHolder();
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();

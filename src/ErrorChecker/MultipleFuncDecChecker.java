@@ -27,7 +27,7 @@ public class MultipleFuncDecChecker implements IErrorChecker {
 
     private void verifyFunctionCall(String identifierString) {
 
-        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
         CorgiFunction corgiFunction = corgiScope.getFunction(identifierString);
 
         if(corgiFunction != null) {

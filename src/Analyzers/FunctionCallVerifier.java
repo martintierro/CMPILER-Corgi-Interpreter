@@ -35,7 +35,7 @@ public class FunctionCallVerifier implements ParseTreeListener {
 
                 String functionName = exprCtx.expression(0).getText();
 
-                CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+                CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
                 CorgiFunction corgiFunction = corgiScope.getFunction(functionName);
 
                 if (exprCtx.arguments() != null) {

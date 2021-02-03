@@ -37,7 +37,7 @@ public class FunctionCallCommand implements ICommand {
     }
 
     private void searchFunction() {
-        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
         this.corgiFunction = corgiScope.getFunction(this.functionName);
     }
 

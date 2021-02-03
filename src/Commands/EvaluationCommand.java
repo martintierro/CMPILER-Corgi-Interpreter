@@ -97,7 +97,7 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     private void evaluateFunctionCall(CorgiParser.ExpressionContext exprCtx) {
         String functionName = exprCtx.expression(0).getText();
 
-        CorgiScope corgiScope = SymbolTableManager.getInstance().getMainScope();
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
         CorgiFunction corgiFunction = corgiScope.getFunction(functionName);
 
         if (exprCtx.arguments().expressionList() != null) {
