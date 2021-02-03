@@ -83,13 +83,17 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
             }
 
-            else if(this.isFunctionCallWithParams(exprCtx)) {
-                this.handleFunctionCallWithParams(exprCtx);
+            else if (isFunctionCall(exprCtx)){
+                this.handleFunctionCall(exprCtx);
             }
-
-            else if(this.isFunctionCallWithNoParams(exprCtx)) {
-                this.handleFunctionCallWithNoParams(exprCtx);
-            }
+//
+//            else if(this.isFunctionCallWithParams(exprCtx)) {
+//                this.handleFunctionCallWithParams(exprCtx);
+//            }
+//
+//            else if(this.isFunctionCallWithNoParams(exprCtx)) {
+//                this.handleFunctionCallWithNoParams(exprCtx);
+//            }
         }
     }
 
@@ -136,6 +140,7 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
     }
 
     private void handleFunctionCallWithNoParams(CorgiParser.ExpressionContext funcExprCtx) {
+        System.out.println("HANDLE FUNCTION"+ funcExprCtx.getText());
         String functionName = funcExprCtx.expression(0).getText();
 
         FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
@@ -143,6 +148,15 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
         System.out.println("Function call with no params detected: " +functionName);
     }
+
+    private void handleFunctionCall(CorgiParser.ExpressionContext funcExprCtx) {
+        String functionName = funcExprCtx.expression(0).getText();
+
+        FunctionCallCommand methodCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
+        this.handleStatementExecution(methodCallCommand);
+
+    }
+
     public static boolean isAssignmentExpression(CorgiParser.ExpressionContext exprCtx) {
         List<TerminalNode> tokenList = exprCtx.getTokens(CorgiLexer.ASSIGN);
         return (tokenList.size() > 0);
@@ -182,4 +196,9 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
         //if(exprCtx.Identifier() != null)
         return exprCtx.depth() == FUNCTION_CALL_NO_PARAMS_DEPTH || exprCtx.depth() == 17;
     }
+
+    public boolean isFunctionCall(CorgiParser.ExpressionContext exprCtx) {
+        return exprCtx.expression(0) != null && exprCtx != this.readRightHandExprCtx && EvaluationCommand.isFunctionCall(exprCtx);
+    }
+
 }
