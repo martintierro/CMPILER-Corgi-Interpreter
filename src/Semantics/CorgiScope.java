@@ -63,7 +63,7 @@ public class CorgiScope implements IScope {
             return this.variables.get(identifier);
         }
         else {
-            System.err.println(identifier + " is not found"); //TODO Change to IDE
+//            System.err.println(identifier + " is not found"); //TODO Change to IDE
             return null;
         }
     }
@@ -83,7 +83,7 @@ public class CorgiScope implements IScope {
             return this.functions.get(identifier);
         }
         else {
-            System.err.println(identifier + " is not found"); //TODO Change to IDE
+//            System.err.println(identifier + " is not found"); //TODO Change to IDE
             return null;
         }
     }
@@ -95,7 +95,7 @@ public class CorgiScope implements IScope {
         }
         else {
             //Log.e(TAG, identifier + " is not found in " +this.className);
-            System.err.println(identifier + " is not found"); //TODO Change to IDE
+//            System.err.println(identifier + " is not found"); //TODO Change to IDE
             return null;
         }
     }

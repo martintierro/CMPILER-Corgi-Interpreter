@@ -25,7 +25,7 @@ public class StatementControlOverseer {
     private StatementControlOverseer() {
         this.procedureCallStack = new Stack<ICommand>();
 
-        System.err.println("Stack initialized!");
+        System.out.println("Stack initialized!");
     }
 
     public static void initialize() {
