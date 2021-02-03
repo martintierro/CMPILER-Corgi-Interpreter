@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 
 public class ParserHandler {
 
-    private final static String TAG = "MobiProg_ParserHandler";
     private static ParserHandler sharedInstance = null;
 
     public static ParserHandler getInstance() {

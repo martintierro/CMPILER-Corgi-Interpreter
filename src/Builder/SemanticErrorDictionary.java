@@ -26,7 +26,7 @@ public class SemanticErrorDictionary {
     }
 
     private void populateErrorMessages() {
-        this.errorMessageDictionary.put(SemanticErrorDictionary.INCONSISTENT_CLASS_NAME, "Inconsistent class name. ");
+        this.errorMessageDictionary.put(INCONSISTENT_CLASS_NAME, "Inconsistent class name. ");
         this.errorMessageDictionary.put(TYPE_MISMATCH, "Type mismatch at line %d. ");
         this.errorMessageDictionary.put(UNDECLARED_VARIABLE, "Undeclared variable %s at line %d. ");
         this.errorMessageDictionary.put(UNDECLARED_FUNCTION, "Undeclared function %s at line %d. ");

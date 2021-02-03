@@ -295,12 +295,12 @@ public class View extends Application {
     }
 
     public static void printInConsole(String text) {
-        Text error = new Text(text);
-        error.setFont(Font.font("Courier", 14));
+        Text toPrint = new Text(text+"\n");
+        toPrint.setFont(Font.font("Courier", 14));
 
 
         Platform.runLater(() -> {
-            console.getChildren().add(error);
+            console.getChildren().add(toPrint);
         });
     }
 
