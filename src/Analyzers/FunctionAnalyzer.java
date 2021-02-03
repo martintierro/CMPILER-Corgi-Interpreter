@@ -117,7 +117,7 @@ public class FunctionAnalyzer implements ParseTreeListener {
     }
 
     private void analyzeParameters(CorgiParser.FormalParametersContext formalParamsCtx) {
-        if(formalParamsCtx.formalParameterList() != null) {
+        if(formalParamsCtx.formalParameterList() != null) { ;
             ParameterAnalyzer parameterAnalyzer = new ParameterAnalyzer(this.declaredCorgiFunction);
             parameterAnalyzer.analyze(formalParamsCtx.formalParameterList());
         }

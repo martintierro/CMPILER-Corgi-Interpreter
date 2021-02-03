@@ -36,8 +36,8 @@ public class CorgiAnalyzer implements ParseTreeListener {
         //Console.log(LogType.DEBUG, "Class name is " +className);
 //        ClassNameChecker classNameChecker = new ClassNameChecker(className);
 //        classNameChecker.verify();
-
         this.corgiScope = SymbolTableManager.getInstance().getCorgiScope();
+        this.corgiScope.reset();
         this.identifiedTokenHolder = new IdentifiedTokenHolder();
 
         ParseTreeWalker treeWalker = new ParseTreeWalker();

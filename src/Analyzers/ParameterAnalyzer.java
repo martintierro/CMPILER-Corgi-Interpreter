@@ -115,7 +115,7 @@ public class ParameterAnalyzer implements ParseTreeListener {
             CorgiValue corgiValue = new CorgiValue(declaredArray, PrimitiveType.ARRAY);
             this.declaredCorgiFunction.addParameter(identifierString, corgiValue);
 
-            //Console.log(LogType.DEBUG, "Created array parameter for " +this.declaredBaracoMethod.getFunctionName());
+            System.out.println("Created array parameter " + identifierString +" for " + this.declaredCorgiFunction.getFunctionName());
         }
         else if(this.identifiedTokenHolder.containsTokens(PARAMETER_TYPE_KEY, PARAMETER_IDENTIFIER_KEY)) {
             String typeString = this.identifiedTokenHolder.getToken(PARAMETER_TYPE_KEY);
@@ -123,6 +123,7 @@ public class ParameterAnalyzer implements ParseTreeListener {
 
             CorgiValue corgiValue = CorgiValue.createEmptyVariable(typeString);
             this.declaredCorgiFunction.addParameter(identifierString, corgiValue);
+            System.out.println("Created parameter " + identifierString +" for " + this.declaredCorgiFunction.getFunctionName());
         }
 
         this.identifiedTokenHolder.clearTokens();

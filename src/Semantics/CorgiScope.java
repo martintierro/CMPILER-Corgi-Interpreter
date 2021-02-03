@@ -105,10 +105,6 @@ public class CorgiScope implements IScope {
     }
 
     @Override
-    /* Attempts to find a variable first in the private and public variable storage, then on the local scopes.
-     * (non-Javadoc)
-     * @see com.neildg.mobiprog.semantics.symboltable.scopes.IScope#getVariable(java.lang.String)
-     */
     public CorgiValue searchVariableIncludingLocal(String identifier) {
         CorgiValue value;
         if(this.containsVariable(identifier)) {
@@ -137,11 +133,8 @@ public class CorgiScope implements IScope {
     /*
      * Resets all stored variables. This is called after the execution manager finishes
      */
-    public void resetValues() {
-        CorgiValue[] corgiValues = this.variables.values().toArray(new CorgiValue[this.variables.size()]);
-
-        for(int i = 0; i < corgiValues.length; i++) {
-            corgiValues[i].reset();
-        }
+    public void reset() {
+        this.variables = new HashMap<>();
+        this.functions = new HashMap<>();
     }
 }
