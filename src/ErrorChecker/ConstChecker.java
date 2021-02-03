@@ -71,7 +71,7 @@ public class ConstChecker implements IErrorChecker, ParseTreeListener {
             corgiValue = VariableSearcher.searchVariableInFunction(corgiFunction, varExprCtx.primary().Identifier().getText());
         }
 
-        //if after function finding, mobi value is still null, search class
+        //if after function finding, corgi value is still null, search class
         if(corgiValue == null) {
             CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             corgiValue = VariableSearcher.searchVariableInClassIncludingLocal(corgiScope, varExprCtx.primary().Identifier().getText());

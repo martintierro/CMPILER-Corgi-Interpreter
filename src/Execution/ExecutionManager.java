@@ -79,8 +79,8 @@ public class ExecutionManager implements NotificationListener {
     /*
      * Opens a function. Any succeeding commands to be added will be put to the function control flow.
      */
-    public void openFunctionExecution(CorgiFunction mobiFunction) {
-        FunctionExecutionAdder functionExecutionAdder = new FunctionExecutionAdder(mobiFunction);
+    public void openFunctionExecution(CorgiFunction corgiFunction) {
+        FunctionExecutionAdder functionExecutionAdder = new FunctionExecutionAdder(corgiFunction);
         this.activeExecutionAdder = functionExecutionAdder;
     }
 

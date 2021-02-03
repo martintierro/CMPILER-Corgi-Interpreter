@@ -50,4 +50,8 @@ public class SemanticErrorDictionary {
     public static String getErrorMessage(int errorCode) {
         return instance.errorMessageDictionary.getOrDefault(errorCode, "Error code "+errorCode+ " not found.");
     }
+
+    public static String getErrorMessageDescription (int errorCode){
+        return instance.errorMessageDictionary.get(errorCode);
+    }
 }

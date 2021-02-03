@@ -20,11 +20,16 @@ public class ArrayInitializeCommand implements ICommand {
     public void execute() {
         CorgiParser.ExpressionContext exprCtx = this.arrayCreatorCtx.expression(0);
 
-        if(exprCtx != null&&isInteger(exprCtx.getText())) {
+        if(exprCtx != null) {
             EvaluationCommand evaluationCommand = new EvaluationCommand(exprCtx);
             evaluationCommand.execute();
 
-            this.assignedCorgiArray.initializeSize(evaluationCommand.getResult().intValue());
+            if (isInteger(evaluationCommand.getResult().toString()))
+                this.assignedCorgiArray.initializeSize(evaluationCommand.getResult().intValue());
+            else{
+                Token token = arrayCreatorCtx.expression(0).getStart();
+              BuildChecker.reportCustomError(SemanticErrorDictionary.TYPE_MISMATCH,"Array Size should be integer." , token.getLine());
+            }
         }
 
     }

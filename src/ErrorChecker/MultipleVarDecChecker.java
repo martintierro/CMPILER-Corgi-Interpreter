@@ -29,9 +29,7 @@ public class MultipleVarDecChecker implements IErrorChecker, ParseTreeListener {
         this.lineNumber = firstToken.getLine();
     }
 
-    /* (non-Javadoc)
-     * @see com.neildg.mobiprog.builder.errorcheckers.IErrorChecker#verify()
-     */
+
     @Override
     public void verify() {
         ParseTreeWalker treeWalker = new ParseTreeWalker();
@@ -72,12 +70,12 @@ public class MultipleVarDecChecker implements IErrorChecker, ParseTreeListener {
             corgiValue = VariableSearcher.searchVariableInFunction(corgiFunction, identifierString);
         }
 
-        //if after function finding, mobi value is still null, search local scope
+        //if after function finding, Corgi value is still null, search local scope
         if(corgiValue == null) {
             corgiValue = LocalScopeHandler.searchVariableInLocalIterative(identifierString, LocalScopeHandler.getInstance().getActiveLocalScope());
         }
 
-        //if mobi value is still null, search class
+        //if corgi value is still null, search class
         if(corgiValue == null) {
             CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
             corgiValue = VariableSearcher.searchVariableInClass(corgiScope, identifierString);

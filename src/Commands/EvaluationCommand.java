@@ -129,7 +129,6 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     private void evaluateVariable(CorgiParser.ExpressionContext exprCtx) {
         CorgiValue corgiValue = VariableSearcher
                 .searchVariable(exprCtx.getText());
-
         this.modifiedExp = this.modifiedExp.replaceFirst(exprCtx.getText(),
                 corgiValue.getValue().toString());
     }

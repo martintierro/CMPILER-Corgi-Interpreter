@@ -19,7 +19,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class ArrayAnalyzer implements ParseTreeListener{
-    private final static String TAG = "MobiProg_ArrayAnalyzer";
 
     private final static String ARRAY_PRIMITIVE_KEY = "ARRAY_PRIMITIVE_KEY";
     private final static String ARRAY_IDENTIFIER_KEY = "ARRAY_IDENTIFIER_KEY";
@@ -76,15 +75,15 @@ public class ArrayAnalyzer implements ParseTreeListener{
         else if(ctx instanceof CorgiParser.ArrayCreatorRestContext) {
             CorgiParser.ArrayCreatorRestContext arrayCreatorCtx = (CorgiParser.ArrayCreatorRestContext) ctx;
 
-            if (isInteger(arrayCreatorCtx.getText()))
+//            if (isInteger(arrayCreatorCtx.getText()))
                 this.createInitializeCommand(arrayCreatorCtx);
 
-            else{
-
-                Token token = arrayCreatorCtx.expression(0).getStart();
-                BuildChecker.reportCustomError(SemanticErrorDictionary.TYPE_MISMATCH,"Array Size should be integer" , token.getLine());
-
-            }
+//            else{
+//
+//                Token token = arrayCreatorCtx.expression(0).getStart();
+//                BuildChecker.reportCustomError(SemanticErrorDictionary.TYPE_MISMATCH,"Array Size should be integer" , token.getLine());
+//
+//            }
 
         }
     }

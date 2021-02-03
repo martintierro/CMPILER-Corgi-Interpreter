@@ -46,7 +46,7 @@ public class CorgiFunction implements IControlledCommand{
     public void setReturnType(FunctionType functionType) {
         this.returnType = functionType;
 
-        //create an empty mobi value as a return value
+        //create an empty corgi value as a return value
         switch(this.returnType) {
             case BOOLEAN_TYPE: this.returnValue = new CorgiValue(true, PrimitiveType.BOOLEAN); break;
             case CHAR_TYPE: this.returnValue = new CorgiValue(' ', PrimitiveType.CHAR); break;
@@ -84,16 +84,16 @@ public class CorgiFunction implements IControlledCommand{
             return;
         }
 
-        CorgiValue mobiValue = this.getParameterAt(index);
-        mobiValue.setValue(value);
+        CorgiValue corgiValue = this.getParameterAt(index);
+        corgiValue.setValue(value);
     }
 
-    public void mapArrayAt(CorgiValue mobiValue, int index, String identifier) {
+    public void mapArrayAt(CorgiValue corgiValue, int index, String identifier) {
         if(index >= this.parameterValues.size()) {
             return;
         }
 
-        CorgiArray mobiArray = (CorgiArray) mobiValue.getValue();
+        CorgiArray mobiArray = (CorgiArray) corgiValue.getValue();
 
         CorgiArray newArray = new CorgiArray(mobiArray.getPrimitiveType(), identifier);
         CorgiValue newValue = new CorgiValue(newArray, PrimitiveType.ARRAY);
@@ -131,7 +131,7 @@ public class CorgiFunction implements IControlledCommand{
 
     public void addParameter(String identifierString, CorgiValue corgiValue) {
         this.parameterValues.put(identifierString, corgiValue);
-      //  Console.log(LogType.DEBUG, this.functionName + " added an empty parameter " +identifierString+ " type " +mobiValue.getPrimitiveType());
+      //  Console.log(LogType.DEBUG, this.functionName + " added an empty parameter " +identifierString+ " type " +corgiValue.getPrimitiveType());
     }
 
     public boolean hasParameter(String identifierString) {

@@ -129,9 +129,9 @@ public class CorgiValue {
         }
 
         //create empty mobi value
-        CorgiValue mobiValue = new CorgiValue(null, primitiveType);
+        CorgiValue corgiValue = new CorgiValue(null, primitiveType);
 
-        return mobiValue;
+        return corgiValue;
     }
 
 }

@@ -32,19 +32,19 @@ public class CorgiArray {
 
     public void initializeSize(int size) {
         this.corgiValueArray = new CorgiValue[size];
-        System.err.println("Mobi array initialized to size " +this.corgiValueArray.length);
+        System.err.println("Corgi array initialized to size " +this.corgiValueArray.length);
     }
 
     public int getSize() {
         return this.corgiValueArray.length;
     }
 
-    public void updateValueAt(CorgiValue mobiValue, int index) {
+    public void updateValueAt(CorgiValue corgiValue, int index) {
         if(index >= this.corgiValueArray.length) {
            // Console.log(LogType.ERROR, String.format(ErrorRepository.getErrorMessage(ErrorRepository.RUNTIME_ARRAY_OUT_OF_BOUNDS), this.arrayIdentifier));
             return;
         }
-        this.corgiValueArray[index] = mobiValue;
+        this.corgiValueArray[index] = corgiValue;
     }
 
     public CorgiValue getValueAt(int index) {

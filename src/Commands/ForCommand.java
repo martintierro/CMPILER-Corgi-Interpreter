@@ -13,7 +13,6 @@ import java.util.List;
 
 public class ForCommand implements IControlledCommand {
 
-    private final static String TAG = "MobiProg_ForCommand";
 
     private List<ICommand> commandSequences;
 
@@ -51,7 +50,7 @@ public class ForCommand implements IControlledCommand {
             }
 
         } catch(InterruptedException e) {
-            System.out.println(TAG + ": " + "Monitor block interrupted! " +e.getMessage()); //TODO Change to IDE
+            System.out.println("Monitor block interrupted! " +e.getMessage()); //TODO Change to IDE
         }
     }
 

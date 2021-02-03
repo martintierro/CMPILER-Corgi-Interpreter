@@ -1,5 +1,7 @@
 package Semantics;
 
+import Builder.BuildChecker;
+import Builder.SemanticErrorDictionary;
 import Representations.CorgiValue;
 
 import java.util.ArrayList;
@@ -75,6 +77,8 @@ public class LocalScopeHandler {
      */
     public static CorgiValue searchVariableInLocalIterative(String identifier, LocalScope localScope) {
         if(localScope == null) {
+//            String msg = "Declaration of "+identifier + " is  not found.";
+//            BuildChecker.reportCustomError(SemanticErrorDictionary.UNDECLARED_VARIABLE, msg);
             System.err.println(identifier + " not found in any local scope!");
             return null;
         }
@@ -102,7 +106,8 @@ public class LocalScopeHandler {
                 }
             }
         }
-
+//        String msg = "Declaration of "+identifier + " is  not found.";
+//        BuildChecker.reportCustomError(SemanticErrorDictionary.UNDECLARED_VARIABLE, msg);
         System.err.println(identifier + " not found in any local scope!");
         return null;
     }

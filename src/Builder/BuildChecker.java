@@ -183,8 +183,9 @@ public class BuildChecker extends BaseErrorListener {
     }
 
     public static void reportCustomError(int errorCode, String additionalMessage) {
-        String errorMessage = SemanticErrorDictionary.getErrorMessage(errorCode) + " " + additionalMessage;
+        String errorMessage = SemanticErrorDictionary.getErrorMessageDescription(errorCode).split(" %s")[0] + ". " + additionalMessage;
         System.err.println(errorMessage); //TODO Change to IDE
+        View.printCustomError(errorMessage);
 
         sharedInstance.successful = false;
     }

@@ -78,7 +78,7 @@ public class FunctionIdentifierMapper implements ParseTreeListener, IValueMapper
                 CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
                 this.corgiValue = corgiScope.searchVariableIncludingLocal(identifierString);
 
-                //Console.log("Variable in global scope: " +this.mobiValue.getValue());
+                //Console.log("Variable in global scope: " +this.corgiValue.getValue());
             }
             this.modifiedExp = this.modifiedExp.replace(identifierString, this.corgiValue.getValue().toString());
         }

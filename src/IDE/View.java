@@ -305,6 +305,17 @@ public class View extends Application {
         });
     }
 
+    public static void printCustomError(String text) {
+        Text msg = new Text(text+"\n");
+        msg.setFont(Font.font("Courier", 14));
+        msg.setFill(Color.RED);
+
+
+        Platform.runLater(() -> {
+            console.getChildren().add(msg);
+        });
+    }
+
     public static void appendErrorInConsole(CorgiError e) {
 
         System.out.println("IN APPEND ERROR IN CONSOLE");
