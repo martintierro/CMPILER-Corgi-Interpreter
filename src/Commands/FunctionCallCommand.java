@@ -76,16 +76,15 @@ public class FunctionCallCommand implements ICommand {
             if(this.corgiFunction.getParameterAt(i).getPrimitiveType() == PrimitiveType.ARRAY) {
                 CorgiValue corgiValue = VariableSearcher.searchVariable(parameterExprCtx.getText());
                 this.corgiFunction.mapArrayAt(corgiValue, i, parameterExprCtx.getText());
-            }else if(this.corgiFunction.getParameterAt(i).getPrimitiveType() != null){
-                CorgiValue corgiValue = VariableSearcher.searchVariable(parameterExprCtx.getText());
-                this.corgiFunction.mapParameterByValue(corgiValue.getValue().toString());
-            }
-            else if(parameterExprCtx.getText().contains("\"")){
+            } else if(parameterExprCtx.getText().contains("\"")){
                 String param = StringUtilities.removeQuotes(parameterExprCtx.getText());
                 this.corgiFunction.mapParameterByValue(param);
             } else if(parameterExprCtx.getText().contains("'")){
                 String param = StringUtilities.removeQuotes(parameterExprCtx.getText());
                 this.corgiFunction.mapParameterByValue(param);
+            } else if(this.corgiFunction.getParameterAt(i).getPrimitiveType() != null){
+                CorgiValue corgiValue = VariableSearcher.searchVariable(parameterExprCtx.getText());
+                this.corgiFunction.mapParameterByValue(corgiValue.getValue().toString());
             }
             else {
                 EvaluationCommand evaluationCommand = new EvaluationCommand(parameterExprCtx);
