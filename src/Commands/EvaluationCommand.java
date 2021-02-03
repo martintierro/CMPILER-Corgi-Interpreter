@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class EvaluationCommand implements ICommand, ParseTreeListener {
 
@@ -80,7 +81,9 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     }
 
     public static boolean isFunctionCall(CorgiParser.ExpressionContext exprCtx) {
-        if (exprCtx.getText().contains("(") && exprCtx.getText().contains(")")) {
+        Pattern functionPattern = Pattern.compile("([a-zA-Z0-9]+)\\(([ ,.a-zA-Z0-9]*)\\)");
+
+        if (exprCtx.expressionList() != null || functionPattern.matcher(exprCtx.getText()).matches()) {
             return true;
         } else {
             return false;

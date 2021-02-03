@@ -137,4 +137,9 @@ public class CorgiScope implements IScope {
         this.variables = new HashMap<>();
         this.functions = new HashMap<>();
     }
+
+    public void printAllFunctions(){
+        for(CorgiFunction function: this.functions.values())
+            System.out.println(function.getFunctionName());
+    }
 }

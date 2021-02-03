@@ -77,9 +77,8 @@ public class UndeclaredChecker implements IErrorChecker, ParseTreeListener {
             return;
 
         String functionName = funcExprCtx.expression(0).getText();
-
-        CorgiScope classScope = SymbolTableManager.getInstance().getCorgiScope();
-        CorgiFunction corgiFunction = classScope.getFunction(functionName);
+        CorgiScope corgiScope = SymbolTableManager.getInstance().getCorgiScope();
+        CorgiFunction corgiFunction = corgiScope.getFunction(functionName);
 
         if(corgiFunction == null) {
             BuildChecker.reportCustomError(SemanticErrorDictionary.UNDECLARED_FUNCTION, "", functionName, this.lineNumber);

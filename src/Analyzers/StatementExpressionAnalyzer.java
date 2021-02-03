@@ -151,9 +151,8 @@ public class StatementExpressionAnalyzer implements ParseTreeListener {
 
     private void handleFunctionCall(CorgiParser.ExpressionContext funcExprCtx) {
         String functionName = funcExprCtx.expression(0).getText();
-
-        FunctionCallCommand methodCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
-        this.handleStatementExecution(methodCallCommand);
+        FunctionCallCommand functionCallCommand = new FunctionCallCommand(functionName, funcExprCtx);
+        this.handleStatementExecution(functionCallCommand);
 
     }
 

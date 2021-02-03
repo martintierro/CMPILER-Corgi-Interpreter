@@ -56,7 +56,7 @@ public class FunctionAnalyzer implements ParseTreeListener {
             this.analyzeIdentifier(methodDecCtx.Identifier()); //get the function identifier
         }
         else {
-            this.analyzeMethod(ctx);
+            this.analyzeFunction(ctx);
         }
 
     }
@@ -68,7 +68,7 @@ public class FunctionAnalyzer implements ParseTreeListener {
         }
     }
 
-    private void analyzeMethod(ParserRuleContext ctx) {
+    private void analyzeFunction(ParserRuleContext ctx) {
 
         if(ctx instanceof CorgiParser.TypeTypeContext) {
             CorgiParser.TypeTypeContext typeCtx = (CorgiParser.TypeTypeContext) ctx;
