@@ -33,7 +33,7 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     @Override
     public void execute() {
         this.modifiedExp = this.parentExprCtx.getText();
-        System.out.println("MODDYY: "+modifiedExp);
+        //System.out.println("MODDYY: "+modifiedExp);
         //catch rules if the value has direct boolean flags
         /*if(this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_TRUE)) {
             this.resultValue = new BigDecimal(1);
@@ -162,6 +162,7 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
 
         //System.out.println(engine.eval(exp).toString());
         stringTemp = engine.eval(exp).toString();
+       // System.out.println(engine.eval(exp));
 
         if (stringTemp.equals("false"))
             return 0;
