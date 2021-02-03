@@ -307,6 +307,7 @@ public class View extends Application {
 
     public static void appendErrorInConsole(CorgiError e) {
 
+        System.out.println("IN APPEND ERROR IN CONSOLE");
         Text errorPrefix = new Text(e.getErrorPrefix());
         errorPrefix.setFont(Font.font("Courier", 14));
 

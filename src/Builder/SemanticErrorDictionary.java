@@ -3,7 +3,7 @@ package Builder;
 import java.util.HashMap;
 
 public class SemanticErrorDictionary {
-    private final static String TAG = "MobiProg_ErrorRepository";
+
 
     public final static int INCONSISTENT_CLASS_NAME = 1000;
     public final static int TYPE_MISMATCH = 2000;

@@ -1,5 +1,7 @@
 package Analyzers;
 
+import Builder.BuildChecker;
+import Builder.SemanticErrorDictionary;
 import Commands.ArrayInitializeCommand;
 import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
@@ -10,6 +12,7 @@ import Semantics.LocalScope;
 import Semantics.CorgiScope;
 import Utlities.IdentifiedTokenHolder;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -72,7 +75,17 @@ public class ArrayAnalyzer implements ParseTreeListener{
 
         else if(ctx instanceof CorgiParser.ArrayCreatorRestContext) {
             CorgiParser.ArrayCreatorRestContext arrayCreatorCtx = (CorgiParser.ArrayCreatorRestContext) ctx;
-            this.createInitializeCommand(arrayCreatorCtx);
+
+            if (isInteger(arrayCreatorCtx.getText()))
+                this.createInitializeCommand(arrayCreatorCtx);
+
+            else{
+
+                Token token = arrayCreatorCtx.expression(0).getStart();
+                BuildChecker.reportCustomError(SemanticErrorDictionary.TYPE_MISMATCH,"Array Size should be integer" , token.getLine());
+
+            }
+
         }
     }
 
@@ -89,7 +102,7 @@ public class ArrayAnalyzer implements ParseTreeListener{
                 String arrayTypeString = this.identifiedTokenHolder.getToken(ARRAY_PRIMITIVE_KEY);
                 String arrayIdentifierString = this.identifiedTokenHolder.getToken(ARRAY_IDENTIFIER_KEY);
 
-                //initialize an array mobivalue
+                //initialize an array corgivalue
                 this.declaredArray = CorgiArray.createArray(arrayTypeString, arrayIdentifierString);
                 CorgiValue corgiValue = new CorgiValue(this.declaredArray, PrimitiveType.ARRAY);
 
@@ -104,7 +117,7 @@ public class ArrayAnalyzer implements ParseTreeListener{
                 String arrayTypeString = this.identifiedTokenHolder.getToken(ARRAY_PRIMITIVE_KEY);
                 String arrayIdentifierString = this.identifiedTokenHolder.getToken(ARRAY_IDENTIFIER_KEY);
 
-                //initialize an array mobivalue
+                //initialize an array corgivalue
                 this.declaredArray = CorgiArray.createArray(arrayTypeString, arrayIdentifierString);
                 CorgiValue corgiValue = new CorgiValue(this.declaredArray, PrimitiveType.ARRAY);
 
@@ -120,5 +133,16 @@ public class ArrayAnalyzer implements ParseTreeListener{
     private void createInitializeCommand(CorgiParser.ArrayCreatorRestContext arrayCreatorCtx) {
         ArrayInitializeCommand arrayInitializeCommand = new ArrayInitializeCommand(this.declaredArray, arrayCreatorCtx);
         ExecutionManager.getInstance().addCommand(arrayInitializeCommand);
+    }
+
+
+    public boolean isInteger( String input ) {
+        try {
+            Integer.parseInt( input );
+            return true;
+        }
+        catch( Exception e ) {
+            return false;
+        }
     }
 }

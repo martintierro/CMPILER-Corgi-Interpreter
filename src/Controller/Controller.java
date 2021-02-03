@@ -55,6 +55,7 @@ public class Controller {
             //this.mViewPager.setCurrentItem(1);
         }
         else {
+
             System.out.println("Fix identified errors before executing!");
         }
 
