@@ -7,26 +7,7 @@ import Controller.Controller;
 import Execution.ExecutionManager;
 import IDE.Dialog.*;
 import Statements.StatementControlOverseer;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.fxmisc.flowless.VirtualizedScrollPane;
+
 
 import java.io.IOException;
 import java.time.Duration;
@@ -36,8 +17,23 @@ import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.scene.text.Font;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.*;
+import javafx.stage.Stage;
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 
 public class View extends Application {
@@ -85,6 +81,10 @@ public class View extends Application {
         this.stage = primaryStage;
         executor = Executors.newSingleThreadExecutor();
         controller = new Controller(this);
+        Image icon = new Image(getClass().getResourceAsStream("corgi-icon-2.png"));
+        stage.getIcons().add(icon);
+
+
 
         this.currentFileName = "";
 //        this.fileHandler = new FileHandler(primaryStage);
@@ -109,11 +109,11 @@ public class View extends Application {
 
     private Scene setupComponents() {
         gridPane = new GridPane();
-        Scene scene = new Scene(gridPane, 1024, 768);
-//        scene.getStylesheets().add(View.class.getResource("java-keywords.css").toExternalForm());
-
-        scene.setOnKeyPressed(e -> {
-         /*   if(e.getCode() == KeyCode.S && e.isMetaDown() && e.isShiftDown()) {
+        Scene scene = new Scene(gridPane, 1110, 800);
+        scene.getStylesheets().add(View.class.getResource("java-keywords.css").toExternalForm());
+        scene.getStylesheets().add(View.class.getResource("dark-theme.css").toExternalForm());
+   /*     scene.setOnKeyPressed(e -> {
+            if(e.getCode() == KeyCode.S && e.isMetaDown() && e.isShiftDown()) {
                 System.out.println("Save As shortcut");
                 saveAsFile();
             }
@@ -129,7 +129,7 @@ public class View extends Application {
                 System.out.println("New shortcut");
                 newFile();
             }
-            else*/ if(e.getCode() == KeyCode.R && e.isMetaDown()) {
+            else if(e.getCode() == KeyCode.R && e.isMetaDown()) {
                 System.out.println("Run");
                 try {
                     controller.run(editor.getText(), this.currentFileName);
@@ -137,7 +137,7 @@ public class View extends Application {
                     ioException.printStackTrace();
                 }
             }
-        });
+        }); */
 
 
         // Set column constraints
@@ -295,12 +295,13 @@ public class View extends Application {
     }
 
     public static void printInConsole(String text) {
-        Text toPrint = new Text(text+"\n");
-        toPrint.setFont(Font.font("Courier", 14));
+        Text msg = new Text(text+"\n");
+        msg.setFont(Font.font("Courier", 14));
+        msg.setFill(Color.WHITE);
 
 
         Platform.runLater(() -> {
-            console.getChildren().add(toPrint);
+            console.getChildren().add(msg);
         });
     }
 
@@ -334,8 +335,9 @@ public class View extends Application {
     }
 
     public void resetConsole() {
-        Text consoleText = new Text("Console: \n");
-        consoleText.setFont(Font.font("Courier", 12));
+        Text consoleText = new Text("Output: \n");
+        consoleText.setFill(Color.WHITE);
+        consoleText.setFont(Font.font("Courier", FontWeight.BOLD, FontPosture.REGULAR,12));
         console = new TextFlow(consoleText);
         ScrollPane consoleScroll = new ScrollPane(console);
         consoleScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
