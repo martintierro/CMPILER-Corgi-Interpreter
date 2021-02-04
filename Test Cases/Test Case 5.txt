@@ -1,0 +1,26 @@
+void main(){
+	int n;
+	listen("How many numbers do you want to enter?", n);
+
+	int length = 0;
+	int temp;
+	for(int i = 0; i < n; i++){
+		listen("Enter number: ",temp);
+		length = length + temp;
+	}
+
+	woofln("You have an array of characters with size of " + length + "!");
+	char[] s = new char[length];
+	char c;
+	for(int j = 0; j < length; j++){
+		listen("Enter character: ",c);
+		s[j] = c;
+	}
+
+	woof("Characters to print: ");
+
+	for(int l = 0; l < length; l++){
+		woof(s[l]);
+	}
+
+}

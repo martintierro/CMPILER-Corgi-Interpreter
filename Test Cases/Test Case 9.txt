@@ -1,0 +1,60 @@
+void printL(int size){
+	for(int i = 0; i < size - 1; i++){
+		woofln("*");
+	}
+	for(int j = 0; j < size; j++){
+		woof("*");
+	}
+	woofln("");
+}
+
+void printT(int size){
+	for(int j = 0; j < size; j++){
+		woof("*");
+	}
+	woofln("");
+
+	for(int i = 0; i < size - 1; i++){
+		for(int k = 0; k < size/2; k++){
+			woof(" ");
+		}
+		woofln("*");
+	}
+}
+
+void printF(int size){
+	for(int i = 0; i < size; i++){
+		woof("*");
+	}
+	woofln("");
+	woofln("*");
+	for(int j = 0; j < size; j++){
+		woof("*");
+	}
+	woofln("");
+	for(int k = 0; k < size-3; k++){
+		woofln("*");
+	}
+}
+
+void main(){
+	char c;
+	char F = 'F';
+	char T = 'T';
+	char L = 'L';
+	listen("Enter char: ", c);
+	int size;
+	listen("Enter font size: ", size);
+	if(size < 5)
+		woofln("INVALID! Font size should be at least 5");
+	else{
+		if(c == F)
+			printF(size);
+		else if(c == L)
+			printL(size);
+		else if(c == T)
+			printT(size);
+		else
+			woofln("INVALID! Only supports 'FTL'. Please try again");
+	}
+}

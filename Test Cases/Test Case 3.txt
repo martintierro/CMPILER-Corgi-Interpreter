@@ -1,0 +1,14 @@
+void main(){
+	int a, b, c, d, e;
+	listen("Enter Number: ", a);
+	listen("Enter Number: ", b);
+	listen("Enter Number: ", c);
+	listen("Enter Number: ", d);
+	listen("Enter Number: ", e);
+
+	woofln(e);
+	woofln(d);
+	woofln(c);
+	woofln(b);
+	woofln(a);
+}

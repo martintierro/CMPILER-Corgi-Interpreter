@@ -1,0 +1,12 @@
+void main (){
+
+	string firstName;
+	string middleName;
+	string lastName;
+
+	listen("Write First Name", firstName);
+	listen("Write Middle Name", middleName);
+	listen("Write Last Name", lastName);
+
+	woofln("Welcome "+firstName+" "+middleName+" "+ lastName+"!");
+}

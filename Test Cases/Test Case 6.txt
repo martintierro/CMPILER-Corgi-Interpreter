@@ -1,0 +1,25 @@
+void main (){
+
+	int multiplier;
+	listen ("Enter table size: ", multiplier);
+	int temp;
+
+	woof("  ");
+	for (int i = 1; i<=multiplier; i++){
+		woof ("     ");
+		woof(i);
+	}
+
+	woofln ("");
+
+	for (int j = 1; j<=multiplier; j++){
+		woof(j);
+		for (int k = 1; k<=multiplier; k++){
+			temp = j * k;
+			woof ("     ");
+			woof (temp);
+		}
+		woofln ("");
+	}
+
+}

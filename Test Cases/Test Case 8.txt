@@ -1,0 +1,18 @@
+int count7(int n){
+	if(n % 10 == 7){
+		return 1 + count7(n/10);
+	}
+	else if(n < 1){
+		return 0;
+	}
+	else{
+		return count7(n/10);
+	}
+}
+
+void main(){
+	int n;
+	listen("Enter non-negative number: ", n);
+	int a = count7(n);
+	woofln("Number of 7's: " + a);
+}

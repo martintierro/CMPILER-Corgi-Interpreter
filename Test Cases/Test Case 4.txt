@@ -1,0 +1,71 @@
+//RUN 1
+void main (){
+
+	final float MULTIPLIER = 2.0;
+	final float DIVIDER = 1.5;
+
+	int x = 0;
+	int y = 0;
+	int z = 0;
+
+	x = x + 4;
+	y = y + 5;
+	z = z + 6;
+
+	float finalValue = (((x+y) * MULTIPLIER)/DIVIDER + x + y)- y * MULTIPLIER;
+	woof("Value is "+ (finalValue * MULTIPLIER * MULTIPLIER));
+}
+
+//RUN 2
+void main (){
+
+	final float MULTIPLIER = 2.0;
+	final float DIVIDER = 1.5;
+
+	int x = 2;
+	int y = 2;
+	int z = 2;
+
+	x = x + 1;
+	y = y + 1;
+	z = z + 1;
+
+	float finalValue = (((x+y) * MULTIPLIER)/DIVIDER + x + y)- y * MULTIPLIER;
+	woof("Value is "+ (finalValue * MULTIPLIER * MULTIPLIER));
+}
+
+//RUN 3
+void main (){
+
+	final float MULTIPLIER = 2.0;
+	final float DIVIDER = 1.5;
+
+	int x = -1;
+	int y = -2;
+	int z = -3;
+
+	x = x + -1;
+	y = y + -2;
+	z = z + -3;
+
+	float finalValue = (((x+y) * MULTIPLIER)/DIVIDER + x + y)- y * MULTIPLIER;
+	woof("Value is "+ (finalValue * MULTIPLIER * MULTIPLIER));
+}
+
+//RUN 4
+void main (){
+
+	final float MULTIPLIER = 2.0;
+	final float DIVIDER = 1.5;
+
+	int x = 1;
+	int y = 1;
+	int z = x + 1;
+
+	x = x + (x + z);
+	y = y + 1;
+	z = z + 1;
+
+	float finalValue = (((x+y) * MULTIPLIER)/DIVIDER + x + y)- y * MULTIPLIER;
+	woof("Value is "+ (finalValue * MULTIPLIER * MULTIPLIER));
+}
