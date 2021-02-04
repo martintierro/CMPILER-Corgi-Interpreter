@@ -295,7 +295,7 @@ public class View extends Application {
     }
 
     public static void printInConsole(String text) {
-        Text msg = new Text(text+"\n");
+        Text msg = new Text(text);
         msg.setFont(Font.font("Courier", 14));
         msg.setFill(Color.WHITE);
 

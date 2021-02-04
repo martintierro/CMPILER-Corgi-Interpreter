@@ -125,8 +125,13 @@ public class StatementAnalyzer {
 
     private void handlePrintStatement(CorgiParser.PrintStatementContext ctx) {
 //        System.out.println("HANDLE PRINT: " + ctx.expression().size());
-
-        PrintCommand printCommand = new PrintCommand(ctx.expression());
+        boolean b;
+        if(ctx.PRINTLN() != null){
+            b = true;
+        } else{
+            b = false;
+        }
+        PrintCommand printCommand = new PrintCommand(ctx.expression(), b);
 
         StatementControlOverseer statementControl = StatementControlOverseer.getInstance();
         //add to conditional controlled command

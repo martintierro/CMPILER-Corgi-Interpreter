@@ -21,9 +21,12 @@ public class PrintCommand implements ICommand, ParseTreeListener {
     private String statementToPrint = "";
     private boolean complexExpr = false;
     private boolean arrayAccess = false;
+    private boolean isNewline = false;
 
-    public PrintCommand(CorgiParser.ExpressionContext expressionCtx) {
+
+    public PrintCommand(CorgiParser.ExpressionContext expressionCtx, boolean isNewline) {
         this.expressionCtx = expressionCtx;
+        this.isNewline = isNewline;
 
         UndeclaredChecker undeclaredChecker = new UndeclaredChecker(this.expressionCtx);
         undeclaredChecker.verify();
@@ -33,7 +36,8 @@ public class PrintCommand implements ICommand, ParseTreeListener {
     public void execute() {
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         treeWalker.walk(this, this.expressionCtx);
-
+        if(isNewline)
+            this.statementToPrint += "\n";
         System.out.println(this.statementToPrint);//TODO PRINT STATEMENT ON FRONT END
         View.printInConsole(this.statementToPrint);
         this.statementToPrint = ""; //reset statement to print afterwards

@@ -352,6 +352,7 @@ scanStatement
 
 printStatement
     :    PRINT '(' expression ')' ';'
+    |    PRINTLN '(' expression ')' ';'
     ;
 
 catchClause
@@ -565,6 +566,7 @@ VOLATILE      : 'volatile';
 WHILE         : 'while';
 SCAN          : 'listen';
 PRINT         : 'woof';
+PRINTLN       : 'woofln';
 END           : 'end';
 
 ARRAY_BOUNDS_EXCEPTION : 'ARRAY_BOUNDS_EXCEPTION';

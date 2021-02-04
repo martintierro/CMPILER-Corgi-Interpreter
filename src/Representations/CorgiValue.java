@@ -68,7 +68,13 @@ public class CorgiValue {
         switch(this.primitiveType) {
             case BOOLEAN: return Boolean.valueOf(value);
             case CHAR: return Character.valueOf(value.charAt(0)); //only get first char at value
-            case INT: return Integer.valueOf(value);
+            case INT:
+                float temp;
+                if(value.contains(".")){
+                    temp = Float.parseFloat(value);
+                    return (int) temp;
+                }
+                return Integer.valueOf(value);
             case FLOAT: return Float.valueOf(value);
             case STRING: return value;
             default: return null;
