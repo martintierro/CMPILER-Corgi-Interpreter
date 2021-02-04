@@ -42,7 +42,7 @@ public class View extends Application {
             "bool", "break", "case", "do", "else", "decimal", "for",
             "if", "int", "return", "switch", "void", "while", "woof", "woofln",
             "end", "and", "or", "class",  "true", "false", "string",
-            "char", "final", "scan", "new", ":", "try", "catch", "ARRAY_BOUNDS_EXCEPTION",
+            "char", "final", "listen", "new", ":", "try", "catch", "ARRAY_BOUNDS_EXCEPTION",
             "NEGATIVE_ARRSIZE_EXCEPTION", "ARITHMETIC_EXCEPTION"
     };
 
