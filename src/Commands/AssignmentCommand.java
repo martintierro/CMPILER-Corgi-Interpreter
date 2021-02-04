@@ -9,8 +9,10 @@ import GeneratedAntlrClasses.CorgiLexer;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.CorgiArray;
 import Representations.CorgiValue;
+import Representations.PrimitiveType;
 import Searcher.VariableSearcher;
 import Utlities.AssignmentUtilities;
+import Utlities.StringUtilities;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -53,13 +55,35 @@ public class AssignmentCommand implements ICommand{
 
     @Override
     public void execute() {
-        EvaluationCommand evaluationCommand = new EvaluationCommand(this.rightHandExprCtx);
-        evaluationCommand.execute();
+        if(this.isLeftHandArrayAccessor()){
+            TerminalNode identifierNode = this.leftHandExprCtx.expression(0).primary().Identifier();
+            CorgiParser.ExpressionContext arrayIndexExprCtx = this.leftHandExprCtx.expression(1);
 
-        if(this.isLeftHandArrayAccessor()) {
-            this.handleArrayAssignment(evaluationCommand.getResult().toEngineeringString());
+            CorgiValue corgiValue = VariableSearcher.searchVariable(identifierNode.getText());
+            CorgiArray corgiArray = (CorgiArray) corgiValue.getValue();
+            if(corgiArray.getPrimitiveType() == PrimitiveType.CHAR){
+                EvaluationCommand evaluationCommand = new EvaluationCommand(arrayIndexExprCtx);
+                evaluationCommand.execute();
+
+                //create a new array value to replace value at specified index
+                CorgiValue newArrayValue = new CorgiValue(null, corgiArray.getPrimitiveType());
+                CorgiValue tempValue = VariableSearcher.searchVariable(rightHandExprCtx.getText());
+                if( tempValue == null) {
+                    String value = StringUtilities.removeQuotes(rightHandExprCtx.getText());
+                    newArrayValue.setValue(value);
+                } else{
+                    newArrayValue.setValue(String.valueOf(tempValue.getValue()));
+                }
+                corgiArray.updateValueAt(newArrayValue, evaluationCommand.getResult().intValue());
+            } else{
+                EvaluationCommand evaluationCommand = new EvaluationCommand(this.rightHandExprCtx);
+                evaluationCommand.execute();
+                this.handleArrayAssignment(evaluationCommand.getResult().toEngineeringString());
+            }
         }
         else {
+            EvaluationCommand evaluationCommand = new EvaluationCommand(this.rightHandExprCtx);
+            evaluationCommand.execute();
             CorgiValue corgiValue = VariableSearcher.searchVariable(this.leftHandExprCtx.getText());
             AssignmentUtilities.assignAppropriateValue(corgiValue, evaluationCommand.getResult());
         }

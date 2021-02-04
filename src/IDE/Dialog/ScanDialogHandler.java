@@ -20,7 +20,7 @@ public class ScanDialogHandler implements NotificationListener {
     public ScanDialogHandler() {
         dialog = new TextInputDialog();
         dialog.getDialogPane();
-        dialog.setTitle("Scan Dialog");
+        dialog.setTitle("Listening to your input, woof!");
         dialog.setHeaderText(null);
         dialog.getDialogPane().getButtonTypes().remove(1);
 
