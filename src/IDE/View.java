@@ -40,7 +40,7 @@ public class View extends Application {
 
     private static final String[] KEYWORDS = new String[] {
             "bool", "break", "case", "do", "else", "decimal", "for",
-            "if", "int", "return", "switch", "void", "while", "woof",
+            "if", "int", "return", "switch", "void", "while", "woof", "woofln",
             "end", "and", "or", "class",  "true", "false", "string",
             "char", "final", "scan", "new", ":", "try", "catch", "ARRAY_BOUNDS_EXCEPTION",
             "NEGATIVE_ARRSIZE_EXCEPTION", "ARITHMETIC_EXCEPTION"
