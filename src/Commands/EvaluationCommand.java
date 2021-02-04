@@ -1,11 +1,13 @@
 package Commands;
 
+import Execution.ExecutionManager;
 import GeneratedAntlrClasses.CorgiParser;
 import Representations.*;
 import Searcher.VariableSearcher;
 import Semantics.CorgiScope;
 import Semantics.SymbolTableManager;
 import Utlities.KeywordRecognizer;
+import Utlities.StringUtilities;
 import com.udojava.evalex.Expression;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -25,6 +27,10 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
     private CorgiParser.ExpressionContext parentExprCtx;
     private String modifiedExp;
     private BigDecimal resultValue;
+    private boolean isNumeric;
+    private boolean hasException = false;
+    private String stringResult = "";
+
 
     public EvaluationCommand(CorgiParser.ExpressionContext exprCtx) {
         this.parentExprCtx = exprCtx;
@@ -32,31 +38,174 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
 
     @Override
     public void execute() {
+
+        //System.out.println("EvaluationCommand: executing");
         this.modifiedExp = this.parentExprCtx.getText();
-        //System.out.println("MODDYY: "+modifiedExp);
-        //catch rules if the value has direct boolean flags
-        /*if(this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_TRUE)) {
-            this.resultValue = new BigDecimal(1);
-        }
-        else if(this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_FALSE)) {
-            this.resultValue = new BigDecimal(0);
-        } */
-        if (this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_TRUE)||this.modifiedExp.contains(KeywordRecognizer.BOOLEAN_FALSE)){
-            try {
-                this.resultValue = new BigDecimal(evaluateBoolean(this.modifiedExp));
-            } catch (ScriptException e) {
-                e.printStackTrace();
+
+        for (CorgiParser.ExpressionContext eCtx : this.parentExprCtx.expression()) { // bias functions in evaluating
+            if (isFunctionCall(eCtx)) {
+                EvaluationCommand evaluationCommand = new EvaluationCommand(eCtx);
+                evaluationCommand.execute();
+
+                this.modifiedExp = this.modifiedExp.replace(eCtx.getText(), evaluationCommand.modifiedExp);
             }
         }
-        else {
-            ParseTreeWalker treeWalker = new ParseTreeWalker();
-            treeWalker.walk(this, this.parentExprCtx);
+
+        ParseTreeWalker treeWalker = new ParseTreeWalker();
+        treeWalker.walk(this, this.parentExprCtx);
+
+        isNumeric = !this.modifiedExp.contains("\"") && !this.modifiedExp.contains("\'");
+
+        if (!isNumeric) {
+
+            if (this.modifiedExp.contains("==") || this.modifiedExp.contains("!=")) {
+
+
+                String[] strings = {"", ""};
+
+                if (this.modifiedExp.contains("=="))
+                    strings = this.modifiedExp.split("==");
+
+                if (this.modifiedExp.contains("!="))
+                    strings = this.modifiedExp.split("!=");
+
+                String equalityFunction = "STREQ("+strings[0]+", " + strings[1] + ")";
+
+                if (this.modifiedExp.contains("!="))
+                    equalityFunction = "not(" + equalityFunction + ")";
+
+                Expression e = new Expression(equalityFunction);
+
+                e.addLazyFunction(e.new LazyFunction("STREQ", 2) {
+
+                    private Expression.LazyNumber ZERO = new Expression.LazyNumber() {
+                        public BigDecimal eval() {
+                            return BigDecimal.ZERO;
+                        }
+                        public String getString() {
+                            return "0";
+                        }
+                    };
+
+                    private Expression.LazyNumber ONE = new Expression.LazyNumber() {
+                        public BigDecimal eval() {
+                            return BigDecimal.ONE;
+                        }
+                        public String getString() {
+                            return null;
+                        }
+                    };
+
+                    public Expression.LazyNumber lazyEval(List<Expression.LazyNumber> lazyParams) {
+                        if (lazyParams.get(0).getString().equals(lazyParams.get(1).getString())) {
+                            return ONE;
+                        }
+                        return ZERO;
+                    }
+                });
+
+                this.resultValue = e.eval();
+                isNumeric = true;
+            }else if (this.parentExprCtx.expression().size() != 0 &&
+                    !isArrayElement(parentExprCtx) &&
+                    !isFunctionCall(parentExprCtx)) {
+
+                for (CorgiParser.ExpressionContext expCtx :
+                        this.parentExprCtx.expression()) {
+
+                    if (!isArray(expCtx)) {
+
+                        EvaluationCommand innerEvCmd = new EvaluationCommand(expCtx);
+                        innerEvCmd.execute();
+
+                        if (innerEvCmd.isNumericResult())
+                            this.stringResult += innerEvCmd.getResult().toEngineeringString();
+                        else
+                            this.stringResult += innerEvCmd.getStringResult();
+
+                    }
+                }
+
+            } else {
+                this.stringResult = StringUtilities.removeQuotes(modifiedExp);
+            }
+
+        } else {
+
+            if (this.modifiedExp.contains("!")) {
+                this.modifiedExp = this.modifiedExp.replaceAll("!", "not");
+                this.modifiedExp = this.modifiedExp.replaceAll("not=", "!=");
+            }
+
+            if (this.modifiedExp.contains("and")) {
+                this.modifiedExp = this.modifiedExp.replaceAll("and", "&&");
+            }
+
+            if (this.modifiedExp.contains("or")) {
+                this.modifiedExp = this.modifiedExp.replaceAll("or", "||");
+            }
 
             Expression evalEx = new Expression(this.modifiedExp);
-            //Log.i(TAG,"Modified exp to eval: " +this.modifiedExp);
-            this.resultValue = evalEx.eval();
+
+            try {
+                this.resultValue = evalEx.eval(false);
+                this.stringResult = this.resultValue.toEngineeringString();
+            } catch (Expression.ExpressionException ex) {
+                this.resultValue = new BigDecimal(0);
+                this.stringResult = "";
+                this.hasException = true;
+            } catch (ArithmeticException ex) {
+                //StatementControlOverseer.getInstance().setCurrentCatchClause(IAttemptCommand.CatchTypeEnum.ARITHMETIC_EXCEPTION);
+
+//                ExecutionManager.getInstance().setCurrentCheckedLineNumber(this.parentExprCtx.getStart().getLine());
+//                ExecutionManager.getInstance().setCurrentCatchType(IAttemptCommand.CatchTypeEnum.ARITHMETIC_EXCEPTION);
+
+                this.resultValue = new BigDecimal(0);
+                this.stringResult = "";
+                this.hasException = true;
+            }
+
         }
 
+    }
+
+    public static boolean isArrayElement(CorgiParser.ExpressionContext exprCtx) {
+        if (exprCtx.expression(0) != null && exprCtx.expression(1) != null) {
+            CorgiValue value = CorgiValueSearcher.searchVariable(exprCtx.expression(0).getText());
+
+            if (value != null)
+                return value.getPrimitiveType() == PrimitiveType.ARRAY;
+            else
+                return false;
+        } else {
+            return false;
+        }
+    }
+
+    public String getStringResult() {
+        return stringResult;
+    }
+
+    public static boolean isArray(String s) {
+        CorgiValue value = CorgiValueSearcher.searchVariable(s);
+
+        if (value != null) {
+            return value.getPrimitiveType() == PrimitiveType.ARRAY;
+        }
+
+        return false;
+    }
+
+
+
+    public static boolean isArray(CorgiParser.ExpressionContext exprCtx) {
+        CorgiValue value = CorgiValueSearcher.searchVariable(exprCtx.getText());
+
+        if (value != null) {
+            return value.getPrimitiveType() == PrimitiveType.ARRAY && !isArrayElement(exprCtx);
+        }
+
+        return false;
     }
 
     @Override
@@ -171,6 +320,15 @@ public class EvaluationCommand implements ICommand, ParseTreeListener {
 
 
     }
+
+    public boolean isNumericResult() {
+        return isNumeric;
+    }
+
+    public boolean hasException() {
+        return hasException;
+    }
+
 
 }
 

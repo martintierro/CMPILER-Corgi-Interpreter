@@ -35,4 +35,11 @@ public class AssignmentUtilities {
         }
     }
 
+    public static void assignAppropriateValue(CorgiValue corgiValue, String stringValue) {
+        if(corgiValue.getPrimitiveType() == PrimitiveType.STRING ||
+                corgiValue.getPrimitiveType() == PrimitiveType.CHAR) {
+            corgiValue.setValue(stringValue);
+        }
+    }
+
 }
